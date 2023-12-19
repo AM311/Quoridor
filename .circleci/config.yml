@@ -24,3 +24,5 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+orbs:
+ codecov/codecov@3.2.4
