@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+ codecov/codecov@3.2.4
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -24,5 +27,3 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-orbs:
- codecov/codecov@3.2.4
