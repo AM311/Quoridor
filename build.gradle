@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+group = 'it.units.sdm.in20'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.required = true
+        xml.outputLocation = file(".coverage/jacocoReport.xml")
+        html.required = false
+    }
+}
