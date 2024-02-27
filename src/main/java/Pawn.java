@@ -1,23 +1,45 @@
 import java.awt.*;
 
 public class Pawn {
-	private Box position;
-	private final Color color;
+  private int currentRow;
+  private int currentColumn;
+  private final int startingRow;
+  private final int startingColumn;
+  private final Color color;
 
-	public Pawn(Box position, Color color) {
-		this.position = position;
-		this.color = color;
-	}
+  public Pawn(int currentRow, int currentColumn, int startingRow, int startingColumn, Color color) {
+    this.currentRow = currentRow;
+    this.currentColumn = currentColumn;
+    this.startingRow = startingRow;
+    this.startingColumn = startingColumn;
+    this.color = color;
+  }
 
-	public Box getPosition() {
-		return position;
-	}
+  public void setCurrentRow(int currentRow) {
+    this.currentRow = currentRow;
+  }
 
-	public Color getColor() {
-		return color;
-	}
+  public void setCurrentColumn(int currentColumn) {
+    this.currentColumn = currentColumn;
+  }
 
-	public void setPosition(Box position) {
-		this.position = position;
-	}
+  public int getCurrentRow() {
+    return currentRow;
+  }
+
+  public int getCurrentColumn() {
+    return currentColumn;
+  }
+
+  public int getStartingRow() {
+    return startingRow;
+  }
+
+  public int getStartingColumn() {
+    return startingColumn;
+  }
+
+  public Color getColor() {
+    return color;
+  }
 }
