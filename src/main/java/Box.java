@@ -1,15 +1,15 @@
 public class Box {
-  private boolean taken;
+  private boolean occupied;
 
-  public Box(boolean taken) {
-    this.taken = taken;
+  public Box(boolean occupied) {
+    this.occupied = occupied;
   }
 
-  public boolean isTaken() {
-    return taken;
+  public boolean isOccupied() {
+    return occupied;
   }
 
-  public void setTaken(boolean taken) {
-    this.taken = taken;
+  public void setOccupied(boolean occupied) {
+    this.occupied = occupied;
   }
 }

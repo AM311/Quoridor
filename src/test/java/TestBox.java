@@ -5,7 +5,6 @@ public class TestBox {
   @Test
   void assertGetterFalse() {
     Box box = new Box(false);
-    Assertions.assertFalse(box.isTaken());
+    Assertions.assertFalse(box.isOccupied());
   }
-
 }
