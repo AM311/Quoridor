@@ -113,5 +113,7 @@ public class GameBoard {
     public void setLowerLink(LinkState lowerLink) {
       this.lowerLink = lowerLink;
     }
+
+
   }
 }
