@@ -2,6 +2,7 @@ import it.units.sdm.quoridor.model.GameBoard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import it.units.sdm.quoridor.utils.*;
 
 public class GameBoardTest {
   GameBoard gameBoard = new GameBoard();
@@ -45,10 +46,10 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
         {
-            gameBoard.getGameState()[row][column].getLeftLink(),
-            gameBoard.getGameState()[row][column].getRightLink(),
-            gameBoard.getGameState()[row][column].getUpperLink(),
-            gameBoard.getGameState()[row][column].getLowerLink()
+            gameBoard.getGameState()[row][column].getLink(Direction.LEFT),
+            gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
+            gameBoard.getGameState()[row][column].getLink(Direction.UP),
+            gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
         };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -65,8 +66,8 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
         {
-            gameBoard.getGameState()[row][column].getLeftLink(),
-            gameBoard.getGameState()[row][column].getRightLink()
+            gameBoard.getGameState()[row][column].getLink(Direction.LEFT),
+            gameBoard.getGameState()[row][column].getLink(Direction.RIGHT)
         };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -83,8 +84,8 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
         {
-            gameBoard.getGameState()[row][column].getRightLink(),
-            gameBoard.getGameState()[row][column].getLeftLink()
+            gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
+            gameBoard.getGameState()[row][column].getLink(Direction.LEFT)
         };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -101,8 +102,8 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
         {
-            gameBoard.getGameState()[row][column].getUpperLink(),
-            gameBoard.getGameState()[row][column].getLowerLink()
+            gameBoard.getGameState()[row][column].getLink(Direction.UP),
+            gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
         };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -119,8 +120,8 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
         {
-            gameBoard.getGameState()[row][column].getLowerLink(),
-            gameBoard.getGameState()[row][column].getUpperLink()
+            gameBoard.getGameState()[row][column].getLink(Direction.DOWN),
+            gameBoard.getGameState()[row][column].getLink(Direction.UP)
         };
 
     Assertions.assertArrayEquals(expected, actual);
