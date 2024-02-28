@@ -1,3 +1,5 @@
+package it.units.sdm.quoridor.model;
+
 import java.util.List;
 
 public class Game {

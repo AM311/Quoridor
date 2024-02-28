@@ -1,7 +1,11 @@
+package it.units.sdm.quoridor.model;
+
 public class Player {
   private final String name;
   private int numberOfWalls;
   private Pawn pawn;
+
+  //todo aggiungere controlli su numero di muri
 
   public Player(String name, int numberOfWalls, Pawn pawn) {
     this.name = name;
