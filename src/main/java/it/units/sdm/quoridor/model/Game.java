@@ -1,5 +1,7 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.utils.Direction;
+
 import java.util.List;
 
 public class Game {
@@ -33,10 +35,10 @@ public class Game {
             GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
             GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
 
-            if (startingTile.getRightLink() == GameBoard.LinkState.WALL && tileBelowStartingTile.getRightLink() == GameBoard.LinkState.WALL) {
+            if (startingTile.getLink(Direction.RIGHT) == GameBoard.LinkState.WALL && tileBelowStartingTile.getLink(Direction.RIGHT) == GameBoard.LinkState.WALL) {
                 return false;
             }
-            if (startingTile.getLowerLink() == GameBoard.LinkState.WALL || tileRightToStartingTile.getLowerLink() == GameBoard.LinkState.WALL) {
+            if (startingTile.getLink(Direction.DOWN) == GameBoard.LinkState.WALL || tileRightToStartingTile.getLink(Direction.DOWN) == GameBoard.LinkState.WALL) {
                 return false;
             }
         } else {
@@ -47,10 +49,10 @@ public class Game {
             GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
             GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-            if (startingTile.getUpperLink() == GameBoard.LinkState.WALL && tileLeftToStartingTile.getUpperLink() == GameBoard.LinkState.WALL) {
+            if (startingTile.getLink(Direction.UP) == GameBoard.LinkState.WALL && tileLeftToStartingTile.getLink(Direction.UP) == GameBoard.LinkState.WALL) {
                 return false;
             }
-            if (startingTile.getLeftLink() == GameBoard.LinkState.WALL || tileAboveStartingTile.getLeftLink() == GameBoard.LinkState.WALL) {
+            if (startingTile.getLink(Direction.LEFT) == GameBoard.LinkState.WALL || tileAboveStartingTile.getLink(Direction.LEFT) == GameBoard.LinkState.WALL) {
                 return false;
             }
         }

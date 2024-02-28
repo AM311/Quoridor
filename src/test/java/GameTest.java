@@ -2,9 +2,11 @@ import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Player;
+import it.units.sdm.quoridor.utils.Direction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.awt.*;
 import java.util.List;
@@ -24,142 +26,148 @@ public class GameTest {
     Game game = new Game(players, gameBoard);
 
 
-    @Test
-    void horizontalWallIn33IsAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[3][3];
+    @ParameterizedTest
+    @CsvSource({"3, 3", "6, 2", "0, 0"})
+    void horizontalWallIsAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void horizontalWallIn88IsNotAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[8][8];
+    @ParameterizedTest
+    @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
+    void horizontalWallIsNotAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void horizontalWallIn70IsAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[7][0];
-
-        Assertions.assertTrue(game.checkWallPosition(true, startingTile));
-    }
-
-    @Test
-    void horizontalWallCrossingVerticalWallIsNotAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[2][4];
+    @ParameterizedTest
+    @CsvSource({"0, 0", "3, 3", "6, 4"})
+    void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        startingTile.setRightLink(GameBoard.LinkState.WALL);
-        belowStartingTile.setRightLink(GameBoard.LinkState.WALL);
+        startingTile.setLink(GameBoard.LinkState.WALL, Direction.RIGHT);
+        belowStartingTile.setLink(GameBoard.LinkState.WALL, Direction.RIGHT);
 
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void horizontalWallAboveVerticalIsAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[1][4];
+    @ParameterizedTest
+    @CsvSource({"0, 0", "3, 4", "7, 2"})
+    void horizontalWallAboveVerticalIsAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        belowStartingTile.setRightLink(GameBoard.LinkState.WALL);
+        belowStartingTile.setLink(GameBoard.LinkState.WALL, Direction.RIGHT);
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void horizontalWallsOverlappingIsNotAllowedFirstCase() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[5][4];
+    @ParameterizedTest
+    @CsvSource({"6, 1", "2, 5", "3, 2"})
+    void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        startingTile.setLowerLink(GameBoard.LinkState.WALL);
+        startingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void horizontalWallsOverlappingIsNotAllowedSecondCase() { // merge into single parametric test
-        GameBoard.Tile startingTile = gameBoard.getGameState()[5][4];
+    @ParameterizedTest
+    @CsvSource({"2, 3", "1, 4", "4, 7"})
+    void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
 
-        tileRightToStartingTile.setLowerLink(GameBoard.LinkState.WALL);
+        tileRightToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void horizontalWallsNearEachOtherIsAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[1][2];
+    @ParameterizedTest
+    @CsvSource({"1, 6", "4, 4", "7, 7"})
+    void horizontalWallsNearEachOtherIsAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        tileLeftToStartingTile.setLowerLink(GameBoard.LinkState.WALL);
+        tileLeftToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
 
-    @Test
-    void verticalWallIn70IsNotAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[7][0];
+    @ParameterizedTest
+    @CsvSource({"0, 0", "4, 0", "0, 7"})
+    void verticalWallIsNotAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
         Assertions.assertFalse(game.checkWallPosition(false, startingTile));
     }
 
-    @Test
-    void verticalWallIn00IsNotAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[0][0];
-
-        Assertions.assertFalse(game.checkWallPosition(false, startingTile));
-    }
-
-    @Test
-    void verticalWallCrossingHorizontalWallIsNotAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[6][4];
-        GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
-
-        startingTile.setUpperLink(GameBoard.LinkState.WALL);
-        tileLeftToStartingTile.setUpperLink(GameBoard.LinkState.WALL);
-
-        Assertions.assertFalse(game.checkWallPosition(false, startingTile));
-    }
-
-    @Test
-    void verticalWallRightToHorizontalWallIsAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[6][5];
-        GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
-
-        tileLeftToStartingTile.setUpperLink(GameBoard.LinkState.WALL);
+    @ParameterizedTest
+    @CsvSource({"8, 8", "4, 4", "1, 8"})
+    void verticalWallIsAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
         Assertions.assertTrue(game.checkWallPosition(false, startingTile));
     }
 
-    @Test
-    void verticalWallsOverlappingIsNotAllowedFirstCase() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[5][4];
+    @ParameterizedTest
+    @CsvSource({"3, 4", "5, 7", "1, 7"})
+    void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        startingTile.setLeftLink(GameBoard.LinkState.WALL);
+        startingTile.setLink(GameBoard.LinkState.WALL, Direction.UP);
+        tileLeftToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.UP);
 
         Assertions.assertFalse(game.checkWallPosition(false, startingTile));
     }
 
-    @Test
-    void verticalWallsOverlappingIsNotAllowedSecondCase() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[6][3];
+    @ParameterizedTest
+    @CsvSource({"3, 4", "3, 3", "2, 4"})
+    void verticalWallRightToHorizontalWallIsAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
+
+        tileLeftToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.UP);
+
+        Assertions.assertTrue(game.checkWallPosition(false, startingTile));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1, 4", "7, 2", "4, 6"})
+    void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+
+        startingTile.setLink(GameBoard.LinkState.WALL, Direction.LEFT);
+
+        Assertions.assertFalse(game.checkWallPosition(false, startingTile));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"5, 4", "5, 1", "6, 3"})
+    void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
 
-        tileAboveStartingTile.setLeftLink(GameBoard.LinkState.WALL);
+        tileAboveStartingTile.setLink(GameBoard.LinkState.WALL, Direction.LEFT);
 
         Assertions.assertFalse(game.checkWallPosition(false, startingTile));
     }
 
-    @Test
-    void verticalWallsNearEachOtherIsAllowed() {
-        GameBoard.Tile startingTile = gameBoard.getGameState()[6][7];
+    @ParameterizedTest
+    @CsvSource({"6, 2", "3, 5", "5, 1"})
+    void verticalWallsNearEachOtherIsAllowed(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        tileBelowStartingTile.setLowerLink(GameBoard.LinkState.WALL);
+        tileBelowStartingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
-
 
 
 }
