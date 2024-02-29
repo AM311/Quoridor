@@ -2,6 +2,12 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.utils.Direction;
 
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
+import static it.units.sdm.quoridor.utils.Direction.*;
+
+import java.util.EnumMap;
+import java.util.Map;
+
 public class GameBoard {
   public static final int sideLength = 9;
   private final Tile[][] gameState;
@@ -22,10 +28,10 @@ public class GameBoard {
 
   private void setEdgesLinks() {
     for (int i = 0; i < sideLength; i++) {
-      gameState[0][i].setLink(LinkState.EDGE, Direction.UP);
-      gameState[i][0].setLink(LinkState.EDGE, Direction.LEFT);
-      gameState[sideLength - 1][i].setLink(LinkState.EDGE, Direction.DOWN);
-      gameState[i][sideLength - 1].setLink(LinkState.EDGE, Direction.RIGHT);
+      gameState[0][i].setLink(UP, EDGE);
+      gameState[i][0].setLink(LEFT, EDGE);
+      gameState[sideLength - 1][i].setLink(DOWN, EDGE);
+      gameState[i][sideLength - 1].setLink(RIGHT, EDGE);
     }
   }
 
@@ -50,19 +56,13 @@ public class GameBoard {
     private boolean occupied;
     private final int row;
     private final int column;
-    private LinkState leftLink;
-    private LinkState rightLink;
-    private LinkState upperLink;
-    private LinkState lowerLink;
+    private final Map<Direction, LinkState> links;
 
     public Tile(int row, int column, boolean occupied) {
       this.row = row;
       this.column = column;
       this.occupied = occupied;
-      this.leftLink = LinkState.FREE;
-      this.rightLink = LinkState.FREE;
-      this.upperLink = LinkState.FREE;
-      this.lowerLink = LinkState.FREE;
+      links = new EnumMap<>(Map.of(UP, FREE, RIGHT, FREE, DOWN, FREE, LEFT, FREE));
     }
 
     public boolean isOccupied() {
@@ -82,23 +82,11 @@ public class GameBoard {
     }
 
     public LinkState getLink(Direction direction) {
-      return switch (direction) {
-        case UP -> upperLink;
-        case DOWN -> lowerLink;
-        case LEFT -> leftLink;
-        case RIGHT -> rightLink;
-      };
+      return links.get(direction);
     }
 
-    public void setLink(LinkState link, Direction direction) {
-      switch (direction) {
-        case UP -> this.upperLink = link;
-        case DOWN -> this.lowerLink = link;
-        case LEFT -> this.leftLink = link;
-        case RIGHT -> this.rightLink = link;
-      }
+    public void setLink(Direction direction, LinkState linkState) {
+      links.put(direction, linkState);
     }
-
-
   }
 }
