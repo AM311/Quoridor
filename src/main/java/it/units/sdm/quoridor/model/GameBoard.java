@@ -40,6 +40,15 @@ public class GameBoard {
             || (row == sideLength - 1 && column == sideLength / 2);
   }
 
+  public Tile getAdjacentTile(Tile tile, Direction direction) {
+    return switch (direction) {
+      case UP -> gameState[tile.row - 1][tile.column];
+      case DOWN -> gameState[tile.row + 1][tile.column];
+      case RIGHT -> gameState[tile.row][tile.column + 1];
+      case LEFT -> gameState[tile.row][tile.column - 1];
+    };
+  }
+
   public int getSideLength() {
     return sideLength;
   }
@@ -83,6 +92,10 @@ public class GameBoard {
 
     public LinkState getLink(Direction direction) {
       return links.get(direction);
+    }
+
+    public Map<Direction, LinkState> getLinks() {
+      return links;
     }
 
     public void setLink(Direction direction, LinkState linkState) {

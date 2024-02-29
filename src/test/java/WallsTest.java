@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.awt.*;
 import java.util.List;
 
-public class GameTest {
+public class WallsTest {
 
     GameBoard gameBoard = new GameBoard();
 

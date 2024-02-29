@@ -2,7 +2,6 @@ import it.units.sdm.quoridor.model.GameBoard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import it.units.sdm.quoridor.utils.*;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Direction.*;
@@ -42,10 +41,10 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.LEFT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.UP),
-                    gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
+                    gameBoard.getGameState()[row][column].getLink(LEFT),
+                    gameBoard.getGameState()[row][column].getLink(RIGHT),
+                    gameBoard.getGameState()[row][column].getLink(UP),
+                    gameBoard.getGameState()[row][column].getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -57,8 +56,8 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.LEFT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.RIGHT)
+                    gameBoard.getGameState()[row][column].getLink(LEFT),
+                    gameBoard.getGameState()[row][column].getLink(RIGHT)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -69,8 +68,8 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.LEFT)
+                    gameBoard.getGameState()[row][column].getLink(RIGHT),
+                    gameBoard.getGameState()[row][column].getLink(LEFT)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -82,8 +81,8 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.UP),
-                    gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
+                    gameBoard.getGameState()[row][column].getLink(UP),
+                    gameBoard.getGameState()[row][column].getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -95,8 +94,8 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.DOWN),
-                    gameBoard.getGameState()[row][column].getLink(Direction.UP)
+                    gameBoard.getGameState()[row][column].getLink(DOWN),
+                    gameBoard.getGameState()[row][column].getLink(UP)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
