@@ -4,7 +4,6 @@ import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Player;
 import it.units.sdm.quoridor.utils.Direction;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -48,8 +47,8 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        startingTile.setLink(GameBoard.LinkState.WALL, Direction.RIGHT);
-        belowStartingTile.setLink(GameBoard.LinkState.WALL, Direction.RIGHT);
+        startingTile.setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+        belowStartingTile.setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
 
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
@@ -61,7 +60,7 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        belowStartingTile.setLink(GameBoard.LinkState.WALL, Direction.RIGHT);
+        belowStartingTile.setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
@@ -71,7 +70,7 @@ public class GameTest {
     void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        startingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
+        startingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
     }
@@ -82,7 +81,7 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
 
-        tileRightToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
+        tileRightToStartingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
         Assertions.assertFalse(game.checkWallPosition(true, startingTile));
     }
@@ -93,7 +92,7 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        tileLeftToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
+        tileLeftToStartingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
@@ -120,8 +119,8 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        startingTile.setLink(GameBoard.LinkState.WALL, Direction.UP);
-        tileLeftToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.UP);
+        startingTile.setLink(Direction.UP, GameBoard.LinkState.WALL);
+        tileLeftToStartingTile.setLink(Direction.UP, GameBoard.LinkState.WALL);
 
         Assertions.assertFalse(game.checkWallPosition(false, startingTile));
     }
@@ -132,7 +131,7 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        tileLeftToStartingTile.setLink(GameBoard.LinkState.WALL, Direction.UP);
+        tileLeftToStartingTile.setLink(Direction.UP, GameBoard.LinkState.WALL);
 
         Assertions.assertTrue(game.checkWallPosition(false, startingTile));
     }
@@ -142,7 +141,7 @@ public class GameTest {
     void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        startingTile.setLink(GameBoard.LinkState.WALL, Direction.LEFT);
+        startingTile.setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
         Assertions.assertFalse(game.checkWallPosition(false, startingTile));
     }
@@ -153,7 +152,7 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
 
-        tileAboveStartingTile.setLink(GameBoard.LinkState.WALL, Direction.LEFT);
+        tileAboveStartingTile.setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
         Assertions.assertFalse(game.checkWallPosition(false, startingTile));
     }
@@ -164,7 +163,7 @@ public class GameTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        tileBelowStartingTile.setLink(GameBoard.LinkState.WALL, Direction.DOWN);
+        tileBelowStartingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
         Assertions.assertTrue(game.checkWallPosition(true, startingTile));
     }
