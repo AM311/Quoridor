@@ -20,7 +20,7 @@ public class GameBoard {
   private void fillGameState() {
     for (int i = 0; i < sideLength; i++) {
       for (int j = 0; j < sideLength; j++) {
-        gameState[i][j] = new Tile(i, j, isStartingBox(i, j));
+        gameState[i][j] = new Tile(i, j, isStartingPosition(i, j));
       }
     }
     setEdgesLinks();
@@ -35,7 +35,7 @@ public class GameBoard {
     }
   }
 
-  private static boolean isStartingBox(int row, int column) {
+  private static boolean isStartingPosition(int row, int column) {
     return (row == 0 && column == sideLength / 2)
             || (row == sideLength - 1 && column == sideLength / 2);
   }
