@@ -1,12 +1,16 @@
 package it.units.sdm.quoridor.model;
 
-import it.units.sdm.quoridor.utils.Direction;
 import it.units.sdm.quoridor.utils.WallOrientation;
+
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
+import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
+import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class Player {
     private final String name;
-    private int numberOfWalls;
     private final Pawn pawn;
+    private int numberOfWalls;
 
     //todo aggiungere controlli su numero di muri
 
@@ -18,14 +22,38 @@ public class Player {
 
     public void placeWall(GameBoard gameBoard, WallOrientation orientation, GameBoard.Tile startingTile) {
 
+
+        if (checkWallPosition(gameBoard, orientation, startingTile)) {
+            if (orientation == HORIZONTAL) {
+                GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
+                GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
+                GameBoard.Tile tileLowRightDiagToStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn() + 1];
+
+                startingTile.setLink(DOWN, WALL);
+                tileRightToStartingTile.setLink(DOWN, WALL);
+                tileBelowStartingTile.setLink(UP, WALL);
+                tileLowRightDiagToStartingTile.setLink(UP, WALL);
+            }
+            if (orientation == VERTICAL) {
+                GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
+                GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
+                GameBoard.Tile tileUpLeftDiagToStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn() - 1];
+
+                startingTile.setLink(LEFT, WALL);
+                tileAboveStartingTile.setLink(LEFT, WALL);
+                tileLeftToStartingTile.setLink(RIGHT, WALL);
+                tileUpLeftDiagToStartingTile.setLink(RIGHT, WALL);
+            }
+        }
+
     }
 
 
     public boolean checkWallPosition(GameBoard gameBoard, WallOrientation orientation, GameBoard.Tile startingTile) {
-        if (orientation == WallOrientation.HORIZONTAL) {
+        if (orientation == HORIZONTAL) {
             return checkHorizontalWallPosition(gameBoard, startingTile);
         }
-        if (orientation == WallOrientation.VERTICAL) {
+        if (orientation == VERTICAL) {
             return checkVerticalWallPosition(gameBoard, startingTile);
         }
         return true;
@@ -38,10 +66,10 @@ public class Player {
         GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
         GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
 
-        if (startingTile.getLink(Direction.RIGHT) == GameBoard.LinkState.WALL && tileBelowStartingTile.getLink(Direction.RIGHT) == GameBoard.LinkState.WALL) {
+        if (startingTile.getLink(RIGHT) == WALL && tileBelowStartingTile.getLink(RIGHT) == WALL) {
             return false;
         }
-        if (startingTile.getLink(Direction.DOWN) == GameBoard.LinkState.WALL || tileRightToStartingTile.getLink(Direction.DOWN) == GameBoard.LinkState.WALL) {
+        if (startingTile.getLink(DOWN) == WALL || tileRightToStartingTile.getLink(DOWN) == WALL) {
             return false;
         }
         return true;
@@ -55,10 +83,10 @@ public class Player {
         GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        if (startingTile.getLink(Direction.UP) == GameBoard.LinkState.WALL && tileLeftToStartingTile.getLink(Direction.UP) == GameBoard.LinkState.WALL) {
+        if (startingTile.getLink(UP) == WALL && tileLeftToStartingTile.getLink(UP) == WALL) {
             return false;
         }
-        if (startingTile.getLink(Direction.LEFT) == GameBoard.LinkState.WALL || tileAboveStartingTile.getLink(Direction.LEFT) == GameBoard.LinkState.WALL) {
+        if (startingTile.getLink(LEFT) == WALL || tileAboveStartingTile.getLink(LEFT) == WALL) {
             return false;
         }
         return true;

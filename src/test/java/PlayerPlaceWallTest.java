@@ -1,15 +1,17 @@
-import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Player;
-import it.units.sdm.quoridor.utils.Direction;
-import it.units.sdm.quoridor.utils.WallOrientation;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.awt.*;
-import java.util.List;
+
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
+import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
+import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class PlayerPlaceWallTest {
     GameBoard gameBoard = new GameBoard();
@@ -17,12 +19,191 @@ public class PlayerPlaceWallTest {
     Pawn pawn = new Pawn(tile, Color.black);
     Player player = new Player("Bob", 10, pawn);
 
+
+    @ParameterizedTest
+    @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
+    void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, HORIZONTAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, WALL};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row][column].getLink(LEFT),
+                        gameBoard.getGameState()[row][column].getLink(RIGHT),
+                        gameBoard.getGameState()[row][column].getLink(UP),
+                        gameBoard.getGameState()[row][column].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
+    void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, HORIZONTAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, WALL, FREE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row + 1][column].getLink(LEFT),
+                        gameBoard.getGameState()[row + 1][column].getLink(RIGHT),
+                        gameBoard.getGameState()[row + 1][column].getLink(UP),
+                        gameBoard.getGameState()[row + 1][column].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
+    void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, HORIZONTAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, WALL};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row][column + 1].getLink(LEFT),
+                        gameBoard.getGameState()[row][column + 1].getLink(RIGHT),
+                        gameBoard.getGameState()[row][column + 1].getLink(UP),
+                        gameBoard.getGameState()[row][column + 1].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
+    void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, HORIZONTAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, WALL, FREE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row + 1][column + 1].getLink(LEFT),
+                        gameBoard.getGameState()[row + 1][column + 1].getLink(RIGHT),
+                        gameBoard.getGameState()[row + 1][column + 1].getLink(UP),
+                        gameBoard.getGameState()[row + 1][column + 1].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[0][0];
+        player.placeWall(gameBoard, HORIZONTAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE, EDGE, WALL};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[0][0].getLink(LEFT),
+                        gameBoard.getGameState()[0][0].getLink(RIGHT),
+                        gameBoard.getGameState()[0][0].getLink(UP),
+                        gameBoard.getGameState()[0][0].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
+    void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, VERTICAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, FREE, FREE, FREE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row][column].getLink(LEFT),
+                        gameBoard.getGameState()[row][column].getLink(RIGHT),
+                        gameBoard.getGameState()[row][column].getLink(UP),
+                        gameBoard.getGameState()[row][column].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
+    void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, VERTICAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, FREE, FREE, FREE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row - 1][column].getLink(LEFT),
+                        gameBoard.getGameState()[row - 1][column].getLink(RIGHT),
+                        gameBoard.getGameState()[row - 1][column].getLink(UP),
+                        gameBoard.getGameState()[row - 1][column].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
+    void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, VERTICAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, WALL, FREE, FREE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row][column - 1].getLink(LEFT),
+                        gameBoard.getGameState()[row][column - 1].getLink(RIGHT),
+                        gameBoard.getGameState()[row][column - 1].getLink(UP),
+                        gameBoard.getGameState()[row][column - 1].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
+    void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+        player.placeWall(gameBoard, VERTICAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, WALL, FREE, FREE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[row - 1][column - 1].getLink(LEFT),
+                        gameBoard.getGameState()[row - 1][column - 1].getLink(RIGHT),
+                        gameBoard.getGameState()[row - 1][column - 1].getLink(UP),
+                        gameBoard.getGameState()[row - 1][column - 1].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() {
+        GameBoard.Tile startingTile = gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1];
+        player.placeWall(gameBoard, VERTICAL, startingTile);
+
+        GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, EDGE, FREE, EDGE};
+        GameBoard.LinkState[] actual = new GameBoard.LinkState[]
+                {
+                        gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(LEFT),
+                        gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(RIGHT),
+                        gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(UP),
+                        gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(DOWN)
+                };
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
     @ParameterizedTest
     @CsvSource({"3, 3", "6, 2", "0, 0"})
     void horizontalWallIsAllowed(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        Assertions.assertTrue(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertTrue(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -30,7 +211,7 @@ public class PlayerPlaceWallTest {
     void horizontalWallIsNotAllowed(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -39,11 +220,11 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        startingTile.setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-        belowStartingTile.setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+        startingTile.setLink(RIGHT, WALL);
+        belowStartingTile.setLink(RIGHT, WALL);
 
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -52,9 +233,9 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        belowStartingTile.setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+        belowStartingTile.setLink(RIGHT, WALL);
 
-        Assertions.assertTrue(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertTrue(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -62,9 +243,9 @@ public class PlayerPlaceWallTest {
     void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        startingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+        startingTile.setLink(DOWN, WALL);
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -73,9 +254,9 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
 
-        tileRightToStartingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+        tileRightToStartingTile.setLink(DOWN, WALL);
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -84,9 +265,9 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        tileLeftToStartingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+        tileLeftToStartingTile.setLink(DOWN, WALL);
 
-        Assertions.assertTrue(player.checkWallPosition(gameBoard, WallOrientation.HORIZONTAL, startingTile));
+        Assertions.assertTrue(player.checkWallPosition(gameBoard, HORIZONTAL, startingTile));
     }
 
     @ParameterizedTest
@@ -94,7 +275,7 @@ public class PlayerPlaceWallTest {
     void verticalWallIsNotAllowed(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
     @ParameterizedTest
@@ -102,7 +283,7 @@ public class PlayerPlaceWallTest {
     void verticalWallIsAllowed(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        Assertions.assertTrue(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertTrue(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
     @ParameterizedTest
@@ -111,10 +292,10 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        startingTile.setLink(Direction.UP, GameBoard.LinkState.WALL);
-        tileLeftToStartingTile.setLink(Direction.UP, GameBoard.LinkState.WALL);
+        startingTile.setLink(UP, WALL);
+        tileLeftToStartingTile.setLink(UP, WALL);
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
     @ParameterizedTest
@@ -123,9 +304,9 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
-        tileLeftToStartingTile.setLink(Direction.UP, GameBoard.LinkState.WALL);
+        tileLeftToStartingTile.setLink(UP, WALL);
 
-        Assertions.assertTrue(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertTrue(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
     @ParameterizedTest
@@ -133,9 +314,9 @@ public class PlayerPlaceWallTest {
     void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
 
-        startingTile.setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+        startingTile.setLink(LEFT, WALL);
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
     @ParameterizedTest
@@ -144,9 +325,9 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
 
-        tileAboveStartingTile.setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+        tileAboveStartingTile.setLink(LEFT, WALL);
 
-        Assertions.assertFalse(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertFalse(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
     @ParameterizedTest
@@ -155,9 +336,9 @@ public class PlayerPlaceWallTest {
         GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
         GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
-        tileBelowStartingTile.setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+        tileBelowStartingTile.setLink(DOWN, WALL);
 
-        Assertions.assertTrue(player.checkWallPosition(gameBoard, WallOrientation.VERTICAL, startingTile));
+        Assertions.assertTrue(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
 
 
