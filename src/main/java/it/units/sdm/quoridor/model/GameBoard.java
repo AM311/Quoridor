@@ -21,15 +21,14 @@ public class GameBoard {
 	private void fillGameState() {
 		for (int i = 0; i < sideLength; i++) {
 			for (int j = 0; j < sideLength; j++) {
-				gameState[i][j] = new Tile(i, j, isStartingPosition(i, j));
+				gameState[i][j] = new Tile(i, j, isInitialPosition(i, j));
 			}
 		}
 		setEdgesLinks();
 	}
 
-	private static boolean isStartingPosition(int row, int column) {
-		return (row == 0 && column == sideLength / 2)
-				|| (row == sideLength - 1 && column == sideLength / 2);
+	private static boolean isInitialPosition(int row, int column) {
+		return (row == 0 && column == sideLength / 2) || (row == sideLength - 1 && column == sideLength / 2);
 	}
 
 	private void setEdgesLinks() {
@@ -55,6 +54,24 @@ public class GameBoard {
 
 	public boolean isInLastColumn(Tile tile) {
 		return tile.column == sideLength - 1;
+	}
+
+	//-----
+	//todo manage exceptions
+	public Tile getRightTile(Tile tile) {
+		return gameState[tile.row][tile.column + 1];
+	}
+
+	public Tile getLeftTile(Tile tile) {
+		return gameState[tile.row][tile.column - 1];
+	}
+
+	public Tile getUpperTile(Tile tile) {
+		return gameState[tile.row - 1][tile.column];
+	}
+
+	public Tile getLowerTile(Tile tile) {
+		return gameState[tile.row + 1][tile.column];
 	}
 
 	public int getSideLength() {
