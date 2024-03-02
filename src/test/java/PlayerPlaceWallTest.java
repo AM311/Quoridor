@@ -14,11 +14,11 @@ import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class PlayerPlaceWallTest {
+    //todo check if the declaration of the objects for all the tests leads to issues or inconsistencies
     GameBoard gameBoard = new GameBoard();
     GameBoard.Tile tile = gameBoard.getGameState()[0][4];
     Pawn pawn = new Pawn(tile, Color.black);
     Player player = new Player("Bob", 10, pawn);
-
 
     @ParameterizedTest
     @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
@@ -340,7 +340,4 @@ public class PlayerPlaceWallTest {
 
         Assertions.assertTrue(player.checkWallPosition(gameBoard, VERTICAL, startingTile));
     }
-
-
 }
-
