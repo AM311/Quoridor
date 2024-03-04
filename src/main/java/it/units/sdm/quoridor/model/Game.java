@@ -1,7 +1,9 @@
 package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.utils.Direction;
+import it.units.sdm.quoridor.utils.WallOrientation;
 
+import java.util.HashSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,39 +30,6 @@ public class Game {
     return gameBoard;
   }
 
-  public void placeWall(boolean orientation, GameBoard.Tile startingTile) {
-
-  }
-
-
-  public boolean checkWallPosition(boolean orientation, GameBoard.Tile startingTile) {
-    if (orientation) {
-      if (startingTile.getRow() == 8 || startingTile.getColumn() == 8) {
-        return false;
-      }
-      GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
-      GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
-      if (startingTile.getLink(RIGHT) == WALL && tileBelowStartingTile.getLink(RIGHT) == WALL) {
-        return false;
-      }
-      if (startingTile.getLink(DOWN) == WALL || tileRightToStartingTile.getLink(DOWN) == WALL) {
-        return false;
-      }
-    } else {
-      if (startingTile.getRow() == 0 || startingTile.getColumn() == 0) {
-        return false;
-      }
-      GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
-      GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
-      if (startingTile.getLink(UP) == WALL && tileLeftToStartingTile.getLink(UP) == WALL) {
-        return false;
-      }
-      if (startingTile.getLink(LEFT) == WALL || tileAboveStartingTile.getLink(LEFT) == WALL) {
-        return false;
-      }
-    }
-    return true;
-  }
 
   public boolean pathExists(Pawn pawn) {
     Set<GameBoard.Tile> visited = new HashSet<>();
