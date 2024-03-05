@@ -1,6 +1,7 @@
 package it.units.sdm.quoridor.model;
 
 import java.awt.*;
+
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 
 public class Pawn {

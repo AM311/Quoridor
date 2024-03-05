@@ -2,11 +2,12 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.utils.Direction;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Direction.*;
-
 import java.util.EnumMap;
 import java.util.Map;
+
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
+import static it.units.sdm.quoridor.utils.Direction.*;
 
 public class GameBoard {
   public static final int sideLength = 9;
@@ -20,10 +21,14 @@ public class GameBoard {
   private void fillGameState() {
     for (int i = 0; i < sideLength; i++) {
       for (int j = 0; j < sideLength; j++) {
-        gameState[i][j] = new Tile(i, j, isStartingBox(i, j));
+        gameState[i][j] = new Tile(i, j, isInitialPosition(i, j));
       }
     }
     setEdgesLinks();
+  }
+
+  private static boolean isInitialPosition(int row, int column) {
+    return (row == 0 && column == sideLength / 2) || (row == sideLength - 1 && column == sideLength / 2);
   }
 
   private void setEdgesLinks() {
@@ -35,9 +40,47 @@ public class GameBoard {
     }
   }
 
-  private static boolean isStartingBox(int row, int column) {
-    return (row == 0 && column == sideLength / 2)
-            || (row == sideLength - 1 && column == sideLength / 2);
+  public boolean isInFirstRow(Tile tile) {
+    return tile.row == 0;
+  }
+
+  public boolean isInLastRow(Tile tile) {
+    return tile.row == sideLength - 1;
+  }
+
+  public boolean isInFirstColumn(Tile tile) {
+    return tile.column == 0;
+  }
+
+  public boolean isInLastColumn(Tile tile) {
+    return tile.column == sideLength - 1;
+  }
+
+  //-----
+  //todo manage exceptions
+  public Tile getRightTile(Tile tile) {
+    return gameState[tile.row][tile.column + 1];
+  }
+
+  public Tile getLeftTile(Tile tile) {
+    return gameState[tile.row][tile.column - 1];
+  }
+
+  public Tile getUpperTile(Tile tile) {
+    return gameState[tile.row - 1][tile.column];
+  }
+
+  public Tile getLowerTile(Tile tile) {
+    return gameState[tile.row + 1][tile.column];
+  }
+
+  public Tile getAdjacentTile(Tile tile, Direction direction) {
+    return switch (direction) {
+      case UP -> gameState[tile.row - 1][tile.column];
+      case DOWN -> gameState[tile.row + 1][tile.column];
+      case RIGHT -> gameState[tile.row][tile.column + 1];
+      case LEFT -> gameState[tile.row][tile.column - 1];
+    };
   }
 
   public int getSideLength() {
@@ -53,10 +96,10 @@ public class GameBoard {
   }
 
   public class Tile {
-    private boolean occupied;
     private final int row;
     private final int column;
     private final Map<Direction, LinkState> links;
+    private boolean occupied;
 
     public Tile(int row, int column, boolean occupied) {
       this.row = row;
@@ -83,6 +126,10 @@ public class GameBoard {
 
     public LinkState getLink(Direction direction) {
       return links.get(direction);
+    }
+
+    public Map<Direction, LinkState> getLinks() {
+      return links;
     }
 
     public void setLink(Direction direction, LinkState linkState) {
