@@ -31,7 +31,6 @@ public class PlayerMovePawnTest {
     Assertions.assertTrue(checkMove);
   }
 
-
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6", "4, 3, 3, 3", "8, 3, 8, 4"})
   void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn) {
