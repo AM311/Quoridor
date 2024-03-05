@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
+import static it.units.sdm.quoridor.utils.Direction.*;
 
 public class GameBoardTest {
   GameBoard gameBoard = new GameBoard();
@@ -42,9 +43,9 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.LEFT),
+                    gameBoard.getGameState()[row][column].getLink(LEFT),
                     gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.UP),
+                    gameBoard.getGameState()[row][column].getLink(UP),
                     gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
             };
 
@@ -57,7 +58,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.LEFT),
+                    gameBoard.getGameState()[row][column].getLink(LEFT),
                     gameBoard.getGameState()[row][column].getLink(Direction.RIGHT)
             };
     Assertions.assertArrayEquals(expected, actual);
@@ -70,7 +71,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
                     gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.LEFT)
+                    gameBoard.getGameState()[row][column].getLink(LEFT)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -82,7 +83,7 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.UP),
+                    gameBoard.getGameState()[row][column].getLink(UP),
                     gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
             };
 
@@ -96,7 +97,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
                     gameBoard.getGameState()[row][column].getLink(Direction.DOWN),
-                    gameBoard.getGameState()[row][column].getLink(Direction.UP)
+                    gameBoard.getGameState()[row][column].getLink(UP)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -137,27 +138,27 @@ public class GameBoardTest {
   @CsvSource({"1, 4", "3, 8", "8, 2"})
   void nearTiles_leftTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row][column - 1], gameBoard.getLeftTile(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(gameBoard.getGameState()[row][column - 1], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], LEFT));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 7", "8, 2"})
   void nearTiles_rightTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row][column + 1], gameBoard.getRightTile(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(gameBoard.getGameState()[row][column + 1], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], RIGHT));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "8, 2"})
   void nearTiles_upperTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row - 1][column], gameBoard.getUpperTile(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(gameBoard.getGameState()[row - 1][column], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], UP));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "7, 2"})
   void nearTiles_lowerTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row + 1][column], gameBoard.getLowerTile(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(gameBoard.getGameState()[row + 1][column], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], DOWN));
   }
 }

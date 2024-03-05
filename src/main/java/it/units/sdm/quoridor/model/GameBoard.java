@@ -58,21 +58,6 @@ public class GameBoard {
 
   //-----
   //todo manage exceptions
-  public Tile getRightTile(Tile tile) {
-    return gameState[tile.row][tile.column + 1];
-  }
-
-  public Tile getLeftTile(Tile tile) {
-    return gameState[tile.row][tile.column - 1];
-  }
-
-  public Tile getUpperTile(Tile tile) {
-    return gameState[tile.row - 1][tile.column];
-  }
-
-  public Tile getLowerTile(Tile tile) {
-    return gameState[tile.row + 1][tile.column];
-  }
 
   public Tile getAdjacentTile(Tile tile, Direction direction) {
     return switch (direction) {

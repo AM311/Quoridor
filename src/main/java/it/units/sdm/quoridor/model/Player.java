@@ -1,8 +1,6 @@
 package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.model.GameBoard.Tile;
-import it.units.sdm.quoridor.utils.Direction;
-import it.units.sdm.quoridor.utils.WallOrientation;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.Direction.*;
@@ -23,23 +21,23 @@ public class Player {
     this.pawn = pawn;
   }
 
-  public void placeWall(GameBoard gameBoard, WallOrientation orientation, Tile startingTile) {
-    if (checkWallPosition(gameBoard, orientation, startingTile)) {
-      setWallLinks(gameBoard, orientation, startingTile);
+  public void placeWall(GameBoard gameBoard, Wall wall) {
+    if (checkWallPosition(gameBoard, wall)) {
+      setWallLinks(gameBoard, wall);
     }
   }
 
-  public boolean checkWallPosition(GameBoard gameBoard, WallOrientation orientation, Tile startingTile) {
-    return switch (orientation) {
-      case HORIZONTAL -> checkHorizontalWallPosition(gameBoard, startingTile);
-      case VERTICAL -> checkVerticalWallPosition(gameBoard, startingTile);
+  public boolean checkWallPosition(GameBoard gameBoard, Wall wall) {
+    return switch (wall.orientation()) {
+      case HORIZONTAL -> checkHorizontalWallPosition(gameBoard, wall.startingTile());
+      case VERTICAL -> checkVerticalWallPosition(gameBoard, wall.startingTile());
     };
   }
 
-  private void setWallLinks(GameBoard gameBoard, WallOrientation orientation, Tile startingTile) {
-    switch (orientation) {
-      case HORIZONTAL -> setWallLinksForHorizontalWall(gameBoard, startingTile);
-      case VERTICAL -> setWallLinkForVerticalWall(gameBoard, startingTile);
+  private void setWallLinks(GameBoard gameBoard, Wall wall) {
+    switch (wall.orientation()) {
+      case HORIZONTAL -> setWallLinksForHorizontalWall(gameBoard, wall.startingTile());
+      case VERTICAL -> setWallLinkForVerticalWall(gameBoard, wall.startingTile());
     }
   }
 
@@ -48,8 +46,8 @@ public class Player {
       return false;
     }
     //todo extract method "checkCrossingWalls"?
-    Tile tileBelowStartingTile = gameBoard.getLowerTile(startingTile);
-    Tile tileRightToStartingTile = gameBoard.getRightTile(startingTile);
+    Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
+    Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
 
     if (startingTile.getLink(RIGHT) == WALL && tileBelowStartingTile.getLink(RIGHT) == WALL) {
       return false;
@@ -65,8 +63,8 @@ public class Player {
       return false;
     }
     //todo extract method "checkCrossingWalls"?
-    Tile tileAboveStartingTile = gameBoard.getUpperTile(startingTile);
-    Tile tileLeftToStartingTile = gameBoard.getLeftTile(startingTile);
+    Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
+    Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
 
     if (startingTile.getLink(UP) == WALL && tileLeftToStartingTile.getLink(UP) == WALL) {
       return false;
@@ -78,10 +76,9 @@ public class Player {
   }
 
   private void setWallLinksForHorizontalWall(GameBoard gameBoard, Tile startingTile) {
-    Tile tileBelowStartingTile = gameBoard.getLowerTile(startingTile);
-    Tile tileRightToStartingTile = gameBoard.getRightTile(startingTile);
-    Tile tileLowRightDiagToStartingTile = gameBoard.getLowerTile(gameBoard.getRightTile(startingTile));
-
+    Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
+    Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
+    Tile tileLowRightDiagToStartingTile = gameBoard.getAdjacentTile(gameBoard.getAdjacentTile(startingTile, RIGHT), DOWN);
     startingTile.setLink(DOWN, WALL);
     tileRightToStartingTile.setLink(DOWN, WALL);
     tileBelowStartingTile.setLink(UP, WALL);
@@ -89,9 +86,9 @@ public class Player {
   }
 
   private void setWallLinkForVerticalWall(GameBoard gameBoard, Tile startingTile) {
-    Tile tileAboveStartingTile = gameBoard.getUpperTile(startingTile);
-    Tile tileLeftToStartingTile = gameBoard.getLeftTile(startingTile);
-    Tile tileUpLeftDiagToStartingTile = gameBoard.getUpperTile(gameBoard.getLeftTile(startingTile));
+    Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
+    Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
+    Tile tileUpLeftDiagToStartingTile = gameBoard.getAdjacentTile(gameBoard.getAdjacentTile(startingTile, LEFT), UP);
 
     startingTile.setLink(LEFT, WALL);
     tileAboveStartingTile.setLink(LEFT, WALL);
@@ -143,16 +140,16 @@ public class Player {
     int destinationColumn = destinationTile.getColumn();
 
     if (currentRow - destinationRow == 1 && currentColumn == destinationColumn) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(Direction.UP) == GameBoard.LinkState.WALL;
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(UP) == WALL;
     }
     if (currentRow - destinationRow == -1 && currentColumn == destinationColumn) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(Direction.DOWN) == GameBoard.LinkState.WALL;
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(DOWN) == WALL;
     }
     if (currentColumn - destinationColumn == 1 && currentRow == destinationRow) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(Direction.LEFT) == GameBoard.LinkState.WALL;
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(LEFT) == WALL;
     }
     if (currentColumn - destinationColumn == -1 && currentRow == destinationRow) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(Direction.RIGHT) == GameBoard.LinkState.WALL;
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(RIGHT) == WALL;
     }
     return false;
   }
@@ -165,42 +162,42 @@ public class Player {
 
     if ((currentRow - destinationRow == 1 && currentColumn - destinationColumn == -1
             && gameBoard.getGameState()[currentRow][currentColumn + 1].isOccupied()
-            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(Direction.RIGHT) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(Direction.UP) != GameBoard.LinkState.WALL)
+            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(RIGHT) == WALL
+            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(UP) != WALL)
             || (currentRow - destinationRow == 1 && currentColumn - destinationColumn == -1
             && gameBoard.getGameState()[currentRow - 1][currentColumn].isOccupied()
-            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(Direction.UP) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(Direction.RIGHT) != GameBoard.LinkState.WALL)) {
+            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(UP) == WALL
+            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(RIGHT) != WALL)) {
       return true;
     }
     if ((currentRow - destinationRow == 1 && currentColumn - destinationColumn == 1
             && gameBoard.getGameState()[currentRow - 1][currentColumn].isOccupied()
-            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(Direction.UP) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(Direction.LEFT) != GameBoard.LinkState.WALL)
+            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(UP) == WALL
+            && gameBoard.getGameState()[currentRow - 1][currentColumn].getLink(LEFT) != WALL)
             || (currentRow - destinationRow == 1 && currentColumn - destinationColumn == 1
             && gameBoard.getGameState()[currentRow][currentColumn - 1].isOccupied()
-            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(Direction.LEFT) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(Direction.UP) != GameBoard.LinkState.WALL)) {
+            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(LEFT) == WALL
+            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(UP) != WALL)) {
       return true;
     }
     if ((currentRow - destinationRow == -1 && currentColumn - destinationColumn == 1
             && gameBoard.getGameState()[currentRow][currentColumn - 1].isOccupied()
-            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(Direction.LEFT) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(Direction.DOWN) != GameBoard.LinkState.WALL)
+            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(LEFT) == WALL
+            && gameBoard.getGameState()[currentRow][currentColumn - 1].getLink(DOWN) != WALL)
             || (currentRow - destinationRow == -1 && currentColumn - destinationColumn == 1
             && gameBoard.getGameState()[currentRow + 1][currentColumn].isOccupied()
-            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(Direction.DOWN) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(Direction.LEFT) != GameBoard.LinkState.WALL)) {
+            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(DOWN) == WALL
+            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(LEFT) != WALL)) {
       return true;
     }
     return (currentRow - destinationRow == -1 && currentColumn - destinationColumn == -1
             && gameBoard.getGameState()[currentRow][currentColumn + 1].isOccupied()
-            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(Direction.RIGHT) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(Direction.DOWN) != GameBoard.LinkState.WALL)
+            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(RIGHT) == WALL
+            && gameBoard.getGameState()[currentRow][currentColumn + 1].getLink(DOWN) != WALL)
             || (currentRow - destinationRow == -1 && currentColumn - destinationColumn == 1
             && gameBoard.getGameState()[currentRow + 1][currentColumn].isOccupied()
-            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(Direction.DOWN) == GameBoard.LinkState.WALL
-            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(Direction.RIGHT) != GameBoard.LinkState.WALL);
+            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(DOWN) == WALL
+            && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(RIGHT) != WALL);
   }
 
   private boolean isJumpingPawnMove(GameBoard gameBoard, GameBoard.Tile destinationTile) {
@@ -211,19 +208,19 @@ public class Player {
 
     if (currentRow - destinationRow == 2 && currentColumn == destinationColumn) {
       return gameBoard.getGameState()[currentRow - 1][currentColumn].isOccupied()
-              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(Direction.DOWN) != GameBoard.LinkState.WALL;
+              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(DOWN) != WALL;
     }
     if (currentRow - destinationRow == -2 && currentColumn == destinationColumn) {
       return gameBoard.getGameState()[currentRow + 1][currentColumn].isOccupied()
-              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(Direction.UP) != GameBoard.LinkState.WALL;
+              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(UP) != WALL;
     }
     if (currentRow == destinationRow && currentColumn - destinationColumn == 2) {
       return gameBoard.getGameState()[currentRow][currentColumn - 1].isOccupied()
-              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(Direction.RIGHT) != GameBoard.LinkState.WALL;
+              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(RIGHT) != WALL;
     }
     if (currentRow == destinationRow && currentColumn - destinationColumn == -2) {
       return gameBoard.getGameState()[currentRow][currentColumn + 1].isOccupied()
-              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(Direction.LEFT) != GameBoard.LinkState.WALL;
+              && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(LEFT) != WALL;
     }
     return false;
   }
