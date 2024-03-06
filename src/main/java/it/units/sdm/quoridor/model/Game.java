@@ -1,9 +1,7 @@
 package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.utils.Direction;
-import it.units.sdm.quoridor.utils.WallOrientation;
 
-import java.util.HashSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +11,17 @@ import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Direction.*;
 
 public class Game {
-  private final List<Player> players;
+  private final List<Pawn> pawns;
   private final GameBoard gameBoard;
   private long maxIterations = 10000000;
 
-  public Game(List<Player> players, GameBoard gameBoard) {
-    this.players = players;
+  public Game(List<Pawn> pawns, GameBoard gameBoard) {
+    this.pawns = pawns;
     this.gameBoard = gameBoard;
   }
 
-  public List<Player> getPlayers() {
-    return players;
+  public List<Pawn> getPawns() {
+    return pawns;
   }
 
   public GameBoard getGameBoard() {
