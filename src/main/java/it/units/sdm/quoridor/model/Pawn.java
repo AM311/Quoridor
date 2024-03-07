@@ -15,7 +15,7 @@ public class Pawn {
   private Tile currentTile;
   private final Tile startingTile;
   private final Color color;
-  private int numberOfWalls;
+  private int numberOfWalls;      //todo da gestire
 
   public Pawn(Tile startingTile, Color color, int numberOfWalls) {
     this.startingTile = startingTile;

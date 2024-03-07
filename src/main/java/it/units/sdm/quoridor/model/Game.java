@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.movemanager.*;
 import it.units.sdm.quoridor.utils.Direction;
 
 import java.util.HashSet;
@@ -13,11 +14,14 @@ import static it.units.sdm.quoridor.utils.Direction.*;
 public class Game {
   private final List<Pawn> pawns;
   private final GameBoard gameBoard;
-  private long maxIterations = 10000000;
-
+  private Pawn playingPawn;
+  private final GameActionManager actionManager;
+  private long maxIterations = 10000000;      //todo remove
   public Game(List<Pawn> pawns, GameBoard gameBoard) {
     this.pawns = pawns;
     this.gameBoard = gameBoard;
+
+    this.actionManager = new GameActionManager(this);
   }
 
   public List<Pawn> getPawns() {
@@ -28,6 +32,21 @@ public class Game {
     return gameBoard;
   }
 
+  public Pawn getPlayingPawn() {
+    return playingPawn;
+  }
+
+  public void setPlayingPawn(Pawn playingPawn) {
+    this.playingPawn = playingPawn;
+  }
+
+  public void placeWall(Wall wall) {
+    actionManager.performAction(new WallPlacer(), new WallPlacementChecker(), wall);
+  }
+
+  public void movePawn(GameBoard.Tile destinationTile) {
+    actionManager.performAction(new PawnMover(), new PawnMovementChecker(), destinationTile);
+  }
 
   public boolean pathExists(Pawn pawn) {
     Set<GameBoard.Tile> visited = new HashSet<>();
