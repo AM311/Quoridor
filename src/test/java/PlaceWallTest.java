@@ -1,12 +1,18 @@
+import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
+import it.units.sdm.quoridor.movemanager.ActionChecker;
+import it.units.sdm.quoridor.movemanager.WallPlacementChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Direction.*;
@@ -16,15 +22,24 @@ import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 public class PlaceWallTest {
   //todo check if the declaration of the objects for all the tests leads to issues or inconsistencies
   GameBoard gameBoard = new GameBoard();
-  GameBoard.Tile tile = gameBoard.getGameState()[0][4];
-  Pawn pawn = new Pawn(tile, Color.black, 10);
+  GameBoard.Tile tile1 = gameBoard.getGameState()[0][4];
+  GameBoard.Tile tile2 = gameBoard.getGameState()[8][4];
+  Pawn pawn1 = new Pawn(tile1, Color.black, 10);
+
+  Pawn pawn2 = new Pawn(tile2, Color.black, 10);
+
+  List<Pawn> pawns = List.of(pawn1, pawn2);
+  Game game = new Game(pawns, gameBoard);
+
+  ActionChecker<Wall> wallPlacementChecker = new WallPlacementChecker();
+
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
   void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, WALL};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -43,7 +58,7 @@ public class PlaceWallTest {
   void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, WALL, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -62,7 +77,7 @@ public class PlaceWallTest {
   void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, WALL};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -81,7 +96,7 @@ public class PlaceWallTest {
   void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, WALL, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -99,7 +114,7 @@ public class PlaceWallTest {
   void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() {
     GameBoard.Tile startingTile = gameBoard.getGameState()[0][0];
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE, EDGE, WALL};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -118,7 +133,7 @@ public class PlaceWallTest {
   void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -137,7 +152,7 @@ public class PlaceWallTest {
   void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -156,7 +171,7 @@ public class PlaceWallTest {
   void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, WALL, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -175,7 +190,7 @@ public class PlaceWallTest {
   void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, WALL, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -193,7 +208,7 @@ public class PlaceWallTest {
   void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() {
     GameBoard.Tile startingTile = gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1];
     Wall wall = new Wall(VERTICAL, startingTile);
-    pawn.placeWall(gameBoard, wall);
+    game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, EDGE, FREE, EDGE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
@@ -213,7 +228,7 @@ public class PlaceWallTest {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertTrue(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -222,7 +237,7 @@ public class PlaceWallTest {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -236,7 +251,7 @@ public class PlaceWallTest {
     belowStartingTile.setLink(RIGHT, WALL);
 
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -248,7 +263,7 @@ public class PlaceWallTest {
 
     belowStartingTile.setLink(RIGHT, WALL);
 
-    Assertions.assertTrue(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -258,7 +273,7 @@ public class PlaceWallTest {
     Wall wall = new Wall(HORIZONTAL, startingTile);
     startingTile.setLink(DOWN, WALL);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -270,7 +285,7 @@ public class PlaceWallTest {
 
     tileRightToStartingTile.setLink(DOWN, WALL);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -282,7 +297,7 @@ public class PlaceWallTest {
 
     tileLeftToStartingTile.setLink(DOWN, WALL);
 
-    Assertions.assertTrue(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -291,7 +306,7 @@ public class PlaceWallTest {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -300,7 +315,7 @@ public class PlaceWallTest {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
-    Assertions.assertTrue(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -313,7 +328,7 @@ public class PlaceWallTest {
     startingTile.setLink(UP, WALL);
     tileLeftToStartingTile.setLink(UP, WALL);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -325,7 +340,7 @@ public class PlaceWallTest {
 
     tileLeftToStartingTile.setLink(UP, WALL);
 
-    Assertions.assertTrue(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -336,7 +351,7 @@ public class PlaceWallTest {
 
     startingTile.setLink(LEFT, WALL);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -348,7 +363,7 @@ public class PlaceWallTest {
 
     tileAboveStartingTile.setLink(LEFT, WALL);
 
-    Assertions.assertFalse(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 
   @ParameterizedTest
@@ -360,6 +375,6 @@ public class PlaceWallTest {
 
     tileBelowStartingTile.setLink(DOWN, WALL);
 
-    Assertions.assertTrue(pawn.checkWallPosition(gameBoard, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
   }
 }
