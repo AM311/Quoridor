@@ -6,15 +6,11 @@ import it.units.sdm.quoridor.model.Wall;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.Direction.*;
-import static it.units.sdm.quoridor.utils.Direction.RIGHT;
 
 public class WallPlacer implements Action<Wall> {
-	WallPlacementChecker wallPlacementChecker = new WallPlacementChecker();
-		@Override
+	@Override
 	public void execute(GameBoard gameBoard, Pawn pawn, Wall target) {
-			if (wallPlacementChecker.checkAction(gameBoard, pawn,target)) {
-				setWallLinks(gameBoard, target);
-			}
+		setWallLinks(gameBoard, target);
 	}
 
 	private void setWallLinks(GameBoard gameBoard, Wall wall) {
