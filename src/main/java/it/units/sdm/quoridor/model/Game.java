@@ -1,12 +1,10 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.movemanager.*;
 import it.units.sdm.quoridor.utils.Direction;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Direction.*;
@@ -14,9 +12,9 @@ import static it.units.sdm.quoridor.utils.Direction.*;
 public class Game {
   private final List<Pawn> pawns;
   private final GameBoard gameBoard;
-  private Pawn playingPawn;
   private final GameActionManager actionManager;
-  private long maxIterations = 10000000;      //todo remove
+  private Pawn playingPawn;
+
   public Game(List<Pawn> pawns, GameBoard gameBoard) {
     this.pawns = pawns;
     this.gameBoard = gameBoard;
@@ -44,60 +42,92 @@ public class Game {
     actionManager.performAction(new WallPlacer(), new WallPlacementChecker(), wall);
   }
 
-  public void movePawn(GameBoard.Tile destinationTile) {
+  public void movePawn(Tile destinationTile) {
     actionManager.performAction(new PawnMover(), new PawnMovementChecker(), destinationTile);
   }
 
-  public boolean pathExists(Pawn pawn) {
-    Set<GameBoard.Tile> visited = new HashSet<>();
-    int goalRow = (gameBoard.getSideLength() - 1) - pawn.getStartingTile().getRow();
-    return dfs(pawn.getCurrentTile(), goalRow, visited);
-  }
+  //============================================================================
 
-  private boolean dfs(GameBoard.Tile currentTile, int goalRow, Set<GameBoard.Tile> visited) {
-    if (currentTile.getRow() == goalRow) {
-      return true;
-    }
-    --maxIterations;
-    if (maxIterations <= 0) {
-      return false;
-    }
-    visited.add(currentTile);
-    for (Map.Entry<Direction, GameBoard.LinkState> link : currentTile.getLinks().entrySet()) {
-      if (link.getValue() == FREE) {
-        switch (link.getKey()) {
-          case RIGHT -> {
-            if (!visited.contains(gameBoard.getAdjacentTile(currentTile, RIGHT))) {
-              if (dfs(gameBoard.getAdjacentTile(currentTile, RIGHT), goalRow, new HashSet<>(visited))) {
-                return true;
-              }
-            }
-          }
-          case LEFT -> {
-            if (!visited.contains(gameBoard.getAdjacentTile(currentTile, LEFT))) {
-              if (dfs(gameBoard.getAdjacentTile(currentTile, LEFT), goalRow, new HashSet<>(visited))) {
-                return true;
-              }
-            }
-          }
-          case DOWN -> {
-            if (!visited.contains(gameBoard.getAdjacentTile(currentTile, DOWN))) {
-              if (dfs(gameBoard.getAdjacentTile(currentTile, DOWN), goalRow, new HashSet<>(visited))) {
-                return true;
-              }
-            }
-          }
-          case UP -> {
-            if (!visited.contains(gameBoard.getAdjacentTile(currentTile, UP))) {
-              if (dfs(gameBoard.getAdjacentTile(currentTile, UP), goalRow, new HashSet<>(visited))) {
-                return true;
-              }
-            }
-          }
+  // >>> NEW ALGORITHM IMPLEMENTATION <<<
 
+  public boolean pathExists() {
+    for (Pawn pawn : pawns) {
+      Map<Tile, Integer> potentials = new HashMap<>();
+      Set<Tile> toVisitTiles = new HashSet<>();
+      int goalRow = (gameBoard.getSideLength() - 1) - pawn.getStartingTile().getRow();                //works only for 2 players
+
+      //Init
+      for (Tile[] tileArr : gameBoard.getGameState()) {
+        for (Tile tile : tileArr) {
+          toVisitTiles.add(tile);
+          potentials.put(tile, Integer.MAX_VALUE);
         }
       }
+
+      Tile startingTile = pawn.getCurrentTile();
+      potentials.put(startingTile, 0);
+
+      //===================
+
+      visitTiles(startingTile, toVisitTiles, potentials);
+
+      if (!checkPathExistence(potentials, goalRow))
+        return false;
     }
-    return false;
+
+    return true;
+  }
+
+  private void visitTiles(Tile startingTile, Set<Tile> toVisitTiles, Map<Tile, Integer> potentials) {
+    Tile visitedTile = startingTile;
+
+    while (!toVisitTiles.isEmpty()) {
+      toVisitTiles.remove(visitedTile);
+
+      visitAdjacentTile(visitedTile, LEFT, potentials);
+      visitAdjacentTile(visitedTile, RIGHT, potentials);
+      visitAdjacentTile(visitedTile, UP, potentials);
+      visitAdjacentTile(visitedTile, DOWN, potentials);
+
+      visitedTile = makeAndGetTileDefinitive(toVisitTiles, potentials);
+    }
+  }
+
+  private boolean checkPathExistence(Map<Tile, Integer> potentials, int goalRow) {
+    boolean existsPath = false;
+
+    for (Tile tile : potentials.keySet()) {
+      if (tile.getRow() == goalRow) {
+        if (potentials.get(tile) == 0)
+          existsPath = true;
+      }
+    }
+
+    return existsPath;
+  }
+
+  private void visitAdjacentTile(Tile visitedTile, Direction left, Map<Tile, Integer> potentials) {
+    if (visitedTile.getLink(left) != EDGE) {
+      Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, left);
+
+      if (visitedTile.getLink(left) == FREE) {
+        if (potentials.get(adjacentTile) > potentials.get(visitedTile))
+          potentials.put(adjacentTile, potentials.get(visitedTile));
+      } else if (visitedTile.getLink(left) == WALL) {
+        if (potentials.get(adjacentTile) > potentials.get(visitedTile) + 1)
+          potentials.put(adjacentTile, potentials.get(visitedTile) + 1);
+      }
+    }
+  }
+
+  private Tile makeAndGetTileDefinitive(Set<Tile> toVisitTiles, Map<Tile, Integer> potentials) {
+    Tile minTile = null;
+
+    for (Tile tile : toVisitTiles) {
+      if (minTile == null || potentials.get(minTile) > potentials.get(tile))
+        minTile = tile;
+    }
+
+    return minTile;
   }
 }
