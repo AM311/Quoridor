@@ -6,6 +6,10 @@ public class ExceptionTest {
 
   @Test
   void correctThrowQuoridorException() {
+    Assertions.assertThrows(QuoridorException.class, () -> {
+      throw new QuoridorException();
+    });
+
     Exception exception = Assertions.assertThrows(QuoridorException.class, () -> {
       throw new QuoridorException("Test");
     });
@@ -14,6 +18,10 @@ public class ExceptionTest {
   }
   @Test
   void correctThrowInvalidActionException() {
+    Assertions.assertThrows(InvalidActionException.class, () -> {
+      throw new InvalidActionException();
+    });
+
     Exception exception = Assertions.assertThrows(InvalidActionException.class, () -> {
       throw new InvalidActionException("Test");
     });
@@ -23,6 +31,10 @@ public class ExceptionTest {
 
   @Test
   void correctThrowOutOfGameBoardException() {
+    Assertions.assertThrows(OutOfGameBoardException.class, () -> {
+      throw new OutOfGameBoardException();
+    });
+
     Exception exception = Assertions.assertThrows(OutOfGameBoardException.class, () -> {
       throw new OutOfGameBoardException("Test");
     });
@@ -32,6 +44,10 @@ public class ExceptionTest {
 
   @Test
   void correctThrowInvalidWallPlacementException() {
+    Assertions.assertThrows(InvalidWallPlacementException.class, () -> {
+      throw new InvalidWallPlacementException();
+    });
+
     Exception exception = Assertions.assertThrows(InvalidWallPlacementException.class, () -> {
       throw new InvalidWallPlacementException("Test");
     });
@@ -41,6 +57,10 @@ public class ExceptionTest {
 
   @Test
   void correctThrowInvalidPawnMovementException() {
+    Assertions.assertThrows(InvalidPawnMovementException.class, () -> {
+      throw new InvalidPawnMovementException();
+    });
+
     Exception exception = Assertions.assertThrows(InvalidPawnMovementException.class, () -> {
       throw new InvalidPawnMovementException("Test");
     });
