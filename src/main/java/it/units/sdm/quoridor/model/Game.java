@@ -84,10 +84,9 @@ public class Game {
     while (!toVisitTiles.isEmpty()) {
       toVisitTiles.remove(visitedTile);
 
-      visitAdjacentTile(visitedTile, LEFT, potentials);
-      visitAdjacentTile(visitedTile, RIGHT, potentials);
-      visitAdjacentTile(visitedTile, UP, potentials);
-      visitAdjacentTile(visitedTile, DOWN, potentials);
+      for(Direction dir : Direction.values()) {
+        visitAdjacentTile(visitedTile, dir, potentials);
+      }
 
       visitedTile = makeAndGetTileDefinitive(toVisitTiles, potentials);
     }
