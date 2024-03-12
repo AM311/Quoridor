@@ -18,7 +18,6 @@ public class Game {
   public Game(List<Pawn> pawns, GameBoard gameBoard) {
     this.pawns = pawns;
     this.gameBoard = gameBoard;
-
     this.actionManager = new GameActionManager(this);
   }
 

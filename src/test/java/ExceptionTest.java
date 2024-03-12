@@ -1,6 +1,10 @@
 import it.units.sdm.quoridor.exceptions.*;
+import it.units.sdm.quoridor.model.GameBoard;
+import it.units.sdm.quoridor.model.Pawn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
 
 public class ExceptionTest {
 
@@ -66,5 +70,15 @@ public class ExceptionTest {
     });
 
     Assertions.assertEquals("Test", exception.getMessage());
+  }
+
+  @Test
+  void correctThrowNumberOfWallsBelowZeroException() {
+    GameBoard gameBoard = new GameBoard();
+    GameBoard.Tile tile = gameBoard.getGameState()[0][4];
+    Pawn pawn = new Pawn(tile, Color.black, 0);
+
+    Assertions.assertThrows(NumberOfWallsBelowZeroException.class, pawn::decrementNumberOfWalls);
+
   }
 }
