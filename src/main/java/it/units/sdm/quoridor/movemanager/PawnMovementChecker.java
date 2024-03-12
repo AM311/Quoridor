@@ -8,7 +8,7 @@ import it.units.sdm.quoridor.utils.Directions.Direction;
 import it.units.sdm.quoridor.utils.Directions;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class PawnMovementChecker implements ActionChecker<Tile> {
   @Override
@@ -19,7 +19,8 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     Tile currentTile = playingPawn.getCurrentTile();
     if (!isStraightMove(gameBoard, target, currentTile)) {
       if (isDiagonalMove(gameBoard, target, currentTile)) {
-        return isSpecialMove(gameBoard, target, playingPawn) || isOnBorderMove(gameBoard, target, playingPawn);
+        return isSpecialMove(gameBoard, target, playingPawn)
+                || isOnBorderMove(gameBoard, target, playingPawn);
       }
       return isJumpingPawnMove(gameBoard, target, playingPawn);
     }
@@ -39,7 +40,6 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     }
     return false;
   }
-
 
   private boolean isStraightMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
     for (Direction direction : Directions.getStraightDirections()) {

@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.List;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 

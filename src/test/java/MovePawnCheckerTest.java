@@ -2,7 +2,7 @@ import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.movemanager.ActionChecker;
 import it.units.sdm.quoridor.movemanager.PawnMovementChecker;
-import it.units.sdm.quoridor.utils.Direction;
+import it.units.sdm.quoridor.utils.Directions.Direction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
