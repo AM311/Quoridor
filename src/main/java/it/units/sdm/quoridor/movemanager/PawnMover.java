@@ -5,8 +5,11 @@ import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.model.Pawn;
 
 public class PawnMover implements Action<Tile> {
-	@Override
-	public void execute(GameBoard gameBoard, Pawn pawn, Tile target) {
-		//todo IMPLEMENT METHOD!
-	}
+  @Override
+  public void execute(GameBoard gameBoard, Pawn pawn, Tile target) {
+    Tile startingTile = pawn.getCurrentTile();
+    pawn.setCurrentTile(target);
+    gameBoard.getGameState()[target.getRow()][target.getColumn()].setOccupied(true);
+    gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn()].setOccupied(false);
+  }
 }
