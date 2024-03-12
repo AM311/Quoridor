@@ -12,6 +12,7 @@ public class WallPlacer implements Action<Wall> {
 	@Override
 	public void execute(GameBoard gameBoard, Pawn pawn, Wall target) {
 		setWallLinks(gameBoard, target);
+		pawn.decrementNumberOfWalls();
 	}
 
 	private void setWallLinks(GameBoard gameBoard, Wall wall)  {

@@ -8,7 +8,7 @@ import it.units.sdm.quoridor.utils.Directions.Direction;
 import it.units.sdm.quoridor.utils.Directions;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
+import static it.units.sdm.quoridor.utils.Direction.*;
 
 public class PawnMovementChecker implements ActionChecker<Tile> {
   @Override
@@ -19,11 +19,25 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     Tile currentTile = playingPawn.getCurrentTile();
     if (!isStraightMove(gameBoard, target, currentTile)) {
       if (isDiagonalMove(gameBoard, target, currentTile)) {
-        return isSpecialMove(gameBoard, target, playingPawn);
+        return isSpecialMove(gameBoard, target, playingPawn) || isOnBorderMove(gameBoard, target, playingPawn);
       }
       return isJumpingPawnMove(gameBoard, target, playingPawn);
     }
     return !isThereAWall(gameBoard, target, playingPawn);
+  }
+
+  private boolean isOnBorderMove(GameBoard gameBoard, Tile target, Pawn playingPawn) {
+    int currentRow = playingPawn.getCurrentTile().getRow();
+    int currentColumn = playingPawn.getCurrentTile().getColumn();
+    int destinationRow = target.getRow();
+    int destinationColumn = target.getColumn();
+    if (destinationRow == 0 || destinationRow == 8) {
+      return gameBoard.getGameState()[destinationRow][currentColumn].isOccupied();
+    }
+    if (destinationColumn == 0 || destinationColumn == 8) {
+      return gameBoard.getGameState()[currentRow][destinationColumn].isOccupied();
+    }
+    return false;
   }
 
 

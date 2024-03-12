@@ -1,5 +1,8 @@
 package it.units.sdm.quoridor.model;
 
+import java.awt.*;
+
+import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 
 import java.awt.*;
@@ -40,4 +43,12 @@ public class Pawn {
   public int getNumberOfWalls() {
     return numberOfWalls;
   }
+
+  public void decrementNumberOfWalls(){
+    if (this.numberOfWalls<=0){
+      throw new NumberOfWallsBelowZeroException();
+    }
+    this.numberOfWalls--;
+  }
+
 }
