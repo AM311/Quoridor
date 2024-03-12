@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.movemanager;
 
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
 
 public class GameActionManager {
@@ -9,7 +10,7 @@ public class GameActionManager {
 		this.game = game;
 	}
 
-	public <T> void performAction(Action<T> action, T target) {
+	public <T> void performAction(Action<T> action, T target)  {
 		action.execute(game.getGameBoard(), game.getPlayingPawn(), target);
 	}
 

@@ -1,13 +1,14 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.movemanager.*;
-import it.units.sdm.quoridor.utils.Direction;
+import it.units.sdm.quoridor.utils.Directions.Direction;
 
 import java.util.*;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class Game {
   private final List<Pawn> pawns;
@@ -84,10 +85,12 @@ public class Game {
     while (!toVisitTiles.isEmpty()) {
       toVisitTiles.remove(visitedTile);
 
-      for(Direction dir : Direction.values()) {
-        visitAdjacentTile(visitedTile, dir, potentials);
+      for (Direction dir : Direction.values()) {
+        try {
+          visitAdjacentTile(visitedTile, dir, potentials);
+        } catch (OutOfGameBoardException ignored) {
+        }
       }
-
       visitedTile = makeAndGetTileDefinitive(toVisitTiles, potentials);
     }
   }
@@ -105,17 +108,14 @@ public class Game {
     return existsPath;
   }
 
-  private void visitAdjacentTile(Tile visitedTile, Direction left, Map<Tile, Integer> potentials) {
-    if (visitedTile.getLink(left) != EDGE) {
-      Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, left);
-
-      if (visitedTile.getLink(left) == FREE) {
-        if (potentials.get(adjacentTile) > potentials.get(visitedTile))
-          potentials.put(adjacentTile, potentials.get(visitedTile));
-      } else if (visitedTile.getLink(left) == WALL) {
-        if (potentials.get(adjacentTile) > potentials.get(visitedTile) + 1)
-          potentials.put(adjacentTile, potentials.get(visitedTile) + 1);
-      }
+  private void visitAdjacentTile(Tile visitedTile, Direction left, Map<Tile, Integer> potentials)  {
+    Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, left);
+    if (visitedTile.getLink(left) == FREE) {
+      if (potentials.get(adjacentTile) > potentials.get(visitedTile))
+        potentials.put(adjacentTile, potentials.get(visitedTile));
+    } else if (visitedTile.getLink(left) == WALL) {
+      if (potentials.get(adjacentTile) > potentials.get(visitedTile) + 1)
+        potentials.put(adjacentTile, potentials.get(visitedTile) + 1);
     }
   }
 

@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.exceptions;
 
-public class OutOfGameBoardException extends QuoridorException{
+public class OutOfGameBoardException extends RuntimeException{
   public OutOfGameBoardException() {
   }
 

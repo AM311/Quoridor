@@ -1,11 +1,8 @@
 package it.units.sdm.quoridor.model;
 
-import java.awt.*;
-
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import java.awt.*;
 
 public class Pawn {
   //todo add checks on walls number

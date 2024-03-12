@@ -1,11 +1,12 @@
 package it.units.sdm.quoridor.movemanager;
 
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class WallPlacer implements Action<Wall> {
 	@Override
@@ -13,14 +14,14 @@ public class WallPlacer implements Action<Wall> {
 		setWallLinks(gameBoard, target);
 	}
 
-	private void setWallLinks(GameBoard gameBoard, Wall wall) {
+	private void setWallLinks(GameBoard gameBoard, Wall wall)  {
 		switch (wall.orientation()) {
 			case HORIZONTAL -> setWallLinksForHorizontalWall(gameBoard, wall.startingTile());
 			case VERTICAL -> setWallLinkForVerticalWall(gameBoard, wall.startingTile());
 		}
 	}
 
-	private void setWallLinksForHorizontalWall(GameBoard gameBoard, GameBoard.Tile startingTile) {
+	private void setWallLinksForHorizontalWall(GameBoard gameBoard, GameBoard.Tile startingTile)  {
 		GameBoard.Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
 		GameBoard.Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
 		GameBoard.Tile tileLowRightDiagToStartingTile = gameBoard.getAdjacentTile(gameBoard.getAdjacentTile(startingTile, RIGHT), DOWN);

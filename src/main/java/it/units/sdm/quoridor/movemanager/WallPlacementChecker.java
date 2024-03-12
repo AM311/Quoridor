@@ -1,12 +1,12 @@
 package it.units.sdm.quoridor.movemanager;
 
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Direction.*;
-import static it.units.sdm.quoridor.utils.Direction.LEFT;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class WallPlacementChecker implements ActionChecker<Wall> {
 	public boolean checkAction(GameBoard gameBoard, Pawn playingPawn, Wall target) {
@@ -16,7 +16,7 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
 		};
 	}
 
-	private boolean checkHorizontalWallPosition(GameBoard gameBoard, GameBoard.Tile startingTile) {
+	private boolean checkHorizontalWallPosition(GameBoard gameBoard, GameBoard.Tile startingTile)  {
 		if (gameBoard.isInLastRow(startingTile) || gameBoard.isInLastColumn(startingTile)) {
 			return false;
 		}

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class PathTest {
   private Game initialize() {                 //todo OK???

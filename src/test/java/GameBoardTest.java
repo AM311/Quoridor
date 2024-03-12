@@ -1,12 +1,13 @@
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.utils.Direction;
+import it.units.sdm.quoridor.utils.Directions.Direction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class GameBoardTest {
   GameBoard gameBoard = new GameBoard();
@@ -136,7 +137,7 @@ public class GameBoardTest {
   //todo manage exceptions and not allowed cases
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "8, 2"})
-  void nearTiles_leftTileIsCorrect(int row, int column) {
+  void nearTiles_leftTileIsCorrect(int row, int column)  {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getGameState()[row][column - 1], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], LEFT));
   }

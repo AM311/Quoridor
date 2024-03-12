@@ -1,3 +1,4 @@
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
@@ -15,7 +16,7 @@ import java.util.List;
 
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
@@ -36,7 +37,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -55,7 +56,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) {
+  void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -74,7 +75,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -93,7 +94,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) {
+  void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -111,7 +112,7 @@ public class PlaceWallTest {
   }
 
   @Test
-  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner()  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[0][0];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -130,7 +131,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) {
+  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -149,7 +150,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) {
+  void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -168,7 +169,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) {
+  void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -187,7 +188,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) {
+  void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -224,7 +225,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallIsAllowed(int row, int column) {
+  void horizontalWallIsAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
@@ -233,7 +234,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
-  void horizontalWallIsNotAllowed(int row, int column) {
+  void horizontalWallIsNotAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
@@ -242,7 +243,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 3", "6, 4"})
-  void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) {
+  void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
     Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -256,7 +257,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 4", "7, 2"})
-  void horizontalWallAboveVerticalIsAllowed(int row, int column) {
+  void horizontalWallAboveVerticalIsAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
     Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -268,7 +269,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"6, 1", "2, 5", "3, 2"})
-  void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
+  void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     startingTile.setLink(DOWN, WALL);
@@ -278,7 +279,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"2, 3", "1, 4", "4, 7"})
-  void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
+  void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
@@ -290,7 +291,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"1, 6", "4, 4", "7, 7"})
-  void horizontalWallsNearEachOtherIsAllowed(int row, int column) {
+  void horizontalWallsNearEachOtherIsAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
@@ -302,7 +303,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "4, 0", "0, 7"})
-  void verticalWallIsNotAllowed(int row, int column) {
+  void verticalWallIsNotAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
@@ -311,7 +312,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"8, 8", "4, 4", "1, 8"})
-  void verticalWallIsAllowed(int row, int column) {
+  void verticalWallIsAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
@@ -320,7 +321,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 4", "5, 7", "1, 7"})
-  void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) {
+  void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
@@ -333,7 +334,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 4", "3, 3", "2, 4"})
-  void verticalWallRightToHorizontalWallIsAllowed(int row, int column) {
+  void verticalWallRightToHorizontalWallIsAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
@@ -345,7 +346,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"1, 4", "7, 2", "4, 6"})
-  void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
+  void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
@@ -356,7 +357,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 4", "5, 1", "6, 3"})
-  void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
+  void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
@@ -368,7 +369,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"6, 2", "3, 5", "5, 1"})
-  void verticalWallsNearEachOtherIsAllowed(int row, int column) {
+  void verticalWallsNearEachOtherIsAllowed(int row, int column)  {
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];

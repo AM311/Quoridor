@@ -1,13 +1,14 @@
 package it.units.sdm.quoridor.model;
 
-import it.units.sdm.quoridor.utils.Direction;
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.utils.Directions.Direction;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
-import static it.units.sdm.quoridor.utils.Direction.*;
+import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class GameBoard {
   public static final int sideLength = 9;
@@ -59,13 +60,21 @@ public class GameBoard {
   //-----
   //todo manage exceptions
 
-  public Tile getAdjacentTile(Tile tile, Direction direction) {
-    return switch (direction) {
-      case UP -> gameState[tile.row - 1][tile.column];
-      case DOWN -> gameState[tile.row + 1][tile.column];
-      case RIGHT -> gameState[tile.row][tile.column + 1];
-      case LEFT -> gameState[tile.row][tile.column - 1];
-    };
+  public Tile getAdjacentTile(Tile tile, Direction direction) throws OutOfGameBoardException {
+    try {
+      return switch (direction) {
+        case UP -> gameState[tile.row - 1][tile.column];
+        case DOWN -> gameState[tile.row + 1][tile.column];
+        case RIGHT -> gameState[tile.row][tile.column + 1];
+        case LEFT -> gameState[tile.row][tile.column - 1];
+        case UP_LEFT -> gameState[tile.row - 1][tile.column - 1];
+        case UP_RIGHT -> gameState[tile.row - 1][tile.column + 1];
+        case DOWN_LEFT -> gameState[tile.row + 1][tile.column - 1];
+        case DOWN_RIGHT -> gameState[tile.row + 1][tile.column + 1];
+      };
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new OutOfGameBoardException();
+    }
   }
 
   public int getSideLength() {
