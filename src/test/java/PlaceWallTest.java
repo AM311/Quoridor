@@ -10,9 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Direction.*;
@@ -23,14 +21,12 @@ public class PlaceWallTest {
   //todo check if the declaration of the objects for all the tests leads to issues or inconsistencies
   GameBoard gameBoard = new GameBoard();
   GameBoard.Tile tile1 = gameBoard.getGameState()[0][4];
+  Pawn pawn1 = new Pawn(tile1, Color.black, 3);
   GameBoard.Tile tile2 = gameBoard.getGameState()[8][4];
-  Pawn pawn1 = new Pawn(tile1, Color.black, 1);
-
-  Pawn pawn2 = new Pawn(tile2, Color.black, 1);
+  Pawn pawn2 = new Pawn(tile2, Color.black, 3);
 
   List<Pawn> pawns = List.of(pawn1, pawn2);
   Game game = new Game(pawns, gameBoard);
-
 
 
   ActionChecker<Wall> wallPlacementChecker = new WallPlacementChecker();
@@ -407,13 +403,27 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallIsAllowed_IfZeroWallsRemaining(int row, int column) {
+  void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) {
+    pawn1.decrementNumberOfWalls();
+    pawn1.decrementNumberOfWalls();
     pawn1.decrementNumberOfWalls();
     game.setPlayingPawn(pawn1);
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"3, 3", "6, 2", "0, 0"})
+  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) {
+    int numberOfWallsBeforePlacement = pawn1.getNumberOfWalls();
+    game.setPlayingPawn(pawn1);
+    GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+    game.placeWall(wall);
+
+    Assertions.assertEquals(numberOfWallsBeforePlacement - 1, pawn1.getNumberOfWalls());
   }
 
 }
