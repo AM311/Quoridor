@@ -1,13 +1,13 @@
 package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.utils.Directions;
 import it.units.sdm.quoridor.utils.Directions.Direction;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class GameBoard {
@@ -59,6 +59,17 @@ public class GameBoard {
 
   //-----
   //todo manage exceptions
+  public boolean isThereAWall(Tile tile1, Tile tile2) {
+    for (Direction direction : Directions.getStraightDirections()) {
+      try {
+        if (tile2.equals(this.getAdjacentTile(tile1, direction))) {
+          return tile1.getLink(direction) == WALL;
+        }
+      } catch (OutOfGameBoardException ignored) {
+      }
+    }
+    return false;
+  }
 
   public Tile getAdjacentTile(Tile tile, Direction direction) throws OutOfGameBoardException {
     try {

@@ -19,12 +19,12 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     Tile currentTile = playingPawn.getCurrentTile();
     if (!isStraightMove(gameBoard, target, currentTile)) {
       if (isDiagonalMove(gameBoard, target, currentTile)) {
-        return isSpecialMove(gameBoard, target, playingPawn)
+        return isSpecialMove(gameBoard, target, currentTile)
                 || isOnBorderMove(gameBoard, target, playingPawn);
       }
       return isJumpingPawnMove(gameBoard, target, playingPawn);
     }
-    return !isThereAWall(gameBoard, target, playingPawn);
+    return !gameBoard.isThereAWall(target, currentTile);
   }
 
   private boolean isOnBorderMove(GameBoard gameBoard, Tile target, Pawn playingPawn) {
@@ -63,30 +63,9 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     return false;
   }
 
-  private boolean isThereAWall(GameBoard gameBoard, GameBoard.Tile destinationTile, Pawn playingPawn) {
-    int currentRow = playingPawn.getCurrentTile().getRow();
-    int currentColumn = playingPawn.getCurrentTile().getColumn();
-    int destinationRow = destinationTile.getRow();
-    int destinationColumn = destinationTile.getColumn();
-
-    if (currentRow - destinationRow == 1 && currentColumn == destinationColumn) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(UP) == WALL;
-    }
-    if (currentRow - destinationRow == -1 && currentColumn == destinationColumn) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(DOWN) == WALL;
-    }
-    if (currentColumn - destinationColumn == 1 && currentRow == destinationRow) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(LEFT) == WALL;
-    }
-    if (currentColumn - destinationColumn == -1 && currentRow == destinationRow) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(RIGHT) == WALL;
-    }
-    return false;
-  }
-
-  private boolean isSpecialMove(GameBoard gameBoard, GameBoard.Tile destinationTile, Pawn playingPawn) {
-    int currentRow = playingPawn.getCurrentTile().getRow();
-    int currentColumn = playingPawn.getCurrentTile().getColumn();
+  private boolean isSpecialMove(GameBoard gameBoard, GameBoard.Tile destinationTile, Tile currentTile) {
+    int currentRow = currentTile.getRow();
+    int currentColumn = currentTile.getColumn();
     int destinationRow = destinationTile.getRow();
     int destinationColumn = destinationTile.getColumn();
 
