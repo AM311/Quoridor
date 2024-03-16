@@ -71,6 +71,20 @@ public class GameBoard {
     return false;
   }
 
+  public Tile getLandingTile(Tile tile, Direction direction) throws OutOfGameBoardException {
+    try {
+      return switch (direction) {
+        case UP -> gameState[tile.row - 2][tile.column];
+        case DOWN -> gameState[tile.row + 2][tile.column];
+        case RIGHT -> gameState[tile.row][tile.column + 2];
+        case LEFT -> gameState[tile.row][tile.column - 2];
+        default -> throw new IllegalArgumentException();
+      };
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new OutOfGameBoardException();
+    }
+  }
+
   public Tile getAdjacentTile(Tile tile, Direction direction) throws OutOfGameBoardException {
     try {
       return switch (direction) {
