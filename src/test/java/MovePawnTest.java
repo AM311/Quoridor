@@ -3,8 +3,6 @@ import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 import it.units.sdm.quoridor.movemanager.ActionChecker;
-import it.units.sdm.quoridor.movemanager.PawnMovementChecker;
-import it.units.sdm.quoridor.utils.Directions.Direction;
 import it.units.sdm.quoridor.movemanager.WallPlacementChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,12 +28,11 @@ public class MovePawnTest {
   @ParameterizedTest
   @CsvSource({"7, 1, 7, 2", "4, 3, 5, 3", "3, 1, 2, 1", "5, 6, 5, 5"})
   void movePawnVerticallyAndOrizzontally(int startingRow, int startingColumn, int destinationRow, int destinationColumn) {
-    game.setPlayingPawn(pawn1);
     GameBoard.Tile startingTile = gameBoard.getGameState()[startingRow][startingColumn];
     GameBoard.Tile destinationTile = gameBoard.getGameState()[destinationRow][destinationColumn];
     pawn1.setCurrentTile(startingTile);
     startingTile.setOccupied(true);
-    game.movePawn(destinationTile);
+    game.movePlayingPawn(destinationTile);
     Assertions.assertTrue(!startingTile.isOccupied()
             && destinationTile.isOccupied()
             && pawn1.getCurrentTile().equals(destinationTile));
@@ -43,14 +40,13 @@ public class MovePawnTest {
 
   @Test
   void movePawnDiagonalUpRight(){
-    game.setPlayingPawn(pawn1);
     GameBoard.Tile startingTile = gameBoard.getGameState()[1][1];
     GameBoard.Tile destinationTile = gameBoard.getGameState()[0][2];
     pawn1.setCurrentTile(startingTile);
     startingTile.setOccupied(true);
     pawn2.setCurrentTile(gameBoard.getGameState()[0][1]);
     gameBoard.getGameState()[0][1].setOccupied(true);
-    game.movePawn(destinationTile);
+    game.movePlayingPawn(destinationTile);
     Assertions.assertTrue(!startingTile.isOccupied()
             && destinationTile.isOccupied()
             && pawn1.getCurrentTile().equals(destinationTile));
@@ -58,14 +54,13 @@ public class MovePawnTest {
 
   @Test
   void movePawnDiagonalUpLeft(){
-    game.setPlayingPawn(pawn1);
     GameBoard.Tile startingTile = gameBoard.getGameState()[1][1];
     GameBoard.Tile destinationTile = gameBoard.getGameState()[0][0];
     pawn1.setCurrentTile(startingTile);
     startingTile.setOccupied(true);
     pawn2.setCurrentTile(gameBoard.getGameState()[0][1]);
     gameBoard.getGameState()[0][1].setOccupied(true);
-    game.movePawn(destinationTile);
+    game.movePlayingPawn(destinationTile);
     Assertions.assertTrue(!startingTile.isOccupied()
             && destinationTile.isOccupied()
             && pawn1.getCurrentTile().equals(destinationTile));
@@ -73,14 +68,13 @@ public class MovePawnTest {
 
   @Test
   void movePawnDiagonalDownRight(){
-    game.setPlayingPawn(pawn1);
     GameBoard.Tile startingTile = gameBoard.getGameState()[4][7];
     GameBoard.Tile destinationTile = gameBoard.getGameState()[5][8];
     pawn1.setCurrentTile(startingTile);
     startingTile.setOccupied(true);
     pawn2.setCurrentTile(gameBoard.getGameState()[4][8]);
     gameBoard.getGameState()[4][8].setOccupied(true);
-    game.movePawn(destinationTile);
+    game.movePlayingPawn(destinationTile);
     Assertions.assertTrue(!startingTile.isOccupied()
             && destinationTile.isOccupied()
             && pawn1.getCurrentTile().equals(destinationTile));
@@ -88,14 +82,13 @@ public class MovePawnTest {
 
   @Test
   void movePawnDiagonalDownLeft(){
-    game.setPlayingPawn(pawn1);
     GameBoard.Tile startingTile = gameBoard.getGameState()[4][1];
     GameBoard.Tile destinationTile = gameBoard.getGameState()[5][0];
     pawn1.setCurrentTile(startingTile);
     startingTile.setOccupied(true);
     pawn2.setCurrentTile(gameBoard.getGameState()[4][0]);
     gameBoard.getGameState()[4][0].setOccupied(true);
-    game.movePawn(destinationTile);
+    game.movePlayingPawn(destinationTile);
     Assertions.assertTrue(!startingTile.isOccupied()
             && destinationTile.isOccupied()
             && pawn1.getCurrentTile().equals(destinationTile));

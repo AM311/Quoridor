@@ -1,21 +1,26 @@
 package it.units.sdm.quoridor.movemanager;
 
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.model.Pawn;
-import it.units.sdm.quoridor.utils.Directions.Direction;
 import it.units.sdm.quoridor.utils.Directions;
+import it.units.sdm.quoridor.utils.Directions.Direction;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class PawnMovementChecker implements ActionChecker<Tile> {
   @Override
-  public boolean checkAction(GameBoard gameBoard, Pawn playingPawn, Tile target) {
+  public boolean checkAction(Game game, Tile target) {
+    GameBoard gameBoard = game.getGameBoard();
+    Pawn playingPawn = game.getPlayingPawn();
+
     if (target.isOccupied()) {
       return false;
     }
+
     Tile currentTile = playingPawn.getCurrentTile();
     if (!isStraightMove(gameBoard, target, currentTile)) {
       if (isDiagonalMove(gameBoard, target, currentTile)) {
@@ -25,20 +30,6 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
       return isJumpingPawnMove(gameBoard, target, playingPawn);
     }
     return !isThereAWall(gameBoard, target, playingPawn);
-  }
-
-  private boolean isOnBorderMove(GameBoard gameBoard, Tile target, Pawn playingPawn) {
-    int currentRow = playingPawn.getCurrentTile().getRow();
-    int currentColumn = playingPawn.getCurrentTile().getColumn();
-    int destinationRow = target.getRow();
-    int destinationColumn = target.getColumn();
-    if (destinationRow == 0 || destinationRow == 8) {
-      return gameBoard.getGameState()[destinationRow][currentColumn].isOccupied();
-    }
-    if (destinationColumn == 0 || destinationColumn == 8) {
-      return gameBoard.getGameState()[currentRow][destinationColumn].isOccupied();
-    }
-    return false;
   }
 
   private boolean isStraightMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
@@ -59,27 +50,6 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
           return true;
       } catch (OutOfGameBoardException ignored) {
       }
-    }
-    return false;
-  }
-
-  private boolean isThereAWall(GameBoard gameBoard, GameBoard.Tile destinationTile, Pawn playingPawn) {
-    int currentRow = playingPawn.getCurrentTile().getRow();
-    int currentColumn = playingPawn.getCurrentTile().getColumn();
-    int destinationRow = destinationTile.getRow();
-    int destinationColumn = destinationTile.getColumn();
-
-    if (currentRow - destinationRow == 1 && currentColumn == destinationColumn) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(UP) == WALL;
-    }
-    if (currentRow - destinationRow == -1 && currentColumn == destinationColumn) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(DOWN) == WALL;
-    }
-    if (currentColumn - destinationColumn == 1 && currentRow == destinationRow) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(LEFT) == WALL;
-    }
-    if (currentColumn - destinationColumn == -1 && currentRow == destinationRow) {
-      return gameBoard.getGameState()[currentRow][currentColumn].getLink(RIGHT) == WALL;
     }
     return false;
   }
@@ -130,6 +100,20 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
             && gameBoard.getGameState()[currentRow + 1][currentColumn].getLink(RIGHT) != WALL);
   }
 
+  private boolean isOnBorderMove(GameBoard gameBoard, Tile target, Pawn playingPawn) {
+    int currentRow = playingPawn.getCurrentTile().getRow();
+    int currentColumn = playingPawn.getCurrentTile().getColumn();
+    int destinationRow = target.getRow();
+    int destinationColumn = target.getColumn();
+    if (destinationRow == 0 || destinationRow == 8) {
+      return gameBoard.getGameState()[destinationRow][currentColumn].isOccupied();
+    }
+    if (destinationColumn == 0 || destinationColumn == 8) {
+      return gameBoard.getGameState()[currentRow][destinationColumn].isOccupied();
+    }
+    return false;
+  }
+
   private boolean isJumpingPawnMove(GameBoard gameBoard, GameBoard.Tile destinationTile, Pawn playingPawn) {
     int currentRow = playingPawn.getCurrentTile().getRow();
     int currentColumn = playingPawn.getCurrentTile().getColumn();
@@ -151,6 +135,27 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     if (currentRow == destinationRow && currentColumn - destinationColumn == -2) {
       return gameBoard.getGameState()[currentRow][currentColumn + 1].isOccupied()
               && gameBoard.getGameState()[destinationRow][destinationColumn].getLink(LEFT) != WALL;
+    }
+    return false;
+  }
+
+  private boolean isThereAWall(GameBoard gameBoard, GameBoard.Tile destinationTile, Pawn playingPawn) {
+    int currentRow = playingPawn.getCurrentTile().getRow();
+    int currentColumn = playingPawn.getCurrentTile().getColumn();
+    int destinationRow = destinationTile.getRow();
+    int destinationColumn = destinationTile.getColumn();
+
+    if (currentRow - destinationRow == 1 && currentColumn == destinationColumn) {
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(UP) == WALL;
+    }
+    if (currentRow - destinationRow == -1 && currentColumn == destinationColumn) {
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(DOWN) == WALL;
+    }
+    if (currentColumn - destinationColumn == 1 && currentRow == destinationRow) {
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(LEFT) == WALL;
+    }
+    if (currentColumn - destinationColumn == -1 && currentRow == destinationRow) {
+      return gameBoard.getGameState()[currentRow][currentColumn].getLink(RIGHT) == WALL;
     }
     return false;
   }
