@@ -8,14 +8,10 @@ import it.units.sdm.quoridor.model.GameBoard.Tile;
 import java.awt.*;
 
 public class Pawn {
-  //todo add checks on walls number
-  //todo add wall number decrease
-  //todo add behavior in placeWall if checkWallPosition returns false
-  //todo check if a wall blocks completely the opponent
   private Tile currentTile;
   private final Tile startingTile;
-  private final Color color;
-  private int numberOfWalls;      //todo da gestire
+  private final Color color;            //todo valutare se estrarre
+  private int numberOfWalls;
 
   public Pawn(Tile startingTile, Color color, int numberOfWalls) {
     this.startingTile = startingTile;
