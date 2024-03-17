@@ -1,6 +1,7 @@
 package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.utils.Directions;
 import it.units.sdm.quoridor.utils.Directions.Direction;
 
 import java.util.Arrays;
@@ -8,8 +9,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class GameBoard implements Cloneable {
@@ -82,6 +82,34 @@ public class GameBoard implements Cloneable {
 
   public boolean isInLastColumn(Tile tile) {
     return tile.column == sideLength - 1;
+  }
+
+  //-----
+  //todo manage exceptions
+  public boolean isThereAWall(Tile tile1, Tile tile2) {
+    for (Direction direction : Directions.getStraightDirections()) {
+      try {
+        if (tile2.equals(this.getAdjacentTile(tile1, direction))) {
+          return tile1.getLink(direction) == WALL;
+        }
+      } catch (OutOfGameBoardException ignored) {
+      }
+    }
+    return false;
+  }
+
+  public Tile getLandingTile(Tile tile, Direction direction) throws OutOfGameBoardException {
+    try {
+      return switch (direction) {
+        case UP -> gameState[tile.row - 2][tile.column];
+        case DOWN -> gameState[tile.row + 2][tile.column];
+        case RIGHT -> gameState[tile.row][tile.column + 2];
+        case LEFT -> gameState[tile.row][tile.column - 2];
+        default -> throw new IllegalArgumentException();
+      };
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new OutOfGameBoardException();
+    }
   }
 
   public Tile getAdjacentTile(Tile tile, Direction direction) throws OutOfGameBoardException {
