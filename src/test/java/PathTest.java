@@ -1,6 +1,7 @@
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
+import it.units.sdm.quoridor.movemanager.PathExistenceChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +12,12 @@ import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class PathTest {
+  //todo REPLACE TEST CODE FOR PLACING WALLS WITH A METHOD CALL TO "PLACE WALL"?
   private Game initialize() {                 //todo OK???
     GameBoard gameBoard = new GameBoard();
     Pawn pawn1 = new Pawn(gameBoard.getGameState()[0][4], Color.black, 10);
     Pawn pawn2 = new Pawn(gameBoard.getGameState()[8][4], Color.red, 10);
-    java.util.List<Pawn> pawns = List.of(pawn1, pawn2);
+    List<Pawn> pawns = List.of(pawn1, pawn2);
     return new Game(pawns, gameBoard);
   }
 
@@ -24,7 +26,7 @@ public class PathTest {
   @Test
   void checkStartPawn() {
     Game game = initialize();
-    Assertions.assertTrue(game.pathExists());
+    Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
   }
 
   @Test
@@ -37,7 +39,34 @@ public class PathTest {
     for (GameBoard.Tile tile : game.getGameBoard().getGameState()[5]) {
       tile.setLink(UP, WALL);
     }
-    Assertions.assertFalse(game.pathExists());
+    Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
+  }
+
+  @Test
+  void checkBlockedPawnsFromCorrectSide() {
+    Game game = initialize();
+
+    //todo CHIAMATA PER MOSSA TROPPO VERBOSA... VALUTARE!!!
+    for (int j = 0; j < 6; j++) {
+      game.movePlayingPawn(game.getGameBoard().getAdjacentTile(game.getPlayingPawn().getCurrentTile(), DOWN));
+    }
+
+    game.changeRound();
+    game.movePlayingPawn(game.getGameBoard().getAdjacentTile(game.getPlayingPawn().getCurrentTile(), LEFT));
+
+    for (int j = 0; j < 6; j++) {
+      game.movePlayingPawn(game.getGameBoard().getAdjacentTile(game.getPlayingPawn().getCurrentTile(), UP));
+    }
+
+    //-------------------
+
+    for (GameBoard.Tile tile : game.getGameBoard().getGameState()[4]) {
+      tile.setLink(DOWN, WALL);
+    }
+    for (GameBoard.Tile tile : game.getGameBoard().getGameState()[5]) {
+      tile.setLink(UP, WALL);
+    }
+    Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
   }
 
   @Test
@@ -54,7 +83,7 @@ public class PathTest {
       game.getGameBoard().getGameState()[i][7].setLink(LEFT, WALL);
     }
 
-    Assertions.assertFalse(game.pathExists());
+    Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
   }
 
   @Test
@@ -71,7 +100,7 @@ public class PathTest {
       game.getGameBoard().getGameState()[i][7].setLink(LEFT, WALL);
     }
 
-    Assertions.assertFalse(game.pathExists());
+    Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
   }
 
 }

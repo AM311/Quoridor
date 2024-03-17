@@ -1,21 +1,24 @@
 package it.units.sdm.quoridor.movemanager;
 
-import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
+
+import java.awt.Color;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class WallPlacementChecker implements ActionChecker<Wall> {
-  public boolean checkAction(GameBoard gameBoard, Pawn playingPawn, Wall target) {
-    if (checkNumberOfWalls(playingPawn)) {
+  public boolean checkAction(Game game, Wall target) {
+    if (checkNumberOfWalls(game.getPlayingPawn())) {
       return switch (target.orientation()) {
-        case HORIZONTAL -> checkHorizontalWallPosition(gameBoard, target.startingTile());
-        case VERTICAL -> checkVerticalWallPosition(gameBoard, target.startingTile());
-      };
-    } else return false;
+        case HORIZONTAL -> checkHorizontalWallPosition(game.getGameBoard(), target.startingTile());
+        case VERTICAL -> checkVerticalWallPosition(game.getGameBoard(), target.startingTile());
+      } && checkPathExistence(game, target);
+    } else
+      return false;
   }
 
   private boolean checkNumberOfWalls(Pawn pawn) {
@@ -54,6 +57,21 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
       return false;
     }
     return true;
+  }
+
+  private boolean checkPathExistence(Game game, Wall wall) {       //todo CHECK!!!
+    GameBoard dummyGameBoard;
+    Pawn dummyPawn;
+
+    try {
+      dummyGameBoard = (GameBoard) game.getGameBoard().clone();
+      dummyPawn = new Pawn(dummyGameBoard.getGameState()[0][0], Color.BLACK, 1);
+    } catch (CloneNotSupportedException e) {
+      throw new RuntimeException(e);      //todo check whether to replace with a custom exception
+    }
+
+    new WallPlacer().execute(dummyGameBoard, dummyPawn, wall);
+    return new PathExistenceChecker().checkAction(game, dummyGameBoard);
   }
 
 }

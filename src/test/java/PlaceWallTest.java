@@ -18,25 +18,25 @@ import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class PlaceWallTest {
-  //todo check if the declaration of the objects for all the tests leads to issues or inconsistencies
-  GameBoard gameBoard = new GameBoard();
-  GameBoard.Tile tile1 = gameBoard.getGameState()[0][4];
-  Pawn pawn1 = new Pawn(tile1, Color.black, 3);
-  GameBoard.Tile tile2 = gameBoard.getGameState()[8][4];
-  Pawn pawn2 = new Pawn(tile2, Color.black, 3);
+  private Game initialize() {                 //todo OK???
+    GameBoard gameBoard = new GameBoard();
+    GameBoard.Tile tile1 = gameBoard.getGameState()[0][4];
+    Pawn pawn1 = new Pawn(tile1, Color.black, 3);
+    GameBoard.Tile tile2 = gameBoard.getGameState()[8][4];
+    Pawn pawn2 = new Pawn(tile2, Color.black, 3);
 
-  List<Pawn> pawns = List.of(pawn1, pawn2);
-  Game game = new Game(pawns, gameBoard);
-
+    List<Pawn> pawns = List.of(pawn1, pawn2);
+    return new Game(pawns, gameBoard);
+  }
 
   ActionChecker<Wall> wallPlacementChecker = new WallPlacementChecker();
-
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
   void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) {
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
-    game.setPlayingPawn(pawn1);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
@@ -55,7 +55,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
   void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -75,7 +76,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
   void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -95,7 +97,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
   void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -114,7 +117,8 @@ public class PlaceWallTest {
 
   @Test
   void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[0][0];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
@@ -134,7 +138,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
   void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -154,7 +159,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
   void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -174,7 +180,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
   void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -194,7 +201,8 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
   void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -213,7 +221,8 @@ public class PlaceWallTest {
 
   @Test
   void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1];
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
@@ -233,28 +242,31 @@ public class PlaceWallTest {
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
   void horizontalWallIsAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
   }
 
 
   @ParameterizedTest
   @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
   void horizontalWallIsNotAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 3", "6, 4"})
   void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
     Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -263,83 +275,90 @@ public class PlaceWallTest {
     belowStartingTile.setLink(RIGHT, WALL);
 
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 4", "7, 2"})
   void horizontalWallAboveVerticalIsAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     GameBoard.Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     belowStartingTile.setLink(RIGHT, WALL);
 
-    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"6, 1", "2, 5", "3, 2"})
   void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     startingTile.setLink(DOWN, WALL);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"2, 3", "1, 4", "4, 7"})
   void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     GameBoard.Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
 
     tileRightToStartingTile.setLink(DOWN, WALL);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 6", "4, 4", "7, 7"})
   void horizontalWallsNearEachOtherIsAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
     tileLeftToStartingTile.setLink(DOWN, WALL);
 
-    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"0, 0", "4, 0", "0, 7"})
   void verticalWallIsNotAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"8, 8", "4, 4", "1, 8"})
   void verticalWallIsAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
-    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"3, 4", "5, 7", "1, 7"})
   void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
@@ -347,83 +366,89 @@ public class PlaceWallTest {
     startingTile.setLink(UP, WALL);
     tileLeftToStartingTile.setLink(UP, WALL);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"3, 4", "3, 3", "2, 4"})
   void verticalWallRightToHorizontalWallIsAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
 
     tileLeftToStartingTile.setLink(UP, WALL);
 
-    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "7, 2", "4, 6"})
   void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
 
     startingTile.setLink(LEFT, WALL);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"5, 4", "5, 1", "6, 3"})
   void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
 
     tileAboveStartingTile.setLink(LEFT, WALL);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"6, 2", "3, 5", "5, 1"})
   void verticalWallsNearEachOtherIsAllowed(int row, int column) {
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(VERTICAL, startingTile);
     GameBoard.Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
 
     tileBelowStartingTile.setLink(DOWN, WALL);
 
-    Assertions.assertTrue(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
   void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) {
-    pawn1.decrementNumberOfWalls();
-    pawn1.decrementNumberOfWalls();
-    pawn1.decrementNumberOfWalls();
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
+    game.getPlayingPawn().decrementNumberOfWalls();
+    game.getPlayingPawn().decrementNumberOfWalls();
+    game.getPlayingPawn().decrementNumberOfWalls();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertFalse(wallPlacementChecker.checkAction(gameBoard, pawn1, wall));
+    Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
   }
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
   void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) {
-    int numberOfWallsBeforePlacement = pawn1.getNumberOfWalls();
-    game.setPlayingPawn(pawn1);
+    Game game = initialize();
+    GameBoard gameBoard = game.getGameBoard();
+    int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();
     GameBoard.Tile startingTile = gameBoard.getGameState()[row][column];
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
-    Assertions.assertEquals(numberOfWallsBeforePlacement - 1, pawn1.getNumberOfWalls());
+    Assertions.assertEquals(numberOfWallsBeforePlacement - 1, game.getPlayingPawn().getNumberOfWalls());
   }
 
 }
