@@ -1,12 +1,10 @@
-import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.utils.Directions.Direction;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
+import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class GameBoardTest {
@@ -45,9 +43,9 @@ public class GameBoardTest {
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
                     gameBoard.getGameState()[row][column].getLink(LEFT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
+                    gameBoard.getGameState()[row][column].getLink(RIGHT),
                     gameBoard.getGameState()[row][column].getLink(UP),
-                    gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
+                    gameBoard.getGameState()[row][column].getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -60,7 +58,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
                     gameBoard.getGameState()[row][column].getLink(LEFT),
-                    gameBoard.getGameState()[row][column].getLink(Direction.RIGHT)
+                    gameBoard.getGameState()[row][column].getLink(RIGHT)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -71,7 +69,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.RIGHT),
+                    gameBoard.getGameState()[row][column].getLink(RIGHT),
                     gameBoard.getGameState()[row][column].getLink(LEFT)
             };
     Assertions.assertArrayEquals(expected, actual);
@@ -85,7 +83,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
                     gameBoard.getGameState()[row][column].getLink(UP),
-                    gameBoard.getGameState()[row][column].getLink(Direction.DOWN)
+                    gameBoard.getGameState()[row][column].getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -97,7 +95,7 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(Direction.DOWN),
+                    gameBoard.getGameState()[row][column].getLink(DOWN),
                     gameBoard.getGameState()[row][column].getLink(UP)
             };
     Assertions.assertArrayEquals(expected, actual);
@@ -137,7 +135,7 @@ public class GameBoardTest {
   //todo manage exceptions and not allowed cases
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "8, 2"})
-  void nearTiles_leftTileIsCorrect(int row, int column)  {
+  void nearTiles_leftTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getGameState()[row][column - 1], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], LEFT));
   }
@@ -161,5 +159,56 @@ public class GameBoardTest {
   void nearTiles_lowerTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getGameState()[row + 1][column], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], DOWN));
+  }
+
+  //=======================
+
+  @Test
+  void cloneTest_withoutWalls() throws CloneNotSupportedException {
+    GameBoard gameBoard = new GameBoard();
+
+    Assertions.assertEquals(gameBoard, gameBoard.clone());
+  }
+
+  @Test
+  void cloneTest_withWalls() throws CloneNotSupportedException {
+    GameBoard gameBoard = new GameBoard();
+    gameBoard.getGameState()[2][3].setLink(UP, WALL);
+    gameBoard.getGameState()[5][2].setLink(LEFT, WALL);
+    gameBoard.getGameState()[0][0].setLink(DOWN, WALL);
+
+    Assertions.assertEquals(gameBoard, gameBoard.clone());
+  }
+
+  @Test
+  void cloneTest_objectsAreIndependent_clonedIsModified() throws CloneNotSupportedException {
+    GameBoard gameBoard = new GameBoard();
+    gameBoard.getGameState()[2][3].setLink(UP, WALL);
+    gameBoard.getGameState()[5][2].setLink(LEFT, WALL);
+    gameBoard.getGameState()[0][0].setLink(DOWN, WALL);
+
+    GameBoard clonedGameBoard = (GameBoard) gameBoard.clone();
+
+    clonedGameBoard.getGameState()[6][2].setLink(UP, WALL);
+    clonedGameBoard.getGameState()[1][4].setLink(RIGHT, WALL);
+    clonedGameBoard.getGameState()[5][2].setLink(LEFT, FREE);
+
+    Assertions.assertNotEquals(gameBoard, clonedGameBoard);
+  }
+
+  @Test
+  void cloneTest_objectsAreIndependent_originalIsModified() throws CloneNotSupportedException {
+    GameBoard gameBoard = new GameBoard();
+    gameBoard.getGameState()[2][3].setLink(UP, WALL);
+    gameBoard.getGameState()[5][2].setLink(LEFT, WALL);
+    gameBoard.getGameState()[0][0].setLink(DOWN, WALL);
+
+    GameBoard clonedGameBoard = (GameBoard) gameBoard.clone();
+
+    gameBoard.getGameState()[6][2].setLink(UP, WALL);
+    gameBoard.getGameState()[1][4].setLink(RIGHT, WALL);
+    gameBoard.getGameState()[5][2].setLink(LEFT, FREE);
+
+    Assertions.assertNotEquals(gameBoard, clonedGameBoard);
   }
 }

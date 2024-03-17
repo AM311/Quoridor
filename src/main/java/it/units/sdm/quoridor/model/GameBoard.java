@@ -3,16 +3,18 @@ package it.units.sdm.quoridor.model;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.utils.Directions.Direction;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.EDGE;
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.FREE;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
-public class GameBoard {
+public class GameBoard implements Cloneable {
   public static final int sideLength = 9;
-  private final Tile[][] gameState;
+  private Tile[][] gameState;
 
   public GameBoard() {
     gameState = new Tile[sideLength][sideLength];
@@ -20,11 +22,10 @@ public class GameBoard {
   }
 
   private void fillGameState() {
-    for (int i = 0; i < sideLength; i++) {
+    for (int i = 0; i < sideLength; i++)
       for (int j = 0; j < sideLength; j++) {
         gameState[i][j] = new Tile(i, j, isInitialPosition(i, j));
       }
-    }
     setEdgesLinks();
   }
 
@@ -39,6 +40,32 @@ public class GameBoard {
       gameState[sideLength - 1][i].setLink(DOWN, EDGE);
       gameState[i][sideLength - 1].setLink(RIGHT, EDGE);
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (!(o instanceof GameBoard gameBoard))
+      return false;
+    return Arrays.deepEquals(getGameState(), gameBoard.getGameState());
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    GameBoard cloneGameBoard = (GameBoard) super.clone();
+    Tile[][] cloneGameState = new Tile[sideLength][sideLength];
+    for (int i = 0; i < sideLength; i++)
+      for (int j = 0; j < sideLength; j++)
+        cloneGameState[i][j] = (Tile) gameState[i][j].clone();
+
+    cloneGameBoard.gameState = cloneGameState;
+
+    return cloneGameBoard;
+  }
+
+  public Tile[][] getGameState() {
+    return gameState;
   }
 
   public boolean isInFirstRow(Tile tile) {
@@ -56,9 +83,6 @@ public class GameBoard {
   public boolean isInLastColumn(Tile tile) {
     return tile.column == sideLength - 1;
   }
-
-  //-----
-  //todo manage exceptions
 
   public Tile getAdjacentTile(Tile tile, Direction direction) throws OutOfGameBoardException {
     try {
@@ -81,18 +105,14 @@ public class GameBoard {
     return sideLength;
   }
 
-  public Tile[][] getGameState() {
-    return gameState;
-  }
-
   public enum LinkState {
     FREE, WALL, EDGE
   }
 
-  public class Tile {
+  public class Tile implements Cloneable {
     private final int row;
     private final int column;
-    private final Map<Direction, LinkState> links;
+    private Map<Direction, LinkState> links;
     private boolean occupied;
 
     public Tile(int row, int column, boolean occupied) {
@@ -102,12 +122,29 @@ public class GameBoard {
       links = new EnumMap<>(Map.of(UP, FREE, RIGHT, FREE, DOWN, FREE, LEFT, FREE));
     }
 
-    public boolean isOccupied() {
-      return occupied;
+    public void setLink(Direction direction, LinkState linkState) {
+      links.put(direction, linkState);
     }
 
-    public void setOccupied(boolean occupied) {
-      this.occupied = occupied;
+    @Override
+    public boolean equals(Object o) {
+      if (this == o)
+        return true;
+      if (!(o instanceof Tile tile))
+        return false;
+      return getRow() == tile.getRow() && getColumn() == tile.getColumn() && isOccupied() == tile.isOccupied() && Objects.equals(getLinks(), tile.getLinks());
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+      Tile cloneTile = (Tile) super.clone();
+      cloneTile.links = new EnumMap<>(Map.of(UP, this.getLink(UP), RIGHT, this.getLink(RIGHT), DOWN, this.getLink(DOWN), LEFT, this.getLink(LEFT)));
+
+      return cloneTile;
+    }
+
+    public LinkState getLink(Direction direction) {
+      return links.get(direction);
     }
 
     public int getRow() {
@@ -118,16 +155,16 @@ public class GameBoard {
       return column;
     }
 
-    public LinkState getLink(Direction direction) {
-      return links.get(direction);
+    public boolean isOccupied() {
+      return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+      this.occupied = occupied;
     }
 
     public Map<Direction, LinkState> getLinks() {
       return links;
-    }
-
-    public void setLink(Direction direction, LinkState linkState) {
-      links.put(direction, linkState);
     }
   }
 }
