@@ -47,26 +47,26 @@ public class ExceptionTest {
   }
 
   @Test
-  void correctThrowInvalidWallPlacementException() {
-    Assertions.assertThrows(InvalidWallPlacementException.class, () -> {
-      throw new InvalidWallPlacementException();
+  void correctThrowInvalidParameterException() {
+    Assertions.assertThrows(InvalidParameterException.class, () -> {
+      throw new InvalidParameterException();
     });
 
-    Exception exception = Assertions.assertThrows(InvalidWallPlacementException.class, () -> {
-      throw new InvalidWallPlacementException("Test");
+    Exception exception = Assertions.assertThrows(InvalidParameterException.class, () -> {
+      throw new InvalidParameterException("Test");
     });
 
     Assertions.assertEquals("Test", exception.getMessage());
   }
 
   @Test
-  void correctThrowInvalidPawnMovementException() {
-    Assertions.assertThrows(InvalidPawnMovementException.class, () -> {
-      throw new InvalidPawnMovementException();
+  void correctThrowNotAdjacentTilesException() {
+    Assertions.assertThrows(NotAdjacentTilesException.class, () -> {
+      throw new NotAdjacentTilesException();
     });
 
-    Exception exception = Assertions.assertThrows(InvalidPawnMovementException.class, () -> {
-      throw new InvalidPawnMovementException("Test");
+    Exception exception = Assertions.assertThrows(NotAdjacentTilesException.class, () -> {
+      throw new NotAdjacentTilesException("Test");
     });
 
     Assertions.assertEquals("Test", exception.getMessage());
@@ -75,10 +75,9 @@ public class ExceptionTest {
   @Test
   void correctThrowNumberOfWallsBelowZeroException() {
     GameBoard gameBoard = new GameBoard();
-    GameBoard.Tile tile = gameBoard.getGameState()[0][4];
-    Pawn pawn = new Pawn(tile, Color.black, 0);
+    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(),
+            gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 0);
 
     Assertions.assertThrows(NumberOfWallsBelowZeroException.class, pawn::decrementNumberOfWalls);
-
   }
 }
