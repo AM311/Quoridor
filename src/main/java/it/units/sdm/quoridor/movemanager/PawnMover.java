@@ -9,7 +9,7 @@ public class PawnMover implements Action<Tile> {
   public void execute(GameBoard gameBoard, Pawn pawn, Tile target) {
     Tile startingTile = pawn.getCurrentTile();
     pawn.move(target);
-    gameBoard.getGameState()[target.getRow()][target.getColumn()].setOccupied(true);
-    gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn()].setOccupied(false);
+    gameBoard.getTile(target.getRow(), target.getColumn()).setOccupied(true);
+    gameBoard.getTile(startingTile.getRow(), startingTile.getColumn()).setOccupied(false);
   }
 }

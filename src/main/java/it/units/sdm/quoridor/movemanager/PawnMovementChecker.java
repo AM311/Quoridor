@@ -68,10 +68,10 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     int destinationRow = destinationTile.getRow();
     int destinationColumn = destinationTile.getColumn();
     if (destinationRow == 0 || destinationRow == 8) {
-      return gameBoard.getGameState()[destinationRow][currentColumn].isOccupied();
+      return gameBoard.getTile(destinationRow, currentColumn).isOccupied();
     }
     if (destinationColumn == 0 || destinationColumn == 8) {
-      return gameBoard.getGameState()[currentRow][destinationColumn].isOccupied();
+      return gameBoard.getTile(currentRow, destinationColumn).isOccupied();
     }
     return false;
   }

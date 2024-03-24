@@ -1,10 +1,15 @@
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
+import it.units.sdm.quoridor.model.GameBoard.Tile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
@@ -21,14 +26,56 @@ public class GameBoardTest {
   @CsvSource({"3, 4", "2, 1", "5, 6", "7, 2"})
   void gameStateInitialization_rowsAreConsistent(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(row, gameBoard.getGameState()[row][column].getRow());
+    Assertions.assertEquals(row, gameBoard.getTile(row, column).getRow());
   }
 
   @ParameterizedTest
   @CsvSource({"3, 4", "2, 1", "5, 6", "7, 2"})
   void gameStateInitialization_columnsAreConsistent(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(column, gameBoard.getGameState()[row][column].getColumn());
+    Assertions.assertEquals(column, gameBoard.getTile(row, column).getColumn());
+  }
+
+  //=======================
+
+  @ParameterizedTest
+  @ValueSource(ints = {1,3,5})
+  void getRowTest_tilesAreConsistent(int row) {
+    GameBoard gameBoard = new GameBoard();
+
+    List<Tile> expected = new ArrayList<>();
+    for(int i = 0; i < gameBoard.getSideLength(); i++)
+      expected.add(gameBoard.getTile(row,i));
+
+    Assertions.assertEquals(expected, gameBoard.getRowTiles(row));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {-1,9,99})
+  void getRowTest_OutOfGameBoardExceptionIsThrown(int row) {
+    GameBoard gameBoard = new GameBoard();
+
+    Assertions.assertThrows(OutOfGameBoardException.class, () -> gameBoard.getRowTiles(row));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1,3,5})
+  void getColumnTest_tilesAreConsistent(int column) {
+    GameBoard gameBoard = new GameBoard();
+
+    List<Tile> expected = new ArrayList<>();
+    for(int i = 0; i < gameBoard.getSideLength(); i++)
+      expected.add(gameBoard.getTile(i, column));
+
+    Assertions.assertEquals(expected, gameBoard.getColumnTiles(column));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {-1,9,99})
+  void getColumnTest_OutOfGameBoardExceptionIsThrown(int column) {
+    GameBoard gameBoard = new GameBoard();
+
+    Assertions.assertThrows(OutOfGameBoardException.class, () -> gameBoard.getColumnTiles(column));
   }
 
   //=======================
@@ -63,10 +110,10 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(LEFT),
-                    gameBoard.getGameState()[row][column].getLink(RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(UP),
-                    gameBoard.getGameState()[row][column].getLink(DOWN)
+                    gameBoard.getTile(row, column).getLink(LEFT),
+                    gameBoard.getTile(row, column).getLink(RIGHT),
+                    gameBoard.getTile(row, column).getLink(UP),
+                    gameBoard.getTile(row, column).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -79,8 +126,8 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(LEFT),
-                    gameBoard.getGameState()[row][column].getLink(RIGHT)
+                    gameBoard.getTile(row, column).getLink(LEFT),
+                    gameBoard.getTile(row, column).getLink(RIGHT)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -92,8 +139,8 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(LEFT)
+                    gameBoard.getTile(row, column).getLink(RIGHT),
+                    gameBoard.getTile(row, column).getLink(LEFT)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -106,8 +153,8 @@ public class GameBoardTest {
 
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(UP),
-                    gameBoard.getGameState()[row][column].getLink(DOWN)
+                    gameBoard.getTile(row, column).getLink(UP),
+                    gameBoard.getTile(row, column).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -120,8 +167,8 @@ public class GameBoardTest {
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(DOWN),
-                    gameBoard.getGameState()[row][column].getLink(UP)
+                    gameBoard.getTile(row, column).getLink(DOWN),
+                    gameBoard.getTile(row, column).getLink(UP)
             };
     Assertions.assertArrayEquals(expected, actual);
   }
@@ -132,28 +179,28 @@ public class GameBoardTest {
   @CsvSource({"0, 4", "0, 8", "2, 0", "3, 1", "8, 0", "8, 8"})
   void tilesPosition_inFirstRowIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(row == 0, gameBoard.isInFirstRow(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(row == 0, gameBoard.isInFirstRow(gameBoard.getTile(row, column)));
   }
 
   @ParameterizedTest
   @CsvSource({"0, 4", "0, 8", "2, 0", "3, 1", "8, 0", "8, 8"})
   void tilesPosition_inLastRowIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(row == 8, gameBoard.isInLastRow(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(row == 8, gameBoard.isInLastRow(gameBoard.getTile(row, column)));
   }
 
   @ParameterizedTest
   @CsvSource({"0, 4", "0, 8", "2, 0", "3, 1", "8, 0", "8, 8"})
   void tilesPosition_inFirstColumnIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(column == 0, gameBoard.isInFirstColumn(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(column == 0, gameBoard.isInFirstColumn(gameBoard.getTile(row, column)));
   }
 
   @ParameterizedTest
   @CsvSource({"0, 4", "0, 8", "2, 0", "3, 1", "8, 0", "8, 8"})
   void tilesPosition_inLastColumnIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(column == 8, gameBoard.isInLastColumn(gameBoard.getGameState()[row][column]));
+    Assertions.assertEquals(column == 8, gameBoard.isInLastColumn(gameBoard.getTile(row, column)));
   }
 
   //=======================
@@ -162,28 +209,28 @@ public class GameBoardTest {
   @CsvSource({"1, 4", "3, 8", "8, 2"})
   void nearTiles_leftTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row][column - 1], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], LEFT));
+    Assertions.assertEquals(gameBoard.getTile(row, column-1), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), LEFT));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 7", "8, 2"})
   void nearTiles_rightTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row][column + 1], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], RIGHT));
+    Assertions.assertEquals(gameBoard.getTile(row, column+1), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), RIGHT));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "8, 2"})
   void nearTiles_upperTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row - 1][column], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], UP));
+    Assertions.assertEquals(gameBoard.getTile(row-1, column), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), UP));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "7, 2"})
   void nearTiles_lowerTileIsCorrect(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertEquals(gameBoard.getGameState()[row + 1][column], gameBoard.getAdjacentTile(gameBoard.getGameState()[row][column], DOWN));
+    Assertions.assertEquals(gameBoard.getTile(row+1, column), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), DOWN));
   }
 
   //=======================
@@ -245,9 +292,9 @@ public class GameBoardTest {
   @Test
   void cloneTest_withWalls() throws CloneNotSupportedException {
     GameBoard gameBoard = new GameBoard();
-    gameBoard.getGameState()[2][3].setLink(UP, WALL);
-    gameBoard.getGameState()[5][2].setLink(LEFT, WALL);
-    gameBoard.getGameState()[0][0].setLink(DOWN, WALL);
+    gameBoard.getTile(2,3).setLink(UP, WALL);
+    gameBoard.getTile(5,2).setLink(LEFT, WALL);
+    gameBoard.getTile(0,0).setLink(DOWN, WALL);
 
     Assertions.assertEquals(gameBoard, gameBoard.clone());
   }
@@ -255,15 +302,15 @@ public class GameBoardTest {
   @Test
   void cloneTest_objectsAreIndependent_clonedIsModified() throws CloneNotSupportedException {
     GameBoard gameBoard = new GameBoard();
-    gameBoard.getGameState()[2][3].setLink(UP, WALL);
-    gameBoard.getGameState()[5][2].setLink(LEFT, WALL);
-    gameBoard.getGameState()[0][0].setLink(DOWN, WALL);
+    gameBoard.getTile(2,3).setLink(UP, WALL);
+    gameBoard.getTile(5,2).setLink(LEFT, WALL);
+    gameBoard.getTile(0,0).setLink(DOWN, WALL);
 
     GameBoard clonedGameBoard = (GameBoard) gameBoard.clone();
 
-    clonedGameBoard.getGameState()[6][2].setLink(UP, WALL);
-    clonedGameBoard.getGameState()[1][4].setLink(RIGHT, WALL);
-    clonedGameBoard.getGameState()[5][2].setLink(LEFT, FREE);
+    clonedGameBoard.getTile(6,2).setLink(UP, WALL);
+    clonedGameBoard.getTile(1,4).setLink(RIGHT, WALL);
+    clonedGameBoard.getTile(5,2).setLink(LEFT, FREE);
 
     Assertions.assertNotEquals(gameBoard, clonedGameBoard);
   }
@@ -271,15 +318,15 @@ public class GameBoardTest {
   @Test
   void cloneTest_objectsAreIndependent_originalIsModified() throws CloneNotSupportedException {
     GameBoard gameBoard = new GameBoard();
-    gameBoard.getGameState()[2][3].setLink(UP, WALL);
-    gameBoard.getGameState()[5][2].setLink(LEFT, WALL);
-    gameBoard.getGameState()[0][0].setLink(DOWN, WALL);
+    gameBoard.getTile(2,3).setLink(UP, WALL);
+    gameBoard.getTile(5,2).setLink(LEFT, WALL);
+    gameBoard.getTile(0,0).setLink(DOWN, WALL);
 
     GameBoard clonedGameBoard = (GameBoard) gameBoard.clone();
 
-    gameBoard.getGameState()[6][2].setLink(UP, WALL);
-    gameBoard.getGameState()[1][4].setLink(RIGHT, WALL);
-    gameBoard.getGameState()[5][2].setLink(LEFT, FREE);
+    gameBoard.getTile(6,2).setLink(UP, WALL);
+    gameBoard.getTile(1,4).setLink(RIGHT, WALL);
+    gameBoard.getTile(5,2).setLink(LEFT, FREE);
 
     Assertions.assertNotEquals(gameBoard, clonedGameBoard);
   }

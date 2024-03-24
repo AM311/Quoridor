@@ -7,6 +7,7 @@ import it.units.sdm.quoridor.utils.Directions.Direction;
 import it.units.sdm.quoridor.utils.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
@@ -38,13 +39,13 @@ public class GameBoard implements Cloneable {
     );
 
     List<List<Tile>> destinationTiles = List.of(
-            List.of(gameState[sideLength-1]),
-            List.of(gameState[0]),
-            List.of(Arrays.stream(gameState).map(x -> x[sideLength-1]).toArray(Tile[]::new)),
-            List.of(Arrays.stream(gameState).map(x -> x[0]).toArray(Tile[]::new))
+            getRowTiles(sideLength-1),
+            getRowTiles(0),
+            getColumnTiles(sideLength-1),
+            getColumnTiles(0)
     );
 
-    return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();
+    return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();     //todo
   }
 
   private void setEdgesLinks() {
@@ -62,6 +63,25 @@ public class GameBoard implements Cloneable {
     } catch (ArrayIndexOutOfBoundsException ex) {
       throw new OutOfGameBoardException();
     }
+  }
+
+  public List<Tile> getRowTiles(int row) throws OutOfGameBoardException {
+    try {
+      return List.of(gameState[row]);
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      throw new OutOfGameBoardException();
+    }
+  }
+  public List<Tile> getColumnTiles(int column) throws OutOfGameBoardException {
+    try {
+      return List.of(Arrays.stream(gameState).map(x -> x[column]).toArray(Tile[]::new));
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      throw new OutOfGameBoardException();
+    }
+  }
+
+  public List<Tile> getTiles() {
+    return Arrays.stream(gameState).flatMap(Arrays::stream).collect(Collectors.toList());
   }
 
   @Override
@@ -86,9 +106,9 @@ public class GameBoard implements Cloneable {
     return cloneGameBoard;
   }
 
-  public Tile[][] getGameState() {
+  private Tile[][] getGameState() {
     return gameState;
-  }         //todo rimuovere...
+  }
 
   public boolean isInFirstRow(Tile tile) {
     return tile.row == 0;

@@ -19,8 +19,8 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[startingRow][startingColumn]);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[destinationRow][destinationColumn]);
+    pawn.move(gameBoard.getTile(startingRow, startingColumn));
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(destinationRow, destinationColumn));
     Assertions.assertFalse(checkMove);
   }
 
@@ -31,9 +31,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[startingRow][startingColumn]);
-    gameBoard.getGameState()[destinationRow][destinationColumn].setOccupied(false);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[destinationRow][destinationColumn]);
+    pawn.move(gameBoard.getTile(startingRow, startingColumn));
+    gameBoard.getTile(destinationRow, destinationColumn).setOccupied(false);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(destinationRow, destinationColumn));
     Assertions.assertTrue(checkMove);
   }
 
@@ -44,9 +44,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[startingRow][startingColumn]);
-    gameBoard.getGameState()[occupiedRow][occupiedColumn].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[occupiedRow][occupiedColumn]);
+    pawn.move(gameBoard.getTile(startingRow, startingColumn));
+    gameBoard.getTile(occupiedRow, occupiedColumn).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(occupiedRow, occupiedColumn));
     Assertions.assertFalse(checkMove);
   }
 
@@ -56,9 +56,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][6]);
-    gameBoard.getGameState()[4][6].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][6]);
+    pawn.move(gameBoard.getTile(3,6));
+    gameBoard.getTile(4,6).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,6));
     Assertions.assertTrue(checkMove);
   }
 
@@ -68,9 +68,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[4][6]);
-    gameBoard.getGameState()[4][7].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][8]);
+    pawn.move(gameBoard.getTile(4,6));
+    gameBoard.getTile(4,7).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,8));
     Assertions.assertTrue(checkMove);
   }
 
@@ -80,9 +80,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[7][6]);
-    gameBoard.getGameState()[7][5].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[7][4]);
+    pawn.move(gameBoard.getTile(7,6));
+    gameBoard.getTile(7,5).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(7,4));
     Assertions.assertTrue(checkMove);
   }
 
@@ -92,9 +92,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][6]);
-    gameBoard.getGameState()[2][6].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[0][6]);
+    pawn.move(gameBoard.getTile(3,6));
+    gameBoard.getTile(2,6).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(0,6));
     Assertions.assertFalse(checkMove);
   }
 
@@ -104,9 +104,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][3]);
-    gameBoard.getGameState()[4][3].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][3]);
+    pawn.move(gameBoard.getTile(3,3));
+    gameBoard.getTile(4,3).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,3));
     Assertions.assertFalse(checkMove);
   }
 
@@ -116,9 +116,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][6]);
-    gameBoard.getGameState()[1][6].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[0][6]);
+    pawn.move(gameBoard.getTile(3,6));
+    gameBoard.getTile(1,6).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(0,6));
     Assertions.assertFalse(checkMove);
   }
 
@@ -128,9 +128,9 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[6][2]);
-    gameBoard.getGameState()[6][4].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][5]);
+    pawn.move(gameBoard.getTile(6,2));
+    gameBoard.getTile(6,4).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,5));
     Assertions.assertFalse(checkMove);
   }
 
@@ -140,12 +140,12 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[5][3]);
-    gameBoard.getGameState()[5][3].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][4].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[4][3].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[4][4].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][3]);
+    pawn.move(gameBoard.getTile(5,3));
+    gameBoard.getTile(5,3).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,4).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,3).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,4).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,3));
     Assertions.assertFalse(checkMove);
   }
 
@@ -155,12 +155,12 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][2]);
-    gameBoard.getGameState()[3][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[3][3]);
+    pawn.move(gameBoard.getTile(3,2));
+    gameBoard.getTile(3,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(3,3));
     Assertions.assertFalse(checkMove);
   }
 
@@ -170,13 +170,13 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][1]);
-    gameBoard.getGameState()[3][2].setOccupied(true);
-    gameBoard.getGameState()[3][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[3][3]);
+    pawn.move(gameBoard.getTile(3,1));
+    gameBoard.getTile(3,2).setOccupied(true);
+    gameBoard.getTile(3,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(3,3));
     Assertions.assertFalse(checkMove);
   }
 
@@ -186,13 +186,13 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[7][1]);
-    gameBoard.getGameState()[6][1].setOccupied(true);
-    gameBoard.getGameState()[6][1].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][2].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][1].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][2].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][1]);
+    pawn.move(gameBoard.getTile(7,1));
+    gameBoard.getTile(6,1).setOccupied(true);
+    gameBoard.getTile(6,1).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,1).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,1));
     Assertions.assertFalse(checkMove);
   }
 
@@ -202,13 +202,13 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][6]);
-    gameBoard.getGameState()[2][6].setOccupied(true);
-    gameBoard.getGameState()[2][6].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][7].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[1][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[1][7].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[2][7]);
+    pawn.move(gameBoard.getTile(3,6));
+    gameBoard.getTile(2,6).setOccupied(true);
+    gameBoard.getTile(2,6).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,7).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,7).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(2,7));
     Assertions.assertTrue(checkMove);
   }
 
@@ -218,13 +218,13 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[3][1]);
-    gameBoard.getGameState()[3][2].setOccupied(true);
-    gameBoard.getGameState()[3][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[2][2]);
+    pawn.move(gameBoard.getTile(3,1));
+    gameBoard.getTile(3,2).setOccupied(true);
+    gameBoard.getTile(3,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(2,2));
     Assertions.assertTrue(checkMove);
   }
 
@@ -234,19 +234,19 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[7][7]);
-    gameBoard.getGameState()[7][6].setOccupied(true);
-    gameBoard.getGameState()[7][5].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][6].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][5].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(7,7));
+    gameBoard.getTile(7,6).setOccupied(true);
+    gameBoard.getTile(7,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
-    gameBoard.getGameState()[7][5].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[8][5].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][6].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[8][6].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][6]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,6));
     Assertions.assertFalse(checkMove);
   }
 
@@ -256,19 +256,19 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[7][4]);
-    gameBoard.getGameState()[7][5].setOccupied(true);
-    gameBoard.getGameState()[7][5].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][6].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][5].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(7,4));
+    gameBoard.getTile(7,5).setOccupied(true);
+    gameBoard.getTile(7,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
-    gameBoard.getGameState()[7][5].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[8][5].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][6].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[8][6].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][5]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,5));
     Assertions.assertFalse(checkMove);
   }
 
@@ -278,13 +278,13 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[4][3]);
-    gameBoard.getGameState()[4][3].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[4][4].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][3].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][4].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(4,3));
+    gameBoard.getTile(4,3).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,4).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,4).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][3]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,3));
     Assertions.assertTrue(checkMove);
   }
 
@@ -294,14 +294,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[5][2]);
-    gameBoard.getGameState()[4][2].setOccupied(true);
-    gameBoard.getGameState()[4][2].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[4][3].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][2].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[3][3].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(5,2));
+    gameBoard.getTile(4,2).setOccupied(true);
+    gameBoard.getTile(4,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,3).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][1]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,1));
     Assertions.assertTrue(checkMove);
   }
 
@@ -311,14 +311,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[5][6]);
-    gameBoard.getGameState()[5][5].setOccupied(true);
-    gameBoard.getGameState()[5][5].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][5].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(5,6));
+    gameBoard.getTile(5,5).setOccupied(true);
+    gameBoard.getTile(5,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][5]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,5));
     Assertions.assertTrue(checkMove);
   }
 
@@ -328,14 +328,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[4][2]);
-    gameBoard.getGameState()[4][1].setOccupied(true);
-    gameBoard.getGameState()[4][1].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[4][0].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][0].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][1].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(4,2));
+    gameBoard.getTile(4,1).setOccupied(true);
+    gameBoard.getTile(4,1).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,0).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,0).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,1).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][1]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,1));
     Assertions.assertTrue(checkMove);
   }
 
@@ -345,14 +345,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[4][5]);
-    gameBoard.getGameState()[5][5].setOccupied(true);
-    gameBoard.getGameState()[5][5].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[5][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][5].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][6].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(4,5));
+    gameBoard.getTile(5,5).setOccupied(true);
+    gameBoard.getTile(5,5).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][4]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,4));
     Assertions.assertTrue(checkMove);
   }
 
@@ -362,14 +362,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[2][3]);
-    gameBoard.getGameState()[2][4].setOccupied(true);
-    gameBoard.getGameState()[2][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[1][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[2][5].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[1][5].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(2,3));
+    gameBoard.getTile(2,4).setOccupied(true);
+    gameBoard.getTile(2,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[3][4]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(3,4));
     Assertions.assertTrue(checkMove);
   }
 
@@ -379,14 +379,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[6][6]);
-    gameBoard.getGameState()[7][6].setOccupied(true);
-    gameBoard.getGameState()[7][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][7].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[8][5].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[8][7].setLink(Direction.UP, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(6,6));
+    gameBoard.getTile(7,6).setOccupied(true);
+    gameBoard.getTile(7,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,7).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,7).setLink(Direction.UP, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[7][5]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(7,5));
     Assertions.assertTrue(checkMove);
   }
 
@@ -396,14 +396,14 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[5][2]);
-    gameBoard.getGameState()[6][2].setOccupied(true);
-    gameBoard.getGameState()[6][1].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][2].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][2].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][1].setLink(Direction.UP, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(5,2));
+    gameBoard.getTile(6,2).setOccupied(true);
+    gameBoard.getTile(6,1).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,1).setLink(Direction.UP, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][1]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,1));
     Assertions.assertTrue(checkMove);
   }
 
@@ -413,19 +413,19 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[5][2]);
-    gameBoard.getGameState()[6][2].setOccupied(true);
-    gameBoard.getGameState()[6][1].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][2].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][2].setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][1].setLink(Direction.UP, GameBoard.LinkState.WALL);
+    pawn.move(gameBoard.getTile(5,2));
+    gameBoard.getTile(6,2).setOccupied(true);
+    gameBoard.getTile(6,1).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,1).setLink(Direction.UP, GameBoard.LinkState.WALL);
 
-    gameBoard.getGameState()[6][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[6][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getGameState()[7][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
 
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][3]);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,3));
     Assertions.assertFalse(checkMove);
   }
 
@@ -435,10 +435,10 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[1][1]);
-    gameBoard.getGameState()[1][1].setOccupied(true);
-    gameBoard.getGameState()[0][1].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[0][2]);
+    pawn.move(gameBoard.getTile(1,1));
+    gameBoard.getTile(1,1).setOccupied(true);
+    gameBoard.getTile(0,1).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(0,2));
     Assertions.assertTrue(checkMove);
   }
 
@@ -448,10 +448,10 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[6][1]);
-    gameBoard.getGameState()[6][1].setOccupied(true);
-    gameBoard.getGameState()[6][0].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][0]);
+    pawn.move(gameBoard.getTile(6,1));
+    gameBoard.getTile(6,1).setOccupied(true);
+    gameBoard.getTile(6,0).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,0));
     Assertions.assertTrue(checkMove);
 
   }
@@ -462,10 +462,10 @@ public class MovePawnCheckerTest {
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getGameState()[5][8]);
-    gameBoard.getGameState()[5][8].setOccupied(true);
-    gameBoard.getGameState()[4][8].setOccupied(true);
-    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][7]);
+    pawn.move(gameBoard.getTile(5,8));
+    gameBoard.getTile(5,8).setOccupied(true);
+    gameBoard.getTile(4,8).setOccupied(true);
+    boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,7));
     Assertions.assertFalse(checkMove);
 
   }

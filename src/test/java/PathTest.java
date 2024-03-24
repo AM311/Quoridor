@@ -1,12 +1,8 @@
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.movemanager.PathExistenceChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
-import java.util.List;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
@@ -26,10 +22,10 @@ public class PathTest {
   void checkBlockedPath() {
     Game game = new Game(2);
 
-    for (GameBoard.Tile tile : game.getGameBoard().getGameState()[4]) {
+    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(4)) {
       tile.setLink(DOWN, WALL);
     }
-    for (GameBoard.Tile tile : game.getGameBoard().getGameState()[5]) {
+    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(5)) {
       tile.setLink(UP, WALL);
     }
     Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
@@ -53,10 +49,10 @@ public class PathTest {
 
     //-------------------
 
-    for (GameBoard.Tile tile : game.getGameBoard().getGameState()[4]) {
+    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(4)) {
       tile.setLink(DOWN, WALL);
     }
-    for (GameBoard.Tile tile : game.getGameBoard().getGameState()[5]) {
+    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(5)) {
       tile.setLink(UP, WALL);
     }
     Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
@@ -67,13 +63,13 @@ public class PathTest {
     Game game = new Game(2);
 
     for (int i = 0; i < 7; i++) {
-      game.getGameBoard().getGameState()[4][i].setLink(DOWN, WALL);
-      game.getGameBoard().getGameState()[5][i].setLink(UP, WALL);
+      game.getGameBoard().getTile(4,i).setLink(DOWN, WALL);
+      game.getGameBoard().getTile(5,i).setLink(UP, WALL);
     }
 
     for (int i = 0; i < 5; i++) {
-      game.getGameBoard().getGameState()[i][6].setLink(RIGHT, WALL);
-      game.getGameBoard().getGameState()[i][7].setLink(LEFT, WALL);
+      game.getGameBoard().getTile(i,6).setLink(RIGHT, WALL);
+      game.getGameBoard().getTile(i,7).setLink(LEFT, WALL);
     }
 
     Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
@@ -84,13 +80,13 @@ public class PathTest {
     Game game = new Game(2);
 
     for (int i = 0; i < 7; i++) {
-      game.getGameBoard().getGameState()[4][i].setLink(DOWN, WALL);
-      game.getGameBoard().getGameState()[5][i].setLink(UP, WALL);
+      game.getGameBoard().getTile(4,i).setLink(DOWN, WALL);
+      game.getGameBoard().getTile(5,i).setLink(UP, WALL);
     }
 
     for (int i = 5; i < 9; i++) {
-      game.getGameBoard().getGameState()[i][6].setLink(RIGHT, WALL);
-      game.getGameBoard().getGameState()[i][7].setLink(LEFT, WALL);
+      game.getGameBoard().getTile(i,6).setLink(RIGHT, WALL);
+      game.getGameBoard().getTile(i,7).setLink(LEFT, WALL);
     }
 
     Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));

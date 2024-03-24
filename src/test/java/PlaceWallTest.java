@@ -1,7 +1,6 @@
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
-import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 import it.units.sdm.quoridor.movemanager.ActionChecker;
 import it.units.sdm.quoridor.movemanager.WallPlacementChecker;
@@ -9,9 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import java.awt.*;
-import java.util.List;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
@@ -27,17 +23,17 @@ public class PlaceWallTest {
   void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, WALL};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(LEFT),
-                    gameBoard.getGameState()[row][column].getLink(RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(UP),
-                    gameBoard.getGameState()[row][column].getLink(DOWN)
+                    gameBoard.getTile(row, column).getLink(LEFT),
+                    gameBoard.getTile(row, column).getLink(RIGHT),
+                    gameBoard.getTile(row, column).getLink(UP),
+                    gameBoard.getTile(row, column).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -48,17 +44,17 @@ public class PlaceWallTest {
   void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, WALL, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row + 1][column].getLink(LEFT),
-                    gameBoard.getGameState()[row + 1][column].getLink(RIGHT),
-                    gameBoard.getGameState()[row + 1][column].getLink(UP),
-                    gameBoard.getGameState()[row + 1][column].getLink(DOWN)
+                    gameBoard.getTile(row+1, column).getLink(LEFT),
+                    gameBoard.getTile(row+1, column).getLink(RIGHT),
+                    gameBoard.getTile(row+1, column).getLink(UP),
+                    gameBoard.getTile(row+1, column).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -69,17 +65,17 @@ public class PlaceWallTest {
   void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, FREE, WALL};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column + 1].getLink(LEFT),
-                    gameBoard.getGameState()[row][column + 1].getLink(RIGHT),
-                    gameBoard.getGameState()[row][column + 1].getLink(UP),
-                    gameBoard.getGameState()[row][column + 1].getLink(DOWN)
+                    gameBoard.getTile(row, column+1).getLink(LEFT),
+                    gameBoard.getTile(row, column+1).getLink(RIGHT),
+                    gameBoard.getTile(row, column+1).getLink(UP),
+                    gameBoard.getTile(row, column+1).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -90,17 +86,17 @@ public class PlaceWallTest {
   void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, FREE, WALL, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row + 1][column + 1].getLink(LEFT),
-                    gameBoard.getGameState()[row + 1][column + 1].getLink(RIGHT),
-                    gameBoard.getGameState()[row + 1][column + 1].getLink(UP),
-                    gameBoard.getGameState()[row + 1][column + 1].getLink(DOWN)
+                    gameBoard.getTile(row+1, column+1).getLink(LEFT),
+                    gameBoard.getTile(row+1, column+1).getLink(RIGHT),
+                    gameBoard.getTile(row+1, column+1).getLink(UP),
+                    gameBoard.getTile(row+1, column+1).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -110,17 +106,17 @@ public class PlaceWallTest {
   void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[0][0];
+    Tile startingTile = gameBoard.getTile(0, 0);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{EDGE, FREE, EDGE, WALL};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[0][0].getLink(LEFT),
-                    gameBoard.getGameState()[0][0].getLink(RIGHT),
-                    gameBoard.getGameState()[0][0].getLink(UP),
-                    gameBoard.getGameState()[0][0].getLink(DOWN)
+                    gameBoard.getTile(0, 0).getLink(LEFT),
+                    gameBoard.getTile(0, 0).getLink(RIGHT),
+                    gameBoard.getTile(0, 0).getLink(UP),
+                    gameBoard.getTile(0, 0).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -131,17 +127,17 @@ public class PlaceWallTest {
   void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column].getLink(LEFT),
-                    gameBoard.getGameState()[row][column].getLink(RIGHT),
-                    gameBoard.getGameState()[row][column].getLink(UP),
-                    gameBoard.getGameState()[row][column].getLink(DOWN)
+                    gameBoard.getTile(row, column).getLink(LEFT),
+                    gameBoard.getTile(row, column).getLink(RIGHT),
+                    gameBoard.getTile(row, column).getLink(UP),
+                    gameBoard.getTile(row, column).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -152,17 +148,17 @@ public class PlaceWallTest {
   void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, FREE, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row - 1][column].getLink(LEFT),
-                    gameBoard.getGameState()[row - 1][column].getLink(RIGHT),
-                    gameBoard.getGameState()[row - 1][column].getLink(UP),
-                    gameBoard.getGameState()[row - 1][column].getLink(DOWN)
+                    gameBoard.getTile(row - 1, column).getLink(LEFT),
+                    gameBoard.getTile(row - 1, column).getLink(RIGHT),
+                    gameBoard.getTile(row - 1, column).getLink(UP),
+                    gameBoard.getTile(row - 1, column).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -173,17 +169,17 @@ public class PlaceWallTest {
   void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, WALL, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row][column - 1].getLink(LEFT),
-                    gameBoard.getGameState()[row][column - 1].getLink(RIGHT),
-                    gameBoard.getGameState()[row][column - 1].getLink(UP),
-                    gameBoard.getGameState()[row][column - 1].getLink(DOWN)
+                    gameBoard.getTile(row, column-1).getLink(LEFT),
+                    gameBoard.getTile(row, column-1).getLink(RIGHT),
+                    gameBoard.getTile(row, column-1).getLink(UP),
+                    gameBoard.getTile(row, column-1).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -194,17 +190,17 @@ public class PlaceWallTest {
   void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{FREE, WALL, FREE, FREE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[row - 1][column - 1].getLink(LEFT),
-                    gameBoard.getGameState()[row - 1][column - 1].getLink(RIGHT),
-                    gameBoard.getGameState()[row - 1][column - 1].getLink(UP),
-                    gameBoard.getGameState()[row - 1][column - 1].getLink(DOWN)
+                    gameBoard.getTile(row-1, column-1).getLink(LEFT),
+                    gameBoard.getTile(row-1, column-1).getLink(RIGHT),
+                    gameBoard.getTile(row-1, column-1).getLink(UP),
+                    gameBoard.getTile(row-1, column-1).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -214,17 +210,17 @@ public class PlaceWallTest {
   void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1];
+    Tile startingTile = gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1);
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, EDGE, FREE, EDGE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(LEFT),
-                    gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(RIGHT),
-                    gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(UP),
-                    gameBoard.getGameState()[gameBoard.getSideLength() - 1][gameBoard.getSideLength() - 1].getLink(DOWN)
+                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(LEFT),
+                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(RIGHT),
+                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(UP),
+                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -235,7 +231,7 @@ public class PlaceWallTest {
   void horizontalWallIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
@@ -247,7 +243,7 @@ public class PlaceWallTest {
   void horizontalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
@@ -258,8 +254,8 @@ public class PlaceWallTest {
   void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
-    Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
+    Tile startingTile = gameBoard.getTile(row, column);
+    Tile belowStartingTile = gameBoard.getTile(startingTile.getRow() + 1,startingTile.getColumn());
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     startingTile.setLink(RIGHT, WALL);
@@ -274,8 +270,8 @@ public class PlaceWallTest {
   void horizontalWallAboveVerticalIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
-    Tile belowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
+    Tile startingTile = gameBoard.getTile(row, column);
+    Tile belowStartingTile = gameBoard.getTile(startingTile.getRow() + 1,startingTile.getColumn());
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     belowStartingTile.setLink(RIGHT, WALL);
@@ -288,7 +284,7 @@ public class PlaceWallTest {
   void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     startingTile.setLink(DOWN, WALL);
 
@@ -300,9 +296,9 @@ public class PlaceWallTest {
   void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    Tile tileRightToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() + 1];
+    Tile tileRightToStartingTile = gameBoard.getTile(startingTile.getRow(),startingTile.getColumn() + 1);
 
     tileRightToStartingTile.setLink(DOWN, WALL);
 
@@ -314,9 +310,9 @@ public class PlaceWallTest {
   void horizontalWallsNearEachOtherIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
-    Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
+    Tile tileLeftToStartingTile = gameBoard.getTile(startingTile.getRow(),startingTile.getColumn() - 1);
 
     tileLeftToStartingTile.setLink(DOWN, WALL);
 
@@ -328,7 +324,7 @@ public class PlaceWallTest {
   void verticalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
 
     Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
@@ -339,7 +335,7 @@ public class PlaceWallTest {
   void verticalWallIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
 
     Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
@@ -350,9 +346,9 @@ public class PlaceWallTest {
   void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
-    Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
+    Tile tileLeftToStartingTile = gameBoard.getTile(startingTile.getRow(),startingTile.getColumn() - 1);
 
     startingTile.setLink(UP, WALL);
     tileLeftToStartingTile.setLink(UP, WALL);
@@ -365,9 +361,9 @@ public class PlaceWallTest {
   void verticalWallRightToHorizontalWallIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
-    Tile tileLeftToStartingTile = gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn() - 1];
+    Tile tileLeftToStartingTile = gameBoard.getTile(startingTile.getRow(),startingTile.getColumn() - 1);
 
     tileLeftToStartingTile.setLink(UP, WALL);
 
@@ -379,7 +375,7 @@ public class PlaceWallTest {
   void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
 
     startingTile.setLink(LEFT, WALL);
@@ -392,9 +388,9 @@ public class PlaceWallTest {
   void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
-    Tile tileAboveStartingTile = gameBoard.getGameState()[startingTile.getRow() - 1][startingTile.getColumn()];
+    Tile tileAboveStartingTile = gameBoard.getTile(startingTile.getRow() - 1,startingTile.getColumn());
 
     tileAboveStartingTile.setLink(LEFT, WALL);
 
@@ -406,9 +402,9 @@ public class PlaceWallTest {
   void verticalWallsNearEachOtherIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(VERTICAL, startingTile);
-    Tile tileBelowStartingTile = gameBoard.getGameState()[startingTile.getRow() + 1][startingTile.getColumn()];
+    Tile tileBelowStartingTile = gameBoard.getTile(startingTile.getRow() + 1,startingTile.getColumn());
 
     tileBelowStartingTile.setLink(DOWN, WALL);
 
@@ -422,7 +418,7 @@ public class PlaceWallTest {
     GameBoard gameBoard = game.getGameBoard();
     for(int i = 0; i < 10; i++)
       game.getPlayingPawn().decrementNumberOfWalls();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
     Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
@@ -434,7 +430,7 @@ public class PlaceWallTest {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();
-    Tile startingTile = gameBoard.getGameState()[row][column];
+    Tile startingTile = gameBoard.getTile(row, column);
     Wall wall = new Wall(HORIZONTAL, startingTile);
     game.placeWall(wall);
 

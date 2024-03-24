@@ -20,11 +20,10 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
       Set<Tile> toVisitTiles = new HashSet<>();
 
       //Init
-      for (Tile[] tileArr : dummyGameBoard.getGameState()) {
-        for (Tile tile : tileArr) {
-          toVisitTiles.add(tile);
-          potentials.put(tile, Integer.MAX_VALUE);
-        }
+      for (Tile tile : dummyGameBoard.getTiles()) {
+        toVisitTiles.add(tile);
+        potentials.put(tile, Integer.MAX_VALUE);
+
       }
 
       Tile startingTile = pawn.getCurrentTile();
