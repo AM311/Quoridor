@@ -8,7 +8,7 @@ public class PawnMover implements Action<Tile> {
   @Override
   public void execute(GameBoard gameBoard, Pawn pawn, Tile target) {
     Tile startingTile = pawn.getCurrentTile();
-    pawn.setCurrentTile(target);
+    pawn.move(target);
     gameBoard.getGameState()[target.getRow()][target.getColumn()].setOccupied(true);
     gameBoard.getGameState()[startingTile.getRow()][startingTile.getColumn()].setOccupied(false);
   }

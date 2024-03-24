@@ -28,20 +28,6 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
             isOnBorderMove(gameBoard, destinationTile, playingPawn));
   }
 
-  private boolean isOnBorderMove(GameBoard gameBoard, Tile destinationTile, Pawn playingPawn) {
-    int currentRow = playingPawn.getCurrentTile().getRow();
-    int currentColumn = playingPawn.getCurrentTile().getColumn();
-    int destinationRow = destinationTile.getRow();
-    int destinationColumn = destinationTile.getColumn();
-    if (destinationRow == 0 || destinationRow == 8) {
-      return gameBoard.getGameState()[destinationRow][currentColumn].isOccupied();
-    }
-    if (destinationColumn == 0 || destinationColumn == 8) {
-      return gameBoard.getGameState()[currentRow][destinationColumn].isOccupied();
-    }
-    return false;
-  }
-
   private boolean isValidStraightMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
     for (Direction direction : Directions.getStraightDirections()) {
       try {
@@ -64,27 +50,6 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     return false;
   }
 
-  private boolean isSpecialMove(GameBoard gameBoard, Tile currentTile, Direction direction) {
-    return switch (direction) {
-      case UP_RIGHT -> checkSpecialMove(gameBoard, currentTile, UP, RIGHT);
-      case UP_LEFT -> checkSpecialMove(gameBoard, currentTile, UP, LEFT);
-      case DOWN_RIGHT -> checkSpecialMove(gameBoard, currentTile, DOWN, RIGHT);
-      case DOWN_LEFT -> checkSpecialMove(gameBoard, currentTile, DOWN, LEFT);
-      default -> throw new IllegalArgumentException();
-    };
-  }
-
-  private boolean checkSpecialMove(GameBoard gameBoard, Tile currentTile, Direction firstDirection, Direction secondDirection) {
-    return (
-            (gameBoard.getAdjacentTile(currentTile, firstDirection).isOccupied()
-                    && gameBoard.getAdjacentTile(currentTile, firstDirection).getLink(firstDirection) == WALL
-                    && gameBoard.getAdjacentTile(currentTile, firstDirection).getLink(secondDirection) != WALL)
-                    ||
-                    (gameBoard.getAdjacentTile(currentTile, secondDirection).isOccupied()
-                            && gameBoard.getAdjacentTile(currentTile, secondDirection).getLink(secondDirection) == WALL
-                            && gameBoard.getAdjacentTile(currentTile, secondDirection).getLink(firstDirection) != WALL));
-  }
-
   private boolean isJumpingPawnMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
     for (Direction direction : Directions.getStraightDirections()) {
       try {
@@ -95,5 +60,40 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
       }
     }
     return false;
+  }
+
+  private boolean isOnBorderMove(GameBoard gameBoard, Tile destinationTile, Pawn playingPawn) {
+    int currentRow = playingPawn.getCurrentTile().getRow();
+    int currentColumn = playingPawn.getCurrentTile().getColumn();
+    int destinationRow = destinationTile.getRow();
+    int destinationColumn = destinationTile.getColumn();
+    if (destinationRow == 0 || destinationRow == 8) {
+      return gameBoard.getGameState()[destinationRow][currentColumn].isOccupied();
+    }
+    if (destinationColumn == 0 || destinationColumn == 8) {
+      return gameBoard.getGameState()[currentRow][destinationColumn].isOccupied();
+    }
+    return false;
+  }
+
+  private boolean isSpecialMove(GameBoard gameBoard, Tile currentTile, Direction direction) {
+    return switch (direction) {
+      case UP_RIGHT -> checkSpecialMove(gameBoard, currentTile, UP, RIGHT);
+      case UP_LEFT -> checkSpecialMove(gameBoard, currentTile, UP, LEFT);
+      case DOWN_RIGHT -> checkSpecialMove(gameBoard, currentTile, DOWN, RIGHT);
+      case DOWN_LEFT -> checkSpecialMove(gameBoard, currentTile, DOWN, LEFT);
+      default -> throw new IllegalArgumentException();
+    };
+  }
+
+  private boolean checkSpecialMove(GameBoard gameBoard, Tile currentTile, Direction verticalDirection, Direction horizontalDirection) {
+    return (
+            (gameBoard.getAdjacentTile(currentTile, verticalDirection).isOccupied()
+                    && gameBoard.getAdjacentTile(currentTile, verticalDirection).getLink(verticalDirection) == WALL
+                    && gameBoard.getAdjacentTile(currentTile, verticalDirection).getLink(horizontalDirection) != WALL)
+                    ||
+                    (gameBoard.getAdjacentTile(currentTile, horizontalDirection).isOccupied()
+                            && gameBoard.getAdjacentTile(currentTile, horizontalDirection).getLink(horizontalDirection) == WALL
+                            && gameBoard.getAdjacentTile(currentTile, horizontalDirection).getLink(verticalDirection) != WALL));
   }
 }

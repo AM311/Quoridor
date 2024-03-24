@@ -3,6 +3,7 @@ package it.units.sdm.quoridor.movemanager;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
+import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.utils.Directions;
 
@@ -15,34 +16,33 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
   @Override
   public boolean checkAction(Game game, GameBoard dummyGameBoard) {
     for (Pawn pawn : game.getPawns()) {
-      Map<GameBoard.Tile, Integer> potentials = new HashMap<>();
-      Set<GameBoard.Tile> toVisitTiles = new HashSet<>();
-      int goalRow = (dummyGameBoard.getSideLength() - 1) - pawn.getStartingTile().getRow();                //todo extend for 4 players
+      Map<Tile, Integer> potentials = new HashMap<>();
+      Set<Tile> toVisitTiles = new HashSet<>();
 
       //Init
-      for (GameBoard.Tile[] tileArr : dummyGameBoard.getGameState()) {
-        for (GameBoard.Tile tile : tileArr) {
+      for (Tile[] tileArr : dummyGameBoard.getGameState()) {
+        for (Tile tile : tileArr) {
           toVisitTiles.add(tile);
           potentials.put(tile, Integer.MAX_VALUE);
         }
       }
 
-      GameBoard.Tile startingTile = pawn.getCurrentTile();
+      Tile startingTile = pawn.getCurrentTile();
       potentials.put(startingTile, 0);
 
       //===================
 
       visitTiles(dummyGameBoard, startingTile, toVisitTiles, potentials);
 
-      if (!checkPathExistence(potentials, goalRow))
+      if (!checkPathExistence(potentials, pawn.getDestinationTiles()))
         return false;
     }
 
     return true;
   }
 
-  private void visitTiles(GameBoard gameBoard, GameBoard.Tile startingTile, Set<GameBoard.Tile> toVisitTiles, Map<GameBoard.Tile, Integer> potentials) {
-    GameBoard.Tile visitedTile = startingTile;
+  private void visitTiles(GameBoard gameBoard, Tile startingTile, Set<Tile> toVisitTiles, Map<Tile, Integer> potentials) {
+    Tile visitedTile = startingTile;
 
     while (!toVisitTiles.isEmpty()) {
       toVisitTiles.remove(visitedTile);
@@ -57,11 +57,11 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
     }
   }
 
-  private boolean checkPathExistence(Map<GameBoard.Tile, Integer> potentials, int goalRow) {
+  private boolean checkPathExistence(Map<Tile, Integer> potentials, List<Tile> destinationTiles) {
     boolean existsPath = false;
 
-    for (GameBoard.Tile tile : potentials.keySet()) {
-      if (tile.getRow() == goalRow) {
+    for (Tile tile : potentials.keySet()) {
+      if (destinationTiles.contains(tile)) {
         if (potentials.get(tile) == 0)
           existsPath = true;
       }
@@ -70,8 +70,8 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
     return existsPath;
   }
 
-  private void visitAdjacentTile(GameBoard gameBoard, GameBoard.Tile visitedTile, Directions.Direction direction, Map<GameBoard.Tile, Integer> potentials) {
-    GameBoard.Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, direction);
+  private void visitAdjacentTile(GameBoard gameBoard, Tile visitedTile, Directions.Direction direction, Map<Tile, Integer> potentials) {
+    Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, direction);
     if (visitedTile.getLink(direction) == FREE) {
       if (potentials.get(adjacentTile) > potentials.get(visitedTile))
         potentials.put(adjacentTile, potentials.get(visitedTile));
@@ -81,10 +81,10 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
     }
   }
 
-  private GameBoard.Tile makeAndGetTileDefinitive(Set<GameBoard.Tile> toVisitTiles, Map<GameBoard.Tile, Integer> potentials) {
-    GameBoard.Tile minTile = null;
+  private Tile makeAndGetTileDefinitive(Set<Tile> toVisitTiles, Map<Tile, Integer> potentials) {
+    Tile minTile = null;
 
-    for (GameBoard.Tile tile : toVisitTiles) {
+    for (Tile tile : toVisitTiles) {
       if (minTile == null || potentials.get(minTile) > potentials.get(tile))
         minTile = tile;
     }

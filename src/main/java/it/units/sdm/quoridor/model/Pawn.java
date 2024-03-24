@@ -1,20 +1,19 @@
 package it.units.sdm.quoridor.model;
 
-import java.awt.*;
-
 import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.List;
 
 public class Pawn {
   private Tile currentTile;
-  private final Tile startingTile;
+  private final List<Tile> destinationTiles;
   private final Color color;            //todo valutare se estrarre
   private int numberOfWalls;
 
-  public Pawn(Tile startingTile, Color color, int numberOfWalls) {
-    this.startingTile = startingTile;
+  public Pawn(Tile startingTile, List<Tile> destinationTiles, Color color, int numberOfWalls) {
+    this.destinationTiles = destinationTiles;
     this.currentTile = startingTile;
     this.color = color;
     this.numberOfWalls = numberOfWalls;
@@ -24,12 +23,12 @@ public class Pawn {
     return currentTile;
   }
 
-  public void setCurrentTile(Tile currentTile) {
-    this.currentTile = currentTile;
+  public void move(Tile destinationTile) {
+    this.currentTile = destinationTile;
   }
 
-  public Tile getStartingTile() {
-    return startingTile;
+  public List<Tile> getDestinationTiles() {
+    return destinationTiles;
   }
 
   public Color getColor() {

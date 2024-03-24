@@ -65,7 +65,8 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
 
     try {
       dummyGameBoard = (GameBoard) game.getGameBoard().clone();
-      dummyPawn = new Pawn(dummyGameBoard.getGameState()[0][0], Color.BLACK, 1);
+      dummyPawn = new Pawn(dummyGameBoard.getStartingAndDestinationTiles().getFirst().getKey(),
+              dummyGameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.BLACK, 1);
     } catch (CloneNotSupportedException e) {
       throw new RuntimeException(e);      //todo check whether to replace with a custom exception
     }
