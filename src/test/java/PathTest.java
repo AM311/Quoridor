@@ -13,25 +13,18 @@ import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 
 public class PathTest {
   //todo REPLACE TEST CODE FOR PLACING WALLS WITH A METHOD CALL TO "PLACE WALL"?
-  private Game initialize() {                 //todo OK???
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn1 = new Pawn(gameBoard.getGameState()[0][4], Color.black, 10);
-    Pawn pawn2 = new Pawn(gameBoard.getGameState()[8][4], Color.red, 10);
-    List<Pawn> pawns = List.of(pawn1, pawn2);
-    return new Game(pawns, gameBoard);
-  }
 
   //-------------------------
 
   @Test
   void checkStartPawn() {
-    Game game = initialize();
+    Game game = new Game(2);
     Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
   }
 
   @Test
   void checkBlockedPath() {
-    Game game = initialize();
+    Game game = new Game(2);
 
     for (GameBoard.Tile tile : game.getGameBoard().getGameState()[4]) {
       tile.setLink(DOWN, WALL);
@@ -44,7 +37,7 @@ public class PathTest {
 
   @Test
   void checkBlockedPawnsFromCorrectSide() {
-    Game game = initialize();
+    Game game = new Game(2);
 
     //todo CHIAMATA PER MOSSA TROPPO VERBOSA... VALUTARE!!!
     for (int j = 0; j < 6; j++) {
@@ -71,7 +64,7 @@ public class PathTest {
 
   @Test
   void checkBlockedPath_OnlyForPawn1() {
-    Game game = initialize();
+    Game game = new Game(2);
 
     for (int i = 0; i < 7; i++) {
       game.getGameBoard().getGameState()[4][i].setLink(DOWN, WALL);
@@ -88,7 +81,7 @@ public class PathTest {
 
   @Test
   void checkBlockedPath_OnlyForPawn2() {
-    Game game = initialize();
+    Game game = new Game(2);
 
     for (int i = 0; i < 7; i++) {
       game.getGameBoard().getGameState()[4][i].setLink(DOWN, WALL);

@@ -1,48 +1,77 @@
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.Game;
-import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.Pawn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
-import java.util.List;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class GameTest {
   @Test
-  void playingPawnAtBeginningTest() {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn1 = new Pawn(gameBoard.getGameState()[0][4], Color.black, 10);
-    Pawn pawn2 = new Pawn(gameBoard.getGameState()[8][4], Color.red, 10);
-    List<Pawn> pawns = List.of(pawn1, pawn2);
-    Game game = new Game(pawns, gameBoard);
+  void testConstructor_invalidNumberOfPlayersThrowsException() {
+    Assertions.assertThrows(InvalidParameterException.class, () -> new Game(3));
+  }
 
-    Assertions.assertEquals(pawn1, game.getPlayingPawn());
+  @ParameterizedTest
+  @CsvSource({"2,10", "4,5"})
+  void testConstructor_wallNumberIsConsistent(int numOfPlayers, int numOfWalls) {
+    Game game = new Game(numOfPlayers);
+    Assertions.assertEquals(numOfWalls, game.getPlayingPawn().getNumberOfWalls());
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {2,4})
+  void testConstructor_pawnsNumberIsConsistent(int numOfPlayers) {
+    Game game = new Game(numOfPlayers);
+    Assertions.assertEquals(numOfPlayers, game.getPawns().size());
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {0, 1, 2, 3})
+  void testConstructor_pawnsStartingTilesAreConsistent(int pawnIndex) {
+    Game game = new Game(4);
+    Assertions.assertEquals(game.getGameBoard().getStartingAndDestinationTiles().get(pawnIndex).getKey(), game.getPawns().get(pawnIndex).getCurrentTile());
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {0, 1, 2, 3})
+  void testConstructor_pawnsDestinationTilesAreConsistent(int pawnIndex) {
+    Game game = new Game(4);
+    Assertions.assertEquals(game.getGameBoard().getStartingAndDestinationTiles().get(pawnIndex).getValue(), game.getPawns().get(pawnIndex).getDestinationTiles());
+  }
+
+  @Test
+  void testConstructor_startingTilesAreSetOccupied() {        //todo parametrizzare-separare casi
+    Game game = new Game(2);
+
+    Assertions.assertTrue(game.getGameBoard().getTile(0, 4).isOccupied() && game.getGameBoard().getTile(8, 4).isOccupied());
+  }
+
+  //------------------------
+
+  @Test
+  void playingPawnAtBeginningTest() {
+    Game game = new Game(2);
+
+    Assertions.assertEquals(game.getPawns().getFirst(), game.getPlayingPawn());
   }
 
   @Test
   void changeRoundOnceTest() {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn1 = new Pawn(gameBoard.getGameState()[0][4], Color.black, 10);
-    Pawn pawn2 = new Pawn(gameBoard.getGameState()[8][4], Color.red, 10);
-    List<Pawn> pawns = List.of(pawn1, pawn2);
-    Game game = new Game(pawns, gameBoard);
+    Game game = new Game(2);
 
     game.changeRound();
 
-    Assertions.assertEquals(pawn2, game.getPlayingPawn());
+    Assertions.assertEquals(game.getPawns().getLast(), game.getPlayingPawn());
   }
 
   @Test
   void changeRound_backToFirstPawnTest() {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn1 = new Pawn(gameBoard.getGameState()[0][4], Color.black, 10);
-    Pawn pawn2 = new Pawn(gameBoard.getGameState()[8][4], Color.red, 10);
-    List<Pawn> pawns = List.of(pawn1, pawn2);
-    Game game = new Game(pawns, gameBoard);
+    Game game = new Game(2);
 
     game.changeRound();
     game.changeRound();
 
-    Assertions.assertEquals(pawn1, game.getPlayingPawn());
+    Assertions.assertEquals(game.getPawns().getFirst(), game.getPlayingPawn());
   }
 }

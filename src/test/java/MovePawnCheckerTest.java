@@ -9,29 +9,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.awt.*;
-import java.util.List;
-
 public class MovePawnCheckerTest {
-  private Game initialize() {                 //todo OK???
-    GameBoard gameBoard = new GameBoard();
-    GameBoard.Tile startingTile = gameBoard.getGameState()[0][4];
-    Pawn pawn = new Pawn(startingTile, Color.red, 10);
-
-    List<Pawn> pawns = List.of(pawn);
-    return new Game(pawns, gameBoard);
-  }
-
-  ActionChecker<GameBoard.Tile> pawnMovementChecker = new PawnMovementChecker();
+   ActionChecker<GameBoard.Tile> pawnMovementChecker = new PawnMovementChecker();
 
   @ParameterizedTest
   @CsvSource({"1, 4, 1, 6", "1, 4, 1, 2", "1, 4, 2, 5", "1, 4, 3, 7", "1, 4, 2, 3", "1,7,0,6"})
   void checkNotAdjacencyMoveNotAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[startingRow][startingColumn]);
+    pawn.move(gameBoard.getGameState()[startingRow][startingColumn]);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[destinationRow][destinationColumn]);
     Assertions.assertFalse(checkMove);
   }
@@ -39,11 +27,11 @@ public class MovePawnCheckerTest {
   @ParameterizedTest
   @CsvSource({"1, 4, 0, 4", "1, 4, 1, 3", "1, 4, 2, 4", "1, 4, 1, 5"})
   void checkAdjacencyMoveAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[startingRow][startingColumn]);
+    pawn.move(gameBoard.getGameState()[startingRow][startingColumn]);
     gameBoard.getGameState()[destinationRow][destinationColumn].setOccupied(false);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[destinationRow][destinationColumn]);
     Assertions.assertTrue(checkMove);
@@ -52,11 +40,11 @@ public class MovePawnCheckerTest {
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6", "4, 3, 3, 3", "8, 3, 8, 4"})
   void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn) {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[startingRow][startingColumn]);
+    pawn.move(gameBoard.getGameState()[startingRow][startingColumn]);
     gameBoard.getGameState()[occupiedRow][occupiedColumn].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[occupiedRow][occupiedColumn]);
     Assertions.assertFalse(checkMove);
@@ -64,11 +52,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNeighborPawnAllowedFrom36To56() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][6]);
+    pawn.move(gameBoard.getGameState()[3][6]);
     gameBoard.getGameState()[4][6].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][6]);
     Assertions.assertTrue(checkMove);
@@ -76,11 +64,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNeighborPawnAllowedFrom46To48() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[4][6]);
+    pawn.move(gameBoard.getGameState()[4][6]);
     gameBoard.getGameState()[4][7].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][8]);
     Assertions.assertTrue(checkMove);
@@ -88,11 +76,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNeighborPawnAllowedFrom76To74() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[7][6]);
+    pawn.move(gameBoard.getGameState()[7][6]);
     gameBoard.getGameState()[7][5].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[7][4]);
     Assertions.assertTrue(checkMove);
@@ -100,11 +88,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNeighborPawnNotAllowedFrom36To06() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][6]);
+    pawn.move(gameBoard.getGameState()[3][6]);
     gameBoard.getGameState()[2][6].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[0][6]);
     Assertions.assertFalse(checkMove);
@@ -112,11 +100,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNeighborPawnNotAllowedFrom33To63() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][3]);
+    pawn.move(gameBoard.getGameState()[3][3]);
     gameBoard.getGameState()[4][3].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][3]);
     Assertions.assertFalse(checkMove);
@@ -124,11 +112,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNotNeighborPawnNotAllowedFrom36To06() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][6]);
+    pawn.move(gameBoard.getGameState()[3][6]);
     gameBoard.getGameState()[1][6].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[0][6]);
     Assertions.assertFalse(checkMove);
@@ -136,11 +124,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverNotNeighborPawnNotAllowedFrom62To65() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[6][2]);
+    pawn.move(gameBoard.getGameState()[6][2]);
     gameBoard.getGameState()[6][4].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[6][5]);
     Assertions.assertFalse(checkMove);
@@ -148,11 +136,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverWallFrom53To43NotAllowed() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[5][3]);
+    pawn.move(gameBoard.getGameState()[5][3]);
     gameBoard.getGameState()[5][3].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[5][4].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[4][3].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
@@ -163,11 +151,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverWallFrom32To33NotAllowed() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][2]);
+    pawn.move(gameBoard.getGameState()[3][2]);
     gameBoard.getGameState()[3][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[2][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[3][3].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
@@ -178,11 +166,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverPawnHavingAWallBehindFrom31to33NotAllowed() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][1]);
+    pawn.move(gameBoard.getGameState()[3][1]);
     gameBoard.getGameState()[3][2].setOccupied(true);
     gameBoard.getGameState()[3][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[2][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
@@ -194,11 +182,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void jumpingOverPawnHavingAWallBehindFrom71to51NotAllowed() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[7][1]);
+    pawn.move(gameBoard.getGameState()[7][1]);
     gameBoard.getGameState()[6][1].setOccupied(true);
     gameBoard.getGameState()[6][1].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[6][2].setLink(Direction.UP, GameBoard.LinkState.WALL);
@@ -210,11 +198,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom36To27() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][6]);
+    pawn.move(gameBoard.getGameState()[3][6]);
     gameBoard.getGameState()[2][6].setOccupied(true);
     gameBoard.getGameState()[2][6].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[2][7].setLink(Direction.UP, GameBoard.LinkState.WALL);
@@ -226,11 +214,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom31To22() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[3][1]);
+    pawn.move(gameBoard.getGameState()[3][1]);
     gameBoard.getGameState()[3][2].setOccupied(true);
     gameBoard.getGameState()[3][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[2][2].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
@@ -242,11 +230,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom77To66() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[7][7]);
+    pawn.move(gameBoard.getGameState()[7][7]);
     gameBoard.getGameState()[7][6].setOccupied(true);
     gameBoard.getGameState()[7][5].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[7][6].setLink(Direction.UP, GameBoard.LinkState.WALL);
@@ -264,11 +252,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom74To65() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[7][4]);
+    pawn.move(gameBoard.getGameState()[7][4]);
     gameBoard.getGameState()[7][5].setOccupied(true);
     gameBoard.getGameState()[7][5].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[7][6].setLink(Direction.UP, GameBoard.LinkState.WALL);
@@ -286,11 +274,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereNotAdjacentWallIn43From63() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[4][3]);
+    pawn.move(gameBoard.getGameState()[4][3]);
     gameBoard.getGameState()[4][3].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[4][4].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[3][3].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
@@ -302,11 +290,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnAdjacentAndAWallBehindFrom52To41() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[5][2]);
+    pawn.move(gameBoard.getGameState()[5][2]);
     gameBoard.getGameState()[4][2].setOccupied(true);
     gameBoard.getGameState()[4][2].setLink(Direction.UP, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[4][3].setLink(Direction.UP, GameBoard.LinkState.WALL);
@@ -319,11 +307,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAWallOnLeftAndAPawnBehindItFrom56To45() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[5][6]);
+    pawn.move(gameBoard.getGameState()[5][6]);
     gameBoard.getGameState()[5][5].setOccupied(true);
     gameBoard.getGameState()[5][5].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[5][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
@@ -336,11 +324,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnOnTheLeftAndBehindAWallFrom42To51() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[4][2]);
+    pawn.move(gameBoard.getGameState()[4][2]);
     gameBoard.getGameState()[4][1].setOccupied(true);
     gameBoard.getGameState()[4][1].setLink(Direction.LEFT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[4][0].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
@@ -353,11 +341,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnBelowAndAWallBehindFrom45To53() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[4][5]);
+    pawn.move(gameBoard.getGameState()[4][5]);
     gameBoard.getGameState()[5][5].setOccupied(true);
     gameBoard.getGameState()[5][5].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[5][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
@@ -370,11 +358,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnInFrontOfMeAndAWallBehindFrom23To34() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[2][3]);
+    pawn.move(gameBoard.getGameState()[2][3]);
     gameBoard.getGameState()[2][4].setOccupied(true);
     gameBoard.getGameState()[2][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[1][4].setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
@@ -387,11 +375,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnBelowAndAWallBehindFrom66To75() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[6][6]);
+    pawn.move(gameBoard.getGameState()[6][6]);
     gameBoard.getGameState()[7][6].setOccupied(true);
     gameBoard.getGameState()[7][6].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[7][7].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
@@ -404,11 +392,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnBelowAndAWallBehindFrom52To63() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[5][2]);
+    pawn.move(gameBoard.getGameState()[5][2]);
     gameBoard.getGameState()[6][2].setOccupied(true);
     gameBoard.getGameState()[6][1].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[6][2].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
@@ -421,11 +409,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void isThereAPawnBelowAndAWallBehindAndAWallOnRightFrom52To63IsNotAllowed() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[5][2]);
+    pawn.move(gameBoard.getGameState()[5][2]);
     gameBoard.getGameState()[6][2].setOccupied(true);
     gameBoard.getGameState()[6][1].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
     gameBoard.getGameState()[6][2].setLink(Direction.DOWN, GameBoard.LinkState.WALL);
@@ -443,11 +431,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void diagonalMoveOnBorderWithAPawnInFrontFrom11to02() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[1][1]);
+    pawn.move(gameBoard.getGameState()[1][1]);
     gameBoard.getGameState()[1][1].setOccupied(true);
     gameBoard.getGameState()[0][1].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[0][2]);
@@ -456,11 +444,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void diagonalMoveOnBorderWithAPawnInFrontFrom61to50() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[6][1]);
+    pawn.move(gameBoard.getGameState()[6][1]);
     gameBoard.getGameState()[6][1].setOccupied(true);
     gameBoard.getGameState()[6][0].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[5][0]);
@@ -470,11 +458,11 @@ public class MovePawnCheckerTest {
 
   @Test
   void diagonalMoveOnBorderWithAPawnInFrontFrom58to47IsNotAllowed() {
-    Game game = initialize();
+    Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
 
-    pawn.setCurrentTile(gameBoard.getGameState()[5][8]);
+    pawn.move(gameBoard.getGameState()[5][8]);
     gameBoard.getGameState()[5][8].setOccupied(true);
     gameBoard.getGameState()[4][8].setOccupied(true);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getGameState()[4][7]);

@@ -1,13 +1,13 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.utils.Directions;
 import it.units.sdm.quoridor.utils.Directions.Direction;
+import it.units.sdm.quoridor.utils.Pair;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
 import static it.units.sdm.quoridor.utils.Directions.Direction.*;
@@ -24,13 +24,27 @@ public class GameBoard implements Cloneable {
   private void fillGameState() {
     for (int i = 0; i < sideLength; i++)
       for (int j = 0; j < sideLength; j++) {
-        gameState[i][j] = new Tile(i, j, isInitialPosition(i, j));
+        gameState[i][j] = new Tile(i, j);
       }
     setEdgesLinks();
   }
 
-  private static boolean isInitialPosition(int row, int column) {
-    return (row == 0 && column == sideLength / 2) || (row == sideLength - 1 && column == sideLength / 2);
+  public List<Pair<Tile, List<Tile>>> getStartingAndDestinationTiles() {
+    List<Tile> startingTiles = List.of(
+            gameState[0][sideLength / 2],
+            gameState[sideLength - 1][sideLength / 2],
+            gameState[sideLength / 2][0],
+            gameState[sideLength / 2][sideLength - 1]
+    );
+
+    List<List<Tile>> destinationTiles = List.of(
+            List.of(gameState[sideLength-1]),
+            List.of(gameState[0]),
+            List.of(Arrays.stream(gameState).map(x -> x[sideLength-1]).toArray(Tile[]::new)),
+            List.of(Arrays.stream(gameState).map(x -> x[0]).toArray(Tile[]::new))
+    );
+
+    return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();
   }
 
   private void setEdgesLinks() {
@@ -39,6 +53,14 @@ public class GameBoard implements Cloneable {
       gameState[i][0].setLink(LEFT, EDGE);
       gameState[sideLength - 1][i].setLink(DOWN, EDGE);
       gameState[i][sideLength - 1].setLink(RIGHT, EDGE);
+    }
+  }
+
+  public Tile getTile(int row, int column) throws OutOfGameBoardException {
+    try {
+      return gameState[row][column];
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      throw new OutOfGameBoardException();
     }
   }
 
@@ -66,7 +88,7 @@ public class GameBoard implements Cloneable {
 
   public Tile[][] getGameState() {
     return gameState;
-  }
+  }         //todo rimuovere...
 
   public boolean isInFirstRow(Tile tile) {
     return tile.row == 0;
@@ -85,8 +107,7 @@ public class GameBoard implements Cloneable {
   }
 
   //-----
-  //todo manage exceptions
-  public boolean isThereAWall(Tile tile1, Tile tile2) {
+  public boolean isThereAWall(Tile tile1, Tile tile2) throws NotAdjacentTilesException {
     for (Direction direction : Directions.getStraightDirections()) {
       try {
         if (tile2.equals(this.getAdjacentTile(tile1, direction))) {
@@ -95,7 +116,7 @@ public class GameBoard implements Cloneable {
       } catch (OutOfGameBoardException ignored) {
       }
     }
-    return false;
+    throw new NotAdjacentTilesException();
   }
 
   public Tile getLandingTile(Tile tile, Direction direction) throws OutOfGameBoardException {
@@ -143,10 +164,10 @@ public class GameBoard implements Cloneable {
     private Map<Direction, LinkState> links;
     private boolean occupied;
 
-    public Tile(int row, int column, boolean occupied) {
+    public Tile(int row, int column) {
       this.row = row;
       this.column = column;
-      this.occupied = occupied;
+      this.occupied = false;
       links = new EnumMap<>(Map.of(UP, FREE, RIGHT, FREE, DOWN, FREE, LEFT, FREE));
     }
 
