@@ -5,10 +5,10 @@ import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 
-import java.awt.Color;
+import java.awt.*;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class WallPlacementChecker implements ActionChecker<Wall> {
   public boolean checkAction(Game game, Wall target) {

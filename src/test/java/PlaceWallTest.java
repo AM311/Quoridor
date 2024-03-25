@@ -10,9 +10,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class PlaceWallTest {
 

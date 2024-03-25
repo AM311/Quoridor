@@ -3,7 +3,7 @@ package it.units.sdm.quoridor.model;
 import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 
 public class Pawn {

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class GameBoardTest {
   @ParameterizedTest

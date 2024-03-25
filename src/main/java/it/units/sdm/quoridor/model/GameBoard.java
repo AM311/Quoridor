@@ -1,17 +1,19 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
-import it.units.sdm.quoridor.utils.Directions;
-import it.units.sdm.quoridor.utils.Directions.Direction;
 import it.units.sdm.quoridor.utils.Pair;
+import it.units.sdm.quoridor.utils.directions.Direction;
+import it.units.sdm.quoridor.utils.directions.StraightDirection;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.*;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
+import static it.units.sdm.quoridor.utils.directions.DiagonalDirection.*;
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class GameBoard implements Cloneable {
   public static final int sideLength = 9;
@@ -128,7 +130,7 @@ public class GameBoard implements Cloneable {
 
   //-----
   public boolean isThereAWall(Tile tile1, Tile tile2) throws NotAdjacentTilesException {
-    for (Direction direction : Directions.getStraightDirections()) {
+    for (StraightDirection direction : StraightDirection.values()) {
       try {
         if (tile2.equals(this.getAdjacentTile(tile1, direction))) {
           return tile1.getLink(direction) == WALL;
@@ -139,14 +141,13 @@ public class GameBoard implements Cloneable {
     throw new NotAdjacentTilesException();
   }
 
-  public Tile getLandingTile(Tile tile, Direction direction) throws OutOfGameBoardException {
+  public Tile getLandingTile(Tile tile, StraightDirection direction) throws OutOfGameBoardException {
     try {
       return switch (direction) {
         case UP -> gameState[tile.row - 2][tile.column];
         case DOWN -> gameState[tile.row + 2][tile.column];
         case RIGHT -> gameState[tile.row][tile.column + 2];
         case LEFT -> gameState[tile.row][tile.column - 2];
-        default -> throw new IllegalArgumentException();
       };
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new OutOfGameBoardException();
@@ -164,6 +165,7 @@ public class GameBoard implements Cloneable {
         case UP_RIGHT -> gameState[tile.row - 1][tile.column + 1];
         case DOWN_LEFT -> gameState[tile.row + 1][tile.column - 1];
         case DOWN_RIGHT -> gameState[tile.row + 1][tile.column + 1];
+        default -> throw new InvalidParameterException();
       };
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new OutOfGameBoardException();
@@ -181,7 +183,7 @@ public class GameBoard implements Cloneable {
   public class Tile implements Cloneable {
     private final int row;
     private final int column;
-    private Map<Direction, LinkState> links;
+    private Map<StraightDirection, LinkState> links;
     private boolean occupied;
 
     public Tile(int row, int column) {
@@ -191,7 +193,7 @@ public class GameBoard implements Cloneable {
       links = new EnumMap<>(Map.of(UP, FREE, RIGHT, FREE, DOWN, FREE, LEFT, FREE));
     }
 
-    public void setLink(Direction direction, LinkState linkState) {
+    public void setLink(StraightDirection direction, LinkState linkState) {
       links.put(direction, linkState);
     }
 
@@ -212,7 +214,7 @@ public class GameBoard implements Cloneable {
       return cloneTile;
     }
 
-    public LinkState getLink(Direction direction) {
+    public LinkState getLink(StraightDirection direction) {
       return links.get(direction);
     }
 
@@ -232,7 +234,7 @@ public class GameBoard implements Cloneable {
       this.occupied = occupied;
     }
 
-    public Map<Direction, LinkState> getLinks() {
+    public Map<StraightDirection, LinkState> getLinks() {
       return links;
     }
   }

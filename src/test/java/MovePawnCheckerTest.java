@@ -3,11 +3,12 @@ import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.movemanager.ActionChecker;
 import it.units.sdm.quoridor.movemanager.PawnMovementChecker;
-import it.units.sdm.quoridor.utils.Directions.Direction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class MovePawnCheckerTest {
    ActionChecker<GameBoard.Tile> pawnMovementChecker = new PawnMovementChecker();
@@ -141,10 +142,10 @@ public class MovePawnCheckerTest {
     GameBoard gameBoard = game.getGameBoard();
 
     pawn.move(gameBoard.getTile(5,3));
-    gameBoard.getTile(5,3).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,4).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(4,3).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(4,4).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,3).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,4).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,3).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,4).setLink(DOWN, GameBoard.LinkState.WALL);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,3));
     Assertions.assertFalse(checkMove);
   }
@@ -156,10 +157,10 @@ public class MovePawnCheckerTest {
     GameBoard gameBoard = game.getGameBoard();
 
     pawn.move(gameBoard.getTile(3,2));
-    gameBoard.getTile(3,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,3).setLink(LEFT, GameBoard.LinkState.WALL);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(3,3));
     Assertions.assertFalse(checkMove);
   }
@@ -172,10 +173,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(3,1));
     gameBoard.getTile(3,2).setOccupied(true);
-    gameBoard.getTile(3,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,3).setLink(LEFT, GameBoard.LinkState.WALL);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(3,3));
     Assertions.assertFalse(checkMove);
   }
@@ -188,10 +189,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(7,1));
     gameBoard.getTile(6,1).setOccupied(true);
-    gameBoard.getTile(6,1).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,1).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,1).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,1).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,2).setLink(DOWN, GameBoard.LinkState.WALL);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,1));
     Assertions.assertFalse(checkMove);
   }
@@ -204,10 +205,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(3,6));
     gameBoard.getTile(2,6).setOccupied(true);
-    gameBoard.getTile(2,6).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,7).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(1,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(1,7).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,6).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,7).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,6).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,7).setLink(DOWN, GameBoard.LinkState.WALL);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(2,7));
     Assertions.assertTrue(checkMove);
   }
@@ -220,10 +221,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(3,1));
     gameBoard.getTile(3,2).setOccupied(true);
-    gameBoard.getTile(3,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,3).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(LEFT, GameBoard.LinkState.WALL);
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(2,2));
     Assertions.assertTrue(checkMove);
   }
@@ -236,15 +237,15 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(7,7));
     gameBoard.getTile(7,6).setOccupied(true);
-    gameBoard.getTile(7,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,6).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,5).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,5).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,6).setLink(DOWN, GameBoard.LinkState.WALL);
 
-    gameBoard.getTile(7,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(8,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(8,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,5).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,5).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,6).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,6));
     Assertions.assertFalse(checkMove);
@@ -258,15 +259,15 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(7,4));
     gameBoard.getTile(7,5).setOccupied(true);
-    gameBoard.getTile(7,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,6).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,5).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,5).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,6).setLink(DOWN, GameBoard.LinkState.WALL);
 
-    gameBoard.getTile(7,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(8,5).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(8,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,5).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,5).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,6).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,5));
     Assertions.assertFalse(checkMove);
@@ -279,10 +280,10 @@ public class MovePawnCheckerTest {
     GameBoard gameBoard = game.getGameBoard();
 
     pawn.move(gameBoard.getTile(4,3));
-    gameBoard.getTile(4,3).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(4,4).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,3).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,4).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,3).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,4).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,4).setLink(DOWN, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,3));
     Assertions.assertTrue(checkMove);
@@ -296,10 +297,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(5,2));
     gameBoard.getTile(4,2).setOccupied(true);
-    gameBoard.getTile(4,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(4,3).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(3,3).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,2).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,3).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,2).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(3,3).setLink(DOWN, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,1));
     Assertions.assertTrue(checkMove);
@@ -313,10 +314,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(5,6));
     gameBoard.getTile(5,5).setOccupied(true);
-    gameBoard.getTile(5,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,5).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,4).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,4).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(4,5));
     Assertions.assertTrue(checkMove);
@@ -330,10 +331,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(4,2));
     gameBoard.getTile(4,1).setOccupied(true);
-    gameBoard.getTile(4,1).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(4,0).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,0).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,1).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,1).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(4,0).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,0).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,1).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,1));
     Assertions.assertTrue(checkMove);
@@ -347,10 +348,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(4,5));
     gameBoard.getTile(5,5).setOccupied(true);
-    gameBoard.getTile(5,5).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(5,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,6).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,5).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(5,6).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,5).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,6).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(5,4));
     Assertions.assertTrue(checkMove);
@@ -364,10 +365,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(2,3));
     gameBoard.getTile(2,4).setOccupied(true);
-    gameBoard.getTile(2,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(1,4).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(2,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(1,5).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,4).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,4).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(2,5).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(1,5).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(3,4));
     Assertions.assertTrue(checkMove);
@@ -381,10 +382,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(6,6));
     gameBoard.getTile(7,6).setOccupied(true);
-    gameBoard.getTile(7,6).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,7).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(8,5).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(8,7).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,6).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,7).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,5).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(8,7).setLink(UP, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(7,5));
     Assertions.assertTrue(checkMove);
@@ -398,10 +399,10 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(5,2));
     gameBoard.getTile(6,2).setOccupied(true);
-    gameBoard.getTile(6,1).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,1).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,1).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,2).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,1).setLink(UP, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,1));
     Assertions.assertTrue(checkMove);
@@ -415,15 +416,15 @@ public class MovePawnCheckerTest {
 
     pawn.move(gameBoard.getTile(5,2));
     gameBoard.getTile(6,2).setOccupied(true);
-    gameBoard.getTile(6,1).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,2).setLink(Direction.DOWN, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,2).setLink(Direction.UP, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,1).setLink(Direction.UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,1).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(DOWN, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,2).setLink(UP, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,1).setLink(UP, GameBoard.LinkState.WALL);
 
-    gameBoard.getTile(6,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(6,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,2).setLink(Direction.RIGHT, GameBoard.LinkState.WALL);
-    gameBoard.getTile(7,3).setLink(Direction.LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,3).setLink(LEFT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(6,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,2).setLink(RIGHT, GameBoard.LinkState.WALL);
+    gameBoard.getTile(7,3).setLink(LEFT, GameBoard.LinkState.WALL);
 
     boolean checkMove = pawnMovementChecker.checkAction(game, gameBoard.getTile(6,3));
     Assertions.assertFalse(checkMove);

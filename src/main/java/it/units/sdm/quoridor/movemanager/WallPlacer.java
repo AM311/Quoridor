@@ -1,12 +1,11 @@
 package it.units.sdm.quoridor.movemanager;
 
-import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class WallPlacer implements Action<Wall> {
 	@Override

@@ -5,11 +5,11 @@ import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.model.Pawn;
-import it.units.sdm.quoridor.utils.Directions;
-import it.units.sdm.quoridor.utils.Directions.Direction;
+import it.units.sdm.quoridor.utils.directions.DiagonalDirection;
+import it.units.sdm.quoridor.utils.directions.StraightDirection;
 
 import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.Directions.Direction.*;
+import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class PawnMovementChecker implements ActionChecker<Tile> {
   @Override
@@ -29,7 +29,7 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
   }
 
   private boolean isValidStraightMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
-    for (Direction direction : Directions.getStraightDirections()) {
+    for (StraightDirection direction : StraightDirection.values()) {
       try {
         if (destinationTile.equals(gameBoard.getAdjacentTile(currentTile, direction)))
           return !gameBoard.isThereAWall(destinationTile, currentTile);
@@ -40,7 +40,7 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
   }
 
   private boolean isValidDiagonalMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
-    for (Direction direction : Directions.getDiagonalDirections()) {
+    for (DiagonalDirection direction : DiagonalDirection.values()) {
       try {
         if (destinationTile.equals(gameBoard.getAdjacentTile(currentTile, direction)))
           return isSpecialMove(gameBoard, currentTile, direction);
@@ -51,7 +51,7 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
   }
 
   private boolean isJumpingPawnMove(GameBoard gameBoard, Tile destinationTile, Tile currentTile) {
-    for (Direction direction : Directions.getStraightDirections()) {
+    for (StraightDirection direction : StraightDirection.values()) {
       try {
         if (destinationTile.equals(gameBoard.getLandingTile(currentTile, direction)))
           return (gameBoard.getAdjacentTile(currentTile, direction).isOccupied()
@@ -76,17 +76,16 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     return false;
   }
 
-  private boolean isSpecialMove(GameBoard gameBoard, Tile currentTile, Direction direction) {
+  private boolean isSpecialMove(GameBoard gameBoard, Tile currentTile, DiagonalDirection direction) {
     return switch (direction) {
       case UP_RIGHT -> checkSpecialMove(gameBoard, currentTile, UP, RIGHT);
       case UP_LEFT -> checkSpecialMove(gameBoard, currentTile, UP, LEFT);
       case DOWN_RIGHT -> checkSpecialMove(gameBoard, currentTile, DOWN, RIGHT);
       case DOWN_LEFT -> checkSpecialMove(gameBoard, currentTile, DOWN, LEFT);
-      default -> throw new IllegalArgumentException();
     };
   }
 
-  private boolean checkSpecialMove(GameBoard gameBoard, Tile currentTile, Direction verticalDirection, Direction horizontalDirection) {
+  private boolean checkSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) {
     return (
             (gameBoard.getAdjacentTile(currentTile, verticalDirection).isOccupied()
                     && gameBoard.getAdjacentTile(currentTile, verticalDirection).getLink(verticalDirection) == WALL

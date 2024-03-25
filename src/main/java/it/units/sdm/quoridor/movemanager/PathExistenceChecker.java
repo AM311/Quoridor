@@ -5,7 +5,7 @@ import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.model.Pawn;
-import it.units.sdm.quoridor.utils.Directions;
+import it.units.sdm.quoridor.utils.directions.StraightDirection;
 
 import java.util.*;
 
@@ -46,9 +46,9 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
     while (!toVisitTiles.isEmpty()) {
       toVisitTiles.remove(visitedTile);
 
-      for (Directions.Direction dir : Directions.Direction.values()) {
+      for (StraightDirection direction : StraightDirection.values()) {
         try {
-          visitAdjacentTile(gameBoard, visitedTile, dir, potentials);
+          visitAdjacentTile(gameBoard, visitedTile, direction, potentials);
         } catch (OutOfGameBoardException ignored) {
         }
       }
@@ -69,7 +69,7 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
     return existsPath;
   }
 
-  private void visitAdjacentTile(GameBoard gameBoard, Tile visitedTile, Directions.Direction direction, Map<Tile, Integer> potentials) {
+  private void visitAdjacentTile(GameBoard gameBoard, Tile visitedTile, StraightDirection direction, Map<Tile, Integer> potentials) {
     Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, direction);
     if (visitedTile.getLink(direction) == FREE) {
       if (potentials.get(adjacentTile) > potentials.get(visitedTile))
