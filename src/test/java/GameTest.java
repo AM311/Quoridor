@@ -1,12 +1,20 @@
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.Game;
+import it.units.sdm.quoridor.model.GameBoard;
+import it.units.sdm.quoridor.model.GameBoard.Tile;
+import it.units.sdm.quoridor.model.Pawn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameTest {
+
   @Test
   void testConstructor_invalidNumberOfPlayersThrowsException() {
     Assertions.assertThrows(InvalidParameterException.class, () -> new Game(3));
@@ -74,4 +82,33 @@ public class GameTest {
 
     Assertions.assertEquals(game.getPawns().getFirst(), game.getPlayingPawn());
   }
+
+
+  @Test
+  void pawnReachesDestinationTilesAndWins(){
+
+    Game game = new Game(2);
+    Pawn pawn = game.getPawns().getFirst();
+
+    for (int i = 0; i < 8; i++) {
+      Tile nextTile1 = game.getGameBoard().getTile(pawn.getCurrentTile().getRow()+1, pawn.getCurrentTile().getColumn());
+      pawn.move(nextTile1);
+    }
+
+    Assertions.assertTrue(game.checkWin());
+  }
+
+  @Test
+  void pawnDoesNotReachDestinationTilesAndDoesNotWin(){
+    Game game = new Game(2);
+    Pawn pawn = game.getPawns().getFirst();
+
+    for (int i = 0; i < 5; i++) {
+      Tile nextTile1 = game.getGameBoard().getTile(pawn.getCurrentTile().getRow()+1, pawn.getCurrentTile().getColumn());
+      pawn.move(nextTile1);
+    }
+
+    Assertions.assertFalse(game.checkWin());
+  }
+
 }

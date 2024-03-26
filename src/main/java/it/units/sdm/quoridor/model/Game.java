@@ -66,4 +66,8 @@ public class Game {
       playingPawn = pawns.getFirst();
     }
   }
+
+  public boolean checkWin(){
+    return playingPawn.getDestinationTiles().contains(playingPawn.getCurrentTile());
+  }
 }
