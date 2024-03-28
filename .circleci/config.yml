@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   codecov: codecov/codecov@4.0.1
-  qodana: jetbrains/qodana@2023.3
 
 jobs:
   buildAndTest:
@@ -19,17 +18,7 @@ jobs:
       - run: gradle test
       - codecov/upload
 
-  code-quality:
-    machine:
-      image: 'ubuntu-2004:current'
-    steps:
-      - checkout
-      - qodana/scan:
-          args: -l jetbrains/qodana-jvm-community:2023.3
-
 workflows:
   validate:
     jobs:
       - buildAndTest
-      - code-quality:
-          context: qodana
