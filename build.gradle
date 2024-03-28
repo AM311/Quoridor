@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id("org.jetbrains.qodana") version "2023.3.2"
 }
 
 group = 'it.units.sdm.in20'
