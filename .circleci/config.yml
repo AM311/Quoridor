@@ -25,7 +25,7 @@ jobs:
     steps:
       - checkout
       - qodana/scan:
-          args: -l jetbrains/qodana-jvm
+          args: -l jetbrains/qodana-jvm-community:2023.3
 
 workflows:
   validate:
