@@ -18,9 +18,17 @@ jobs:
       - run: gradle dependencies
       - run: gradle test
       - codecov/upload
+
+  code-quality:
+    machine:
+      image: 'ubuntu-2004:current'
+    steps:
+      - checkout
       - qodana/scan
 
 workflows:
   validate:
     jobs:
       - buildAndTest
+      - code-quality:
+          context: qodana
