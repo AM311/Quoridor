@@ -24,7 +24,8 @@ jobs:
       image: 'ubuntu-2004:current'
     steps:
       - checkout
-      - qodana/scan
+      - qodana/scan:
+          args: -l jetbrains/qodana-jvm
 
 workflows:
   validate:
