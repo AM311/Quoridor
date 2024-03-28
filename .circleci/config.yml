@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   codecov: codecov/codecov@4.0.1
+  qodana: jetbrains/qodana@2023.3
 
 jobs:
   buildAndTest:
@@ -17,6 +18,7 @@ jobs:
       - run: gradle dependencies
       - run: gradle test
       - codecov/upload
+      - qodana/scan
 
 workflows:
   validate:
