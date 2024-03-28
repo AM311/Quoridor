@@ -2,6 +2,7 @@ package it.units.sdm.quoridor.movemanager;
 
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
+import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.model.Wall;
 
@@ -25,46 +26,42 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
     return pawn.getNumberOfWalls() > 0;
   }
 
-  private boolean checkHorizontalWallPosition(GameBoard gameBoard, GameBoard.Tile startingTile) {
+  private boolean checkHorizontalWallPosition(GameBoard gameBoard, Tile startingTile) {
     if (gameBoard.isInLastRow(startingTile) || gameBoard.isInLastColumn(startingTile)) {
       return false;
     }
     //todo extract method "checkCrossingWalls"?
-    GameBoard.Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
-    GameBoard.Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
+    Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
+    Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
 
-    if (startingTile.getLink(RIGHT) == WALL && tileBelowStartingTile.getLink(RIGHT) == WALL) {
+    if (gameBoard.isThereAWallOrEdge(startingTile, RIGHT) && gameBoard.isThereAWallOrEdge(tileBelowStartingTile, RIGHT)) {
       return false;
     }
-    if (startingTile.getLink(DOWN) == WALL || tileRightToStartingTile.getLink(DOWN) == WALL) {
-      return false;
-    }
-    return true;
+
+    return !gameBoard.isThereAWallOrEdge(startingTile, DOWN) && !gameBoard.isThereAWallOrEdge(tileRightToStartingTile, DOWN);
   }
 
-  private boolean checkVerticalWallPosition(GameBoard gameBoard, GameBoard.Tile startingTile) {
+  private boolean checkVerticalWallPosition(GameBoard gameBoard, Tile startingTile) {
     if (gameBoard.isInFirstRow(startingTile) || gameBoard.isInFirstColumn(startingTile)) {
       return false;
     }
     //todo extract method "checkCrossingWalls"?
-    GameBoard.Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
-    GameBoard.Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
+    Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
+    Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
 
-    if (startingTile.getLink(UP) == WALL && tileLeftToStartingTile.getLink(UP) == WALL) {
+    if (gameBoard.isThereAWallOrEdge(startingTile, UP) && gameBoard.isThereAWallOrEdge(tileLeftToStartingTile, UP)) {
       return false;
     }
-    if (startingTile.getLink(LEFT) == WALL || tileAboveStartingTile.getLink(LEFT) == WALL) {
-      return false;
-    }
-    return true;
+
+    return !gameBoard.isThereAWallOrEdge(startingTile, LEFT) && !gameBoard.isThereAWallOrEdge(tileAboveStartingTile, LEFT);
   }
 
-  private boolean checkPathExistence(Game game, Wall wall) {       //todo CHECK!!!
+  private boolean checkPathExistence(Game game, Wall wall) {
     GameBoard dummyGameBoard;
     Pawn dummyPawn;
 
     try {
-      dummyGameBoard = (GameBoard) game.getGameBoard().clone();
+      dummyGameBoard = game.getGameBoard().clone();
       dummyPawn = new Pawn(dummyGameBoard.getStartingAndDestinationTiles().getFirst().getKey(),
               dummyGameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.BLACK, 1);
     } catch (CloneNotSupportedException e) {

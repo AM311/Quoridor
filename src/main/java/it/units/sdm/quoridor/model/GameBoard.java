@@ -96,12 +96,12 @@ public class GameBoard implements Cloneable {
   }
 
   @Override
-  public Object clone() throws CloneNotSupportedException {
+  public final GameBoard clone() throws CloneNotSupportedException {
     GameBoard cloneGameBoard = (GameBoard) super.clone();
     Tile[][] cloneGameState = new Tile[sideLength][sideLength];
     for (int i = 0; i < sideLength; i++)
       for (int j = 0; j < sideLength; j++)
-        cloneGameState[i][j] = (Tile) gameState[i][j].clone();
+        cloneGameState[i][j] = gameState[i][j].clone();
 
     cloneGameBoard.gameState = cloneGameState;
 
@@ -133,12 +133,16 @@ public class GameBoard implements Cloneable {
     for (StraightDirection direction : StraightDirection.values()) {
       try {
         if (tile2.equals(this.getAdjacentTile(tile1, direction))) {
-          return tile1.getLink(direction) == WALL;
+          return tile1.getLink(direction) == WALL || tile1.getLink(direction) == EDGE;
         }
       } catch (OutOfGameBoardException ignored) {
       }
     }
     throw new NotAdjacentTilesException();
+  }
+
+  public boolean isThereAWallOrEdge(Tile tile, StraightDirection direction) {
+    return tile.getLink(direction) == WALL || tile.getLink(direction) == EDGE;
   }
 
   public Tile getLandingTile(Tile tile, StraightDirection direction) throws OutOfGameBoardException {
@@ -207,7 +211,7 @@ public class GameBoard implements Cloneable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Tile clone() throws CloneNotSupportedException {
       Tile cloneTile = (Tile) super.clone();
       cloneTile.links = new EnumMap<>(Map.of(UP, this.getLink(UP), RIGHT, this.getLink(RIGHT), DOWN, this.getLink(DOWN), LEFT, this.getLink(LEFT)));
 

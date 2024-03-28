@@ -2,6 +2,7 @@ import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
+import it.units.sdm.quoridor.utils.directions.StraightDirection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -241,7 +242,7 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
     for (int i = startingTileColumn; i < startingTileColumn + 1; i++) {
       gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow - 1, i).setLink(UP, WALL);
+      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
     }
 
     Assertions.assertTrue(gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), gameBoard.getTile(startingTileRow + 1, startingTileColumn)));
@@ -253,7 +254,7 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
     for (int i = startingTileColumn-2; i < startingTileColumn; i++) {
       gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow - 1, i).setLink(UP, WALL);
+      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
     }
 
     Assertions.assertFalse(gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), gameBoard.getTile(startingTileRow + 1, startingTileColumn)));
@@ -265,10 +266,51 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
     for (int i = startingTileColumn; i < startingTileColumn+2; i++) {
       gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow - 1, i).setLink(UP, WALL);
+      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
     }
 
     Assertions.assertThrows(NotAdjacentTilesException.class, () -> gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), gameBoard.getTile(startingTileRow + 1, startingTileColumn+1)));
+  }
+
+  //=======================
+
+  @ParameterizedTest
+  @CsvSource({"2,5", "1,4", "7,7"})
+  void isThereAWallOrEdgeTest_wallIsPresent(int startingTileRow, int startingTileColumn) {
+    GameBoard gameBoard = new GameBoard();
+    for (int i = startingTileColumn; i < startingTileColumn + 1; i++) {
+      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
+      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
+    }
+
+    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), DOWN));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"1,2", "5,2", "4,3"})
+  void isThereAWallOrEdgeTest_wallIsAbsent(int startingTileRow, int startingTileColumn) {
+    GameBoard gameBoard = new GameBoard();
+    for (int i = startingTileColumn-2; i < startingTileColumn; i++) {
+      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
+      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
+    }
+
+    Assertions.assertFalse(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), DOWN));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"0,2,UP", "8,0,LEFT", "8,0,DOWN"})
+  void isThereAWallOrEdgeTest_edgeIsPresent(int startingTileRow, int startingTileColumn, StraightDirection direction) {
+    GameBoard gameBoard = new GameBoard();
+
+    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), direction));
+  }
+  @ParameterizedTest
+  @CsvSource({"3,2,UP", "8,0,UP", "5,5,DOWN"})
+  void isThereAWallOrEdgeTest_edgeIsAbsent(int startingTileRow, int startingTileColumn, StraightDirection direction) {
+    GameBoard gameBoard = new GameBoard();
+
+    Assertions.assertFalse(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), direction));
   }
 
   //=======================
@@ -306,7 +348,7 @@ public class GameBoardTest {
     gameBoard.getTile(5,2).setLink(LEFT, WALL);
     gameBoard.getTile(0,0).setLink(DOWN, WALL);
 
-    GameBoard clonedGameBoard = (GameBoard) gameBoard.clone();
+    GameBoard clonedGameBoard = gameBoard.clone();
 
     clonedGameBoard.getTile(6,2).setLink(UP, WALL);
     clonedGameBoard.getTile(1,4).setLink(RIGHT, WALL);
@@ -322,7 +364,7 @@ public class GameBoardTest {
     gameBoard.getTile(5,2).setLink(LEFT, WALL);
     gameBoard.getTile(0,0).setLink(DOWN, WALL);
 
-    GameBoard clonedGameBoard = (GameBoard) gameBoard.clone();
+    GameBoard clonedGameBoard = gameBoard.clone();
 
     gameBoard.getTile(6,2).setLink(UP, WALL);
     gameBoard.getTile(1,4).setLink(RIGHT, WALL);
