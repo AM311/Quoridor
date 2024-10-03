@@ -43,7 +43,8 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
       try {
         if (destinationTile.equals(gameBoard.getAdjacentTile(currentTile, direction)))
           return isSpecialMove(gameBoard, currentTile, direction);
-      } catch (OutOfGameBoardException ignored) {
+      } catch (OutOfGameBoardException outOfGameBoardException) {
+        return false;
       }
     }
     return false;
@@ -61,7 +62,7 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     return false;
   }
 
-  private boolean isSpecialMove(GameBoard gameBoard, Tile currentTile, DiagonalDirection direction) {
+  private boolean isSpecialMove(GameBoard gameBoard, Tile currentTile, DiagonalDirection direction) throws OutOfGameBoardException{
     return switch (direction) {
       case UP_RIGHT -> checkSpecialMove(gameBoard, currentTile, UP, RIGHT);
       case UP_LEFT -> checkSpecialMove(gameBoard, currentTile, UP, LEFT);
@@ -70,12 +71,12 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
     };
   }
 
-  private boolean checkSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) {
+  private boolean checkSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) throws OutOfGameBoardException {
     return checkVerticalSpecialMove(gameBoard, currentTile, verticalDirection, horizontalDirection) ||
             checkHorizontalSpecialMove(gameBoard, currentTile, verticalDirection, horizontalDirection);
   }
 
-  private boolean checkVerticalSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) {
+  private boolean checkVerticalSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) throws OutOfGameBoardException{
     Tile adjacentTile = gameBoard.getAdjacentTile(currentTile, verticalDirection);
 
     return adjacentTile.isOccupied()
@@ -83,7 +84,7 @@ public class PawnMovementChecker implements ActionChecker<Tile> {
             && !gameBoard.isThereAWallOrEdge(adjacentTile, horizontalDirection);
   }
 
-  private boolean checkHorizontalSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) {
+  private boolean checkHorizontalSpecialMove(GameBoard gameBoard, Tile currentTile, StraightDirection verticalDirection, StraightDirection horizontalDirection) throws OutOfGameBoardException{
     Tile adjacentTile = gameBoard.getAdjacentTile(currentTile, horizontalDirection);
 
     return adjacentTile.isOccupied()

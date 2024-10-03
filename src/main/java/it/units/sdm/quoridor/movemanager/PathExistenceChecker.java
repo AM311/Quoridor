@@ -47,10 +47,7 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
       toVisitTiles.remove(visitedTile);
 
       for (StraightDirection direction : StraightDirection.values()) {
-        try {
-          visitAdjacentTile(gameBoard, visitedTile, direction, potentials);
-        } catch (OutOfGameBoardException ignored) {
-        }
+        visitAdjacentTile(gameBoard, visitedTile, direction, potentials);
       }
       visitedTile = makeAndGetTileDefinitive(toVisitTiles, potentials);
     }
@@ -70,13 +67,16 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
   }
 
   private void visitAdjacentTile(GameBoard gameBoard, Tile visitedTile, StraightDirection direction, Map<Tile, Integer> potentials) {
-    Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, direction);
-    if (visitedTile.getLink(direction) == FREE) {
-      if (potentials.get(adjacentTile) > potentials.get(visitedTile))
-        potentials.put(adjacentTile, potentials.get(visitedTile));
-    } else if (visitedTile.getLink(direction) == WALL) {
-      if (potentials.get(adjacentTile) > potentials.get(visitedTile) + 1)
-        potentials.put(adjacentTile, potentials.get(visitedTile) + 1);
+    try {
+      Tile adjacentTile = gameBoard.getAdjacentTile(visitedTile, direction);
+      if (visitedTile.getLink(direction) == FREE) {
+        if (potentials.get(adjacentTile) > potentials.get(visitedTile))
+          potentials.put(adjacentTile, potentials.get(visitedTile));
+      } else if (visitedTile.getLink(direction) == WALL) {
+        if (potentials.get(adjacentTile) > potentials.get(visitedTile) + 1)
+          potentials.put(adjacentTile, potentials.get(visitedTile) + 1);
+      }
+    } catch (OutOfGameBoardException ignored) {
     }
   }
 

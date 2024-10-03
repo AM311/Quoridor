@@ -1,3 +1,4 @@
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
@@ -53,10 +54,10 @@ public class GameBoardTest {
 
   @ParameterizedTest
   @ValueSource(ints = {-1,9,99})
-  void getRowTest_OutOfGameBoardExceptionIsThrown(int row) {
+  void getRowTest_InvalidParameterExceptionIsThrown(int row) {
     GameBoard gameBoard = new GameBoard();
 
-    Assertions.assertThrows(OutOfGameBoardException.class, () -> gameBoard.getRowTiles(row));
+    Assertions.assertThrows(InvalidParameterException.class, () -> gameBoard.getRowTiles(row));
   }
 
   @ParameterizedTest
@@ -73,10 +74,10 @@ public class GameBoardTest {
 
   @ParameterizedTest
   @ValueSource(ints = {-1,9,99})
-  void getColumnTest_OutOfGameBoardExceptionIsThrown(int column) {
+  void getColumnTest_InvalidParameterExceptionIsThrown(int column) {
     GameBoard gameBoard = new GameBoard();
 
-    Assertions.assertThrows(OutOfGameBoardException.class, () -> gameBoard.getColumnTiles(column));
+    Assertions.assertThrows(InvalidParameterException.class, () -> gameBoard.getColumnTiles(column));
   }
 
   //=======================
@@ -208,28 +209,28 @@ public class GameBoardTest {
   //todo manage exceptions and not allowed cases
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "8, 2"})
-  void nearTiles_leftTileIsCorrect(int row, int column) {
+  void nearTiles_leftTileIsCorrect(int row, int column) throws OutOfGameBoardException {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getTile(row, column-1), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), LEFT));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 7", "8, 2"})
-  void nearTiles_rightTileIsCorrect(int row, int column) {
+  void nearTiles_rightTileIsCorrect(int row, int column) throws OutOfGameBoardException {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getTile(row, column+1), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), RIGHT));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "8, 2"})
-  void nearTiles_upperTileIsCorrect(int row, int column) {
+  void nearTiles_upperTileIsCorrect(int row, int column) throws OutOfGameBoardException {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getTile(row-1, column), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), UP));
   }
 
   @ParameterizedTest
   @CsvSource({"1, 4", "3, 8", "7, 2"})
-  void nearTiles_lowerTileIsCorrect(int row, int column) {
+  void nearTiles_lowerTileIsCorrect(int row, int column) throws OutOfGameBoardException {
     GameBoard gameBoard = new GameBoard();
     Assertions.assertEquals(gameBoard.getTile(row+1, column), gameBoard.getAdjacentTile(gameBoard.getTile(row, column), DOWN));
   }
@@ -317,9 +318,9 @@ public class GameBoardTest {
 
   @ParameterizedTest
   @CsvSource({"9,0", "9,9", "0,15", "99,99"})
-  void getTileTest_OutOfGameBoardExceptionIsThrown(int row, int column) {
+  void getTileTest_InvalidParameterExceptionIsThrown(int row, int column) {
     GameBoard gameBoard = new GameBoard();
-    Assertions.assertThrows(OutOfGameBoardException.class, () -> gameBoard.getTile(row, column));
+    Assertions.assertThrows(InvalidParameterException.class, () -> gameBoard.getTile(row, column));
   }
 
   //=======================

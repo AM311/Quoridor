@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.movemanager;
 
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
@@ -27,33 +28,41 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
   }
 
   private boolean checkHorizontalWallPosition(GameBoard gameBoard, Tile startingTile) {
-    if (gameBoard.isInLastRow(startingTile) || gameBoard.isInLastColumn(startingTile)) {
+    try {
+      if (gameBoard.isInLastRow(startingTile) || gameBoard.isInLastColumn(startingTile)) {
+        return false;
+      }
+      //todo extract method "checkCrossingWalls"?
+      Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
+      Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
+
+      if (gameBoard.isThereAWallOrEdge(startingTile, RIGHT) && gameBoard.isThereAWallOrEdge(tileBelowStartingTile, RIGHT)) {
+        return false;
+      }
+
+      return !gameBoard.isThereAWallOrEdge(startingTile, DOWN) && !gameBoard.isThereAWallOrEdge(tileRightToStartingTile, DOWN);
+    } catch (OutOfGameBoardException e) {
       return false;
     }
-    //todo extract method "checkCrossingWalls"?
-    Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
-    Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
-
-    if (gameBoard.isThereAWallOrEdge(startingTile, RIGHT) && gameBoard.isThereAWallOrEdge(tileBelowStartingTile, RIGHT)) {
-      return false;
-    }
-
-    return !gameBoard.isThereAWallOrEdge(startingTile, DOWN) && !gameBoard.isThereAWallOrEdge(tileRightToStartingTile, DOWN);
   }
 
   private boolean checkVerticalWallPosition(GameBoard gameBoard, Tile startingTile) {
-    if (gameBoard.isInFirstRow(startingTile) || gameBoard.isInFirstColumn(startingTile)) {
+    try {
+      if (gameBoard.isInFirstRow(startingTile) || gameBoard.isInFirstColumn(startingTile)) {
+        return false;
+      }
+      //todo extract method "checkCrossingWalls"?
+      Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
+      Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
+
+      if (gameBoard.isThereAWallOrEdge(startingTile, UP) && gameBoard.isThereAWallOrEdge(tileLeftToStartingTile, UP)) {
+        return false;
+      }
+
+      return !gameBoard.isThereAWallOrEdge(startingTile, LEFT) && !gameBoard.isThereAWallOrEdge(tileAboveStartingTile, LEFT);
+    } catch (OutOfGameBoardException e) {
       return false;
     }
-    //todo extract method "checkCrossingWalls"?
-    Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
-    Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
-
-    if (gameBoard.isThereAWallOrEdge(startingTile, UP) && gameBoard.isThereAWallOrEdge(tileLeftToStartingTile, UP)) {
-      return false;
-    }
-
-    return !gameBoard.isThereAWallOrEdge(startingTile, LEFT) && !gameBoard.isThereAWallOrEdge(tileAboveStartingTile, LEFT);
   }
 
   private boolean checkPathExistence(Game game, Wall wall) {

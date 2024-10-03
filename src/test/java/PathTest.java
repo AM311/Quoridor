@@ -1,4 +1,5 @@
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
+import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.movemanager.PathExistenceChecker;
@@ -33,7 +34,7 @@ public class PathTest {
   }
 
   @Test
-  void checkBlockedPawnsFromCorrectSide() throws InvalidActionException {
+  void checkBlockedPawnsFromCorrectSide() throws InvalidActionException, OutOfGameBoardException {
     Game game = new Game(2);
 
     //todo CHIAMATA PER MOSSA TROPPO VERBOSA... VALUTARE!!!

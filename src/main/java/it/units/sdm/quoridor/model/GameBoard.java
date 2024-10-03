@@ -60,27 +60,27 @@ public class GameBoard implements Cloneable {
     return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();
   }
 
-  public Tile getTile(int row, int column) throws OutOfGameBoardException {
+  public Tile getTile(int row, int column) {
     try {
       return gameState[row][column];
     } catch (ArrayIndexOutOfBoundsException ex) {
-      throw new OutOfGameBoardException();
+      throw new InvalidParameterException();
     }
   }
 
-  public List<Tile> getRowTiles(int row) throws OutOfGameBoardException {
+  public List<Tile> getRowTiles(int row) {
     try {
       return List.of(gameState[row]);
     } catch (ArrayIndexOutOfBoundsException ex) {
-      throw new OutOfGameBoardException();
+      throw new InvalidParameterException();
     }
   }
 
-  public List<Tile> getColumnTiles(int column) throws OutOfGameBoardException {
+  public List<Tile> getColumnTiles(int column) {
     try {
       return List.of(Arrays.stream(gameState).map(x -> x[column]).toArray(Tile[]::new));
     } catch (ArrayIndexOutOfBoundsException ex) {
-      throw new OutOfGameBoardException();
+      throw new InvalidParameterException();
     }
   }
 
@@ -131,7 +131,7 @@ public class GameBoard implements Cloneable {
     for (StraightDirection direction : StraightDirection.values()) {
       try {
         if (tile2.equals(this.getAdjacentTile(tile1, direction))) {
-          return tile1.getLink(direction) == WALL || tile1.getLink(direction) == EDGE;
+          return tile1.getLink(direction) == WALL;
         }
       } catch (OutOfGameBoardException ignored) {
       }
