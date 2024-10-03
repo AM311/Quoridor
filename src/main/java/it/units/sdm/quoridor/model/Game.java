@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.model;
 
+import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 import it.units.sdm.quoridor.movemanager.*;
@@ -51,11 +52,11 @@ public class Game {
     return playingPawn;
   }
 
-  public void placeWall(Wall wall) {
+  public void placeWall(Wall wall) throws InvalidActionException {                      //todo Vedere se generare qui le eccezioni
     actionManager.performAction(new WallPlacer(), new WallPlacementChecker(), wall);
   }
 
-  public void movePlayingPawn(Tile destinationTile) {
+  public void movePlayingPawn(Tile destinationTile) throws InvalidActionException {
     actionManager.performAction(new PawnMover(), new PawnMovementChecker(), destinationTile);
   }
 

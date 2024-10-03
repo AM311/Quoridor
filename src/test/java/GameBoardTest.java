@@ -45,7 +45,7 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
 
     List<Tile> expected = new ArrayList<>();
-    for(int i = 0; i < gameBoard.getSideLength(); i++)
+    for(int i = 0; i < GameBoard.SIDE_LENGTH; i++)
       expected.add(gameBoard.getTile(row,i));
 
     Assertions.assertEquals(expected, gameBoard.getRowTiles(row));
@@ -65,7 +65,7 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
 
     List<Tile> expected = new ArrayList<>();
-    for(int i = 0; i < gameBoard.getSideLength(); i++)
+    for(int i = 0; i < GameBoard.SIDE_LENGTH; i++)
       expected.add(gameBoard.getTile(i, column));
 
     Assertions.assertEquals(expected, gameBoard.getColumnTiles(column));

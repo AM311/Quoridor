@@ -1,3 +1,4 @@
+import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
@@ -20,7 +21,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -41,7 +42,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) {
+  void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -62,7 +63,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -83,7 +84,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) {
+  void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -103,7 +104,7 @@ public class PlaceWallTest {
   }
 
   @Test
-  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(0, 0);
@@ -124,7 +125,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) {
+  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -145,7 +146,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) {
+  void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -166,7 +167,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) {
+  void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -187,7 +188,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) {
+  void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -207,20 +208,20 @@ public class PlaceWallTest {
   }
 
   @Test
-  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() {
+  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
-    Tile startingTile = gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1);
+    Tile startingTile = gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1);
     Wall wall = new Wall(VERTICAL, startingTile);
     game.placeWall(wall);
 
     GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, EDGE, FREE, EDGE};
     GameBoard.LinkState[] actual = new GameBoard.LinkState[]
             {
-                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(LEFT),
-                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(RIGHT),
-                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(UP),
-                    gameBoard.getTile(gameBoard.getSideLength() - 1, gameBoard.getSideLength() - 1).getLink(DOWN)
+                    gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(LEFT),
+                    gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(RIGHT),
+                    gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(UP),
+                    gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(DOWN)
             };
 
     Assertions.assertArrayEquals(expected, actual);
@@ -426,7 +427,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) {
+  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();

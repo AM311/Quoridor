@@ -1,3 +1,4 @@
+import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
 import org.junit.jupiter.api.Assertions;
@@ -8,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 public class MovePawnTest {
   @ParameterizedTest
   @CsvSource({"7, 1, 7, 2", "4, 3, 5, 3", "3, 1, 2, 1", "5, 6, 5, 5"})
-  void movePawnVerticallyAndHorizontally(int startingRow, int startingColumn, int destinationRow, int destinationColumn) {
+  void movePawnVerticallyAndHorizontally(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidActionException {
     Game game = new Game(2);
     Tile startingTile = game.getGameBoard().getTile(startingRow, startingColumn);
     Tile destinationTile = game.getGameBoard().getTile(destinationRow, destinationColumn);
@@ -21,7 +22,7 @@ public class MovePawnTest {
   }
 
   @Test
-  void movePawnDiagonalUpRight(){
+  void movePawnDiagonalUpRight() throws InvalidActionException {
     Game game = new Game(2);
     Tile startingTile = game.getGameBoard().getTile(1,1);
     Tile destinationTile = game.getGameBoard().getTile(0,2);
@@ -38,7 +39,7 @@ public class MovePawnTest {
   }
 
   @Test
-  void movePawnDiagonalUpLeft(){
+  void movePawnDiagonalUpLeft() throws InvalidActionException {
     Game game = new Game(2);
     Tile startingTile = game.getGameBoard().getTile(1,1);
     Tile destinationTile = game.getGameBoard().getTile(0,0);
@@ -55,7 +56,7 @@ public class MovePawnTest {
   }
 
   @Test
-  void movePawnDiagonalDownRight(){
+  void movePawnDiagonalDownRight() throws InvalidActionException {
     Game game = new Game(2);
     Tile startingTile = game.getGameBoard().getTile(4,7);
     Tile destinationTile = game.getGameBoard().getTile(5,8);
@@ -72,7 +73,7 @@ public class MovePawnTest {
   }
 
   @Test
-  void movePawnDiagonalDownLeft(){
+  void movePawnDiagonalDownLeft() throws InvalidActionException {
     Game game = new Game(2);
     Tile startingTile = game.getGameBoard().getTile(4,1);
     Tile destinationTile = game.getGameBoard().getTile(5,0);

@@ -16,47 +16,48 @@ import static it.units.sdm.quoridor.utils.directions.DiagonalDirection.*;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class GameBoard implements Cloneable {
-  public static final int sideLength = 9;
+  public static final int SIDE_LENGTH = 9;
   private Tile[][] gameState;
 
   public GameBoard() {
-    gameState = new Tile[sideLength][sideLength];
+    gameState = new Tile[SIDE_LENGTH][SIDE_LENGTH];
     fillGameState();
   }
 
   private void fillGameState() {
-    for (int i = 0; i < sideLength; i++)
-      for (int j = 0; j < sideLength; j++) {
+    for (int i = 0; i < SIDE_LENGTH; i++) {
+      for (int j = 0; j < SIDE_LENGTH; j++) {
         gameState[i][j] = new Tile(i, j);
       }
+    }
     setEdgesLinks();
+  }
+
+  private void setEdgesLinks() {
+    for (int i = 0; i < SIDE_LENGTH; i++) {
+      gameState[0][i].setLink(UP, EDGE);
+      gameState[i][0].setLink(LEFT, EDGE);
+      gameState[SIDE_LENGTH - 1][i].setLink(DOWN, EDGE);
+      gameState[i][SIDE_LENGTH - 1].setLink(RIGHT, EDGE);
+    }
   }
 
   public List<Pair<Tile, List<Tile>>> getStartingAndDestinationTiles() {
     List<Tile> startingTiles = List.of(
-            gameState[0][sideLength / 2],
-            gameState[sideLength - 1][sideLength / 2],
-            gameState[sideLength / 2][0],
-            gameState[sideLength / 2][sideLength - 1]
+            gameState[0][SIDE_LENGTH / 2],
+            gameState[SIDE_LENGTH - 1][SIDE_LENGTH / 2],
+            gameState[SIDE_LENGTH / 2][0],
+            gameState[SIDE_LENGTH / 2][SIDE_LENGTH - 1]
     );
 
     List<List<Tile>> destinationTiles = List.of(
-            getRowTiles(sideLength-1),
+            getRowTiles(SIDE_LENGTH - 1),
             getRowTiles(0),
-            getColumnTiles(sideLength-1),
+            getColumnTiles(SIDE_LENGTH - 1),
             getColumnTiles(0)
     );
 
-    return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();     //todo
-  }
-
-  private void setEdgesLinks() {
-    for (int i = 0; i < sideLength; i++) {
-      gameState[0][i].setLink(UP, EDGE);
-      gameState[i][0].setLink(LEFT, EDGE);
-      gameState[sideLength - 1][i].setLink(DOWN, EDGE);
-      gameState[i][sideLength - 1].setLink(RIGHT, EDGE);
-    }
+    return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();
   }
 
   public Tile getTile(int row, int column) throws OutOfGameBoardException {
@@ -74,6 +75,7 @@ public class GameBoard implements Cloneable {
       throw new OutOfGameBoardException();
     }
   }
+
   public List<Tile> getColumnTiles(int column) throws OutOfGameBoardException {
     try {
       return List.of(Arrays.stream(gameState).map(x -> x[column]).toArray(Tile[]::new));
@@ -92,15 +94,15 @@ public class GameBoard implements Cloneable {
       return true;
     if (!(o instanceof GameBoard gameBoard))
       return false;
-    return Arrays.deepEquals(getGameState(), gameBoard.getGameState());
+    return Arrays.deepEquals(gameState, gameBoard.gameState);
   }
 
   @Override
   public final GameBoard clone() throws CloneNotSupportedException {
     GameBoard cloneGameBoard = (GameBoard) super.clone();
-    Tile[][] cloneGameState = new Tile[sideLength][sideLength];
-    for (int i = 0; i < sideLength; i++)
-      for (int j = 0; j < sideLength; j++)
+    Tile[][] cloneGameState = new Tile[SIDE_LENGTH][SIDE_LENGTH];
+    for (int i = 0; i < SIDE_LENGTH; i++)
+      for (int j = 0; j < SIDE_LENGTH; j++)
         cloneGameState[i][j] = gameState[i][j].clone();
 
     cloneGameBoard.gameState = cloneGameState;
@@ -108,16 +110,12 @@ public class GameBoard implements Cloneable {
     return cloneGameBoard;
   }
 
-  private Tile[][] getGameState() {
-    return gameState;
-  }
-
   public boolean isInFirstRow(Tile tile) {
     return tile.row == 0;
   }
 
   public boolean isInLastRow(Tile tile) {
-    return tile.row == sideLength - 1;
+    return tile.row == SIDE_LENGTH - 1;
   }
 
   public boolean isInFirstColumn(Tile tile) {
@@ -125,7 +123,7 @@ public class GameBoard implements Cloneable {
   }
 
   public boolean isInLastColumn(Tile tile) {
-    return tile.column == sideLength - 1;
+    return tile.column == SIDE_LENGTH - 1;
   }
 
   //-----
@@ -176,10 +174,6 @@ public class GameBoard implements Cloneable {
     }
   }
 
-  public int getSideLength() {
-    return sideLength;
-  }
-
   public enum LinkState {
     FREE, WALL, EDGE
   }
@@ -207,7 +201,7 @@ public class GameBoard implements Cloneable {
         return true;
       if (!(o instanceof Tile tile))
         return false;
-      return getRow() == tile.getRow() && getColumn() == tile.getColumn() && isOccupied() == tile.isOccupied() && Objects.equals(getLinks(), tile.getLinks());
+      return getRow() == tile.getRow() && getColumn() == tile.getColumn() && isOccupied() == tile.isOccupied() && Objects.equals(links, tile.links);
     }
 
     @Override
@@ -236,10 +230,6 @@ public class GameBoard implements Cloneable {
 
     public void setOccupied(boolean occupied) {
       this.occupied = occupied;
-    }
-
-    public Map<StraightDirection, LinkState> getLinks() {
-      return links;
     }
   }
 }
