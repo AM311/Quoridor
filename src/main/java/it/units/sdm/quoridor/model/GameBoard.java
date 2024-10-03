@@ -184,7 +184,7 @@ public class GameBoard implements Cloneable {
     private Map<StraightDirection, LinkState> links;
     private boolean occupied;
 
-    public Tile(int row, int column) {
+    private Tile(int row, int column) {
       this.row = row;
       this.column = column;
       this.occupied = false;

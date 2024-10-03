@@ -22,7 +22,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -43,7 +43,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -64,7 +64,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -85,7 +85,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
-  void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -105,7 +105,7 @@ public class PlaceWallTest {
   }
 
   @Test
-  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() throws InvalidActionException, OutOfGameBoardException {
+  void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(0, 0);
@@ -126,7 +126,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -147,7 +147,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -168,7 +168,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -189,7 +189,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
-  void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -209,7 +209,7 @@ public class PlaceWallTest {
   }
 
   @Test
-  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() throws InvalidActionException, OutOfGameBoardException {
+  void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1);
@@ -230,7 +230,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallIsAllowed(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -242,7 +242,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
-  void horizontalWallIsNotAllowed(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -253,7 +253,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 3", "6, 4"})
-  void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -269,7 +269,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 4", "7, 2"})
-  void horizontalWallAboveVerticalIsAllowed(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallAboveVerticalIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -283,7 +283,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"6, 1", "2, 5", "3, 2"})
-  void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -295,7 +295,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"2, 3", "1, 4", "4, 7"})
-  void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -309,7 +309,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"1, 6", "4, 4", "7, 7"})
-  void horizontalWallsNearEachOtherIsAllowed(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallsNearEachOtherIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -323,7 +323,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "4, 0", "0, 7"})
-  void verticalWallIsNotAllowed(int row, int column) throws OutOfGameBoardException {
+  void verticalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -334,7 +334,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"8, 8", "4, 4", "1, 8"})
-  void verticalWallIsAllowed(int row, int column) throws OutOfGameBoardException {
+  void verticalWallIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -345,7 +345,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 4", "5, 7", "1, 7"})
-  void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) throws OutOfGameBoardException {
+  void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -360,7 +360,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 4", "3, 3", "2, 4"})
-  void verticalWallRightToHorizontalWallIsAllowed(int row, int column) throws OutOfGameBoardException {
+  void verticalWallRightToHorizontalWallIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -374,7 +374,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"1, 4", "7, 2", "4, 6"})
-  void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws OutOfGameBoardException {
+  void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -387,7 +387,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"5, 4", "5, 1", "6, 3"})
-  void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws OutOfGameBoardException {
+  void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -401,7 +401,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"6, 2", "3, 5", "5, 1"})
-  void verticalWallsNearEachOtherIsAllowed(int row, int column) throws OutOfGameBoardException {
+  void verticalWallsNearEachOtherIsAllowed(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     Tile startingTile = gameBoard.getTile(row, column);
@@ -415,7 +415,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) throws OutOfGameBoardException {
+  void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     for(int i = 0; i < 10; i++)
@@ -428,7 +428,7 @@ public class PlaceWallTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) throws InvalidActionException, OutOfGameBoardException {
+  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) throws InvalidActionException {
     Game game = new Game(2);
     GameBoard gameBoard = game.getGameBoard();
     int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();
