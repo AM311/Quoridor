@@ -36,7 +36,7 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
       Tile tileBelowStartingTile = gameBoard.getAdjacentTile(startingTile, DOWN);
       Tile tileRightToStartingTile = gameBoard.getAdjacentTile(startingTile, RIGHT);
 
-      if (gameBoard.isThereAWallOrEdge(startingTile, RIGHT) && gameBoard.isThereAWallOrEdge(tileBelowStartingTile, RIGHT)) {
+      if (gameBoard.isThereAWallOrEdge(tileBelowStartingTile, RIGHT) && gameBoard.isThereAWallOrEdge(startingTile, RIGHT)) {
         return false;
       }
 
@@ -55,7 +55,7 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
       Tile tileAboveStartingTile = gameBoard.getAdjacentTile(startingTile, UP);
       Tile tileLeftToStartingTile = gameBoard.getAdjacentTile(startingTile, LEFT);
 
-      if (gameBoard.isThereAWallOrEdge(startingTile, UP) && gameBoard.isThereAWallOrEdge(tileLeftToStartingTile, UP)) {
+      if (gameBoard.isThereAWallOrEdge(tileLeftToStartingTile, UP) && gameBoard.isThereAWallOrEdge(startingTile, UP)) {
         return false;
       }
 
