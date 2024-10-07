@@ -1,6 +1,7 @@
 package it.units.sdm.quoridor.movemanager;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
+import it.units.sdm.quoridor.exceptions.QuoridorRuntimeException;
 import it.units.sdm.quoridor.model.Game;
 
 public class GameActionManager {
@@ -9,11 +10,11 @@ public class GameActionManager {
 	public GameActionManager(Game game) {
 		this.game = game;
 	}
-	//todo catch all exceptions in following methods
+
 	public <T> void performAction(Action<T> action, T target) throws InvalidActionException {
 		try {
 			action.execute(game.getGameBoard(), game.getPlayingPawn(), target);
-		} catch (RuntimeException ex) {
+		} catch (QuoridorRuntimeException ex) {
 			throw new InvalidActionException("Invalid move: " + ex.getMessage());
 		}
 	}
@@ -22,7 +23,9 @@ public class GameActionManager {
 		try{
 			if(actionChecker.checkAction(game, target))
 				performAction(action, target);
-		} catch (RuntimeException ex) {
+			else
+				throw new InvalidActionException("Invalid move");
+		} catch (QuoridorRuntimeException ex) {
 			throw new InvalidActionException("Invalid move: " + ex.getMessage());
 		}
 

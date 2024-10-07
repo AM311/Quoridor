@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.exceptions;
 
-public class NotAdjacentTilesException extends RuntimeException{
+public class NotAdjacentTilesException extends QuoridorException{
   public NotAdjacentTilesException() {
   }
 

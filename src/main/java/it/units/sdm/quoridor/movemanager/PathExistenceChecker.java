@@ -19,17 +19,13 @@ public class PathExistenceChecker implements ActionChecker<GameBoard> {
       Map<Tile, Integer> potentials = new HashMap<>();
       Set<Tile> toVisitTiles = new HashSet<>();
 
-      //Init
       for (Tile tile : dummyGameBoard.getTiles()) {
         toVisitTiles.add(tile);
         potentials.put(tile, Integer.MAX_VALUE);
-
       }
 
       Tile startingTile = pawn.getCurrentTile();
       potentials.put(startingTile, 0);
-
-      //===================
 
       visitTiles(dummyGameBoard, startingTile, toVisitTiles, potentials);
 

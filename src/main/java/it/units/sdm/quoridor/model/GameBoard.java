@@ -3,6 +3,7 @@ package it.units.sdm.quoridor.model;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.exceptions.QuoridorRuntimeException;
 import it.units.sdm.quoridor.utils.Pair;
 import it.units.sdm.quoridor.utils.directions.Direction;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
@@ -43,44 +44,48 @@ public class GameBoard implements Cloneable {
   }
 
   public List<Pair<Tile, List<Tile>>> getStartingAndDestinationTiles() {
-    List<Tile> startingTiles = List.of(
-            gameState[0][SIDE_LENGTH / 2],
-            gameState[SIDE_LENGTH - 1][SIDE_LENGTH / 2],
-            gameState[SIDE_LENGTH / 2][0],
-            gameState[SIDE_LENGTH / 2][SIDE_LENGTH - 1]
-    );
+    try {
+      List<Tile> startingTiles = List.of(
+              gameState[0][SIDE_LENGTH / 2],
+              gameState[SIDE_LENGTH - 1][SIDE_LENGTH / 2],
+              gameState[SIDE_LENGTH / 2][0],
+              gameState[SIDE_LENGTH / 2][SIDE_LENGTH - 1]
+      );
 
-    List<List<Tile>> destinationTiles = List.of(
-            getRowTiles(SIDE_LENGTH - 1),
-            getRowTiles(0),
-            getColumnTiles(SIDE_LENGTH - 1),
-            getColumnTiles(0)
-    );
+      List<List<Tile>> destinationTiles = List.of(
+              getRowTiles(SIDE_LENGTH - 1),
+              getRowTiles(0),
+              getColumnTiles(SIDE_LENGTH - 1),
+              getColumnTiles(0)
+      );
+      return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();
 
-    return IntStream.range(0, 4).mapToObj(i -> new Pair<>(startingTiles.get(i), destinationTiles.get(i))).toList();
+    } catch (InvalidParameterException e) {
+      throw new QuoridorRuntimeException("Exception when getting starting and destination tiles!");
+    }
   }
 
-  public Tile getTile(int row, int column) {
+  public Tile getTile(int row, int column) throws InvalidParameterException {
     try {
       return gameState[row][column];
     } catch (ArrayIndexOutOfBoundsException ex) {
-      throw new InvalidParameterException();
+      throw new InvalidParameterException("The provided coordinates are outside GameBoard!");
     }
   }
 
-  public List<Tile> getRowTiles(int row) {
+  public List<Tile> getRowTiles(int row) throws InvalidParameterException {
     try {
       return List.of(gameState[row]);
     } catch (ArrayIndexOutOfBoundsException ex) {
-      throw new InvalidParameterException();
+      throw new InvalidParameterException("The provided row is outside GameBoard!");
     }
   }
 
-  public List<Tile> getColumnTiles(int column) {
+  public List<Tile> getColumnTiles(int column) throws InvalidParameterException {
     try {
       return List.of(Arrays.stream(gameState).map(x -> x[column]).toArray(Tile[]::new));
     } catch (ArrayIndexOutOfBoundsException ex) {
-      throw new InvalidParameterException();
+      throw new InvalidParameterException("The provided column is outside GameBoard!");
     }
   }
 
@@ -126,7 +131,6 @@ public class GameBoard implements Cloneable {
     return tile.column == SIDE_LENGTH - 1;
   }
 
-  //-----
   public boolean isThereAWall(Tile tile1, Tile tile2) throws NotAdjacentTilesException {
     for (StraightDirection direction : StraightDirection.values()) {
       try {
@@ -137,6 +141,10 @@ public class GameBoard implements Cloneable {
       }
     }
     throw new NotAdjacentTilesException();
+  }
+
+  public boolean isThereAWall(Tile tile, StraightDirection direction) {
+    return tile.getLink(direction) == WALL;
   }
 
   public boolean isThereAWallOrEdge(Tile tile, StraightDirection direction) {
@@ -152,7 +160,7 @@ public class GameBoard implements Cloneable {
         case LEFT -> gameState[tile.row][tile.column - 2];
       };
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new OutOfGameBoardException();
+      throw new OutOfGameBoardException("Cannot jump from the provided tile!");
     }
   }
 
@@ -167,10 +175,10 @@ public class GameBoard implements Cloneable {
         case UP_RIGHT -> gameState[tile.row - 1][tile.column + 1];
         case DOWN_LEFT -> gameState[tile.row + 1][tile.column - 1];
         case DOWN_RIGHT -> gameState[tile.row + 1][tile.column + 1];
-        default -> throw new InvalidParameterException();
+        default -> throw new QuoridorRuntimeException("Unhandled case while getting adjacent tile!");
       };
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new OutOfGameBoardException();
+      throw new OutOfGameBoardException("The provided tile is on the border!");
     }
   }
 

@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.exceptions;
 
-public class InvalidParameterException extends RuntimeException{
+public class InvalidParameterException extends QuoridorException{
   public InvalidParameterException() {
   }
 

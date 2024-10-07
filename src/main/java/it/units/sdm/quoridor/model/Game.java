@@ -52,7 +52,8 @@ public class Game {
     return playingPawn;
   }
 
-  public void placeWall(Wall wall) throws InvalidActionException {                      //todo Vedere se generare qui le eccezioni
+  //todo Qui e sotto: MEGLIO PASSARE SOLO COORDINATE? --> SEPARATION OF CONCERNS
+  public void placeWall(Wall wall) throws InvalidActionException {
     actionManager.performAction(new WallPlacer(), new WallPlacementChecker(), wall);
   }
 

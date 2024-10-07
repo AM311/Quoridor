@@ -1,4 +1,5 @@
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
@@ -15,13 +16,13 @@ public class PathTest {
   //-------------------------
 
   @Test
-  void checkStartPawn() {
+  void checkStartPawn() throws InvalidParameterException {
     Game game = new Game(2);
     Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
   }
 
   @Test
-  void checkBlockedPath() {
+  void checkBlockedPath() throws InvalidParameterException {
     Game game = new Game(2);
 
     for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(4)) {
@@ -34,7 +35,7 @@ public class PathTest {
   }
 
   @Test
-  void checkBlockedPawnsFromCorrectSide() throws InvalidActionException, OutOfGameBoardException {
+  void checkBlockedPawnsFromCorrectSide() throws InvalidActionException, OutOfGameBoardException, InvalidParameterException {
     Game game = new Game(2);
 
     //todo CHIAMATA PER MOSSA TROPPO VERBOSA... VALUTARE!!!
@@ -61,7 +62,7 @@ public class PathTest {
   }
 
   @Test
-  void checkBlockedPath_OnlyForPawn1() {
+  void checkBlockedPath_OnlyForPawn1() throws InvalidParameterException {
     Game game = new Game(2);
 
     for (int i = 0; i < 7; i++) {
@@ -78,7 +79,7 @@ public class PathTest {
   }
 
   @Test
-  void checkBlockedPath_OnlyForPawn2() {
+  void checkBlockedPath_OnlyForPawn2() throws InvalidParameterException {
     Game game = new Game(2);
 
     for (int i = 0; i < 7; i++) {

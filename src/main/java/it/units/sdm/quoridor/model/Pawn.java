@@ -41,9 +41,8 @@ public class Pawn {
 
   public void decrementNumberOfWalls(){
     if (this.numberOfWalls<=0){
-      throw new NumberOfWallsBelowZeroException();
+      throw new NumberOfWallsBelowZeroException("Number of walls cannot be negative!");
     }
     this.numberOfWalls--;
   }
-
 }

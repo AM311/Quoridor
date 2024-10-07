@@ -1,3 +1,4 @@
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.Pawn;
@@ -18,7 +19,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"1, 4, 1, 6", "1, 4, 1, 2", "1, 4, 2, 5", "1, 4, 3, 7", "1, 4, 2, 3", "1,7,0,6"})
-  void checkNotAdjacencyMoveNotAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) {
+  void checkNotAdjacencyMoveNotAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -30,7 +31,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"1, 4, 0, 4", "1, 4, 1, 3", "1, 4, 2, 4", "1, 4, 1, 5"})
-  void checkAdjacencyMoveAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) {
+  void checkAdjacencyMoveAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -43,7 +44,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6", "4, 3, 3, 3", "8, 3, 8, 4"})
-  void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn) {
+  void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn) throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -58,7 +59,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3, 4, 4, 4, 5", "0, 4, 0, 3, 0, 2", "8, 6, 8, 7, 8, 8", "5, 6, 4, 6, 3, 6", "4, 8, 3, 8, 2, 8", "0, 2, 1, 2, 2, 2"})
-  void jumpingOverNeighborPawnAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) {
+  void jumpingOverNeighborPawnAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -71,7 +72,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6, 0, 6", "3, 5, 4, 5, 6, 5", "8, 8, 8, 7, 8, 5", "1, 3, 1, 2, 1, 0"})
-  void jumpingTwoTilesOverNeighborPawnNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) {
+  void jumpingTwoTilesOverNeighborPawnNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -84,7 +85,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"5, 5, 5, 3, 5, 2", "7, 3, 7, 1, 7, 0", "1, 2, 1, 4, 1, 5", "8, 5, 8, 7, 8, 8"})
-  void jumpingTwoTilesOverNotNeighborPawnNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) {
+  void jumpingTwoTilesOverNotNeighborPawnNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -98,7 +99,7 @@ public class PawnMovementCheckerTest {
   //===========================
 
   @Test
-  void jumpingOverWallFrom53To43NotAllowed() {
+  void jumpingOverWallFrom53To43NotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -113,7 +114,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void jumpingOverWallFrom32To33NotAllowed() {
+  void jumpingOverWallFrom32To33NotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -128,7 +129,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void jumpingOverPawnHavingAWallBehindFrom31to33NotAllowed() {
+  void jumpingOverPawnHavingAWallBehindFrom31to33NotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -144,7 +145,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void jumpingOverPawnHavingAWallBehindFrom71to51NotAllowed() {
+  void jumpingOverPawnHavingAWallBehindFrom71to51NotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -160,7 +161,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom36To27() {
+  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom36To27() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -176,7 +177,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom31To22() {
+  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom31To22() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -192,7 +193,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom77To66() {
+  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom77To66() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -214,7 +215,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom74To65() {
+  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom74To65() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -236,7 +237,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereNotAdjacentWallIn43From63() {
+  void isThereNotAdjacentWallIn43From63() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -252,7 +253,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnAdjacentAndAWallBehindFrom52To41() {
+  void isThereAPawnAdjacentAndAWallBehindFrom52To41() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -269,7 +270,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAWallOnLeftAndAPawnBehindItFrom56To45() {
+  void isThereAWallOnLeftAndAPawnBehindItFrom56To45() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -286,7 +287,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnOnTheLeftAndBehindAWallFrom42To51() {
+  void isThereAPawnOnTheLeftAndBehindAWallFrom42To51() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -303,7 +304,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnBelowAndAWallBehindFrom45To53() {
+  void isThereAPawnBelowAndAWallBehindFrom45To53() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -320,7 +321,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnInFrontOfMeAndAWallBehindFrom23To34() {
+  void isThereAPawnInFrontOfMeAndAWallBehindFrom23To34() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -337,7 +338,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnBelowAndAWallBehindFrom66To75() {
+  void isThereAPawnBelowAndAWallBehindFrom66To75() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -354,7 +355,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnBelowAndAWallBehindFrom52To61() {
+  void isThereAPawnBelowAndAWallBehindFrom52To61() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -371,7 +372,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void isThereAPawnBelowAndAWallBehindAndAWallOnRightFrom52To63IsNotAllowed() {
+  void isThereAPawnBelowAndAWallBehindAndAWallOnRightFrom52To63IsNotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -393,7 +394,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom11to02() {
+  void diagonalMoveOnBorderWithAPawnInFrontFrom11to02() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -406,7 +407,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom61to50() {
+  void diagonalMoveOnBorderWithAPawnInFrontFrom61to50() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -419,7 +420,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom21to02IsNotAllowed() {
+  void diagonalMoveOnBorderWithAPawnInFrontFrom21to02IsNotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();
@@ -432,7 +433,7 @@ public class PawnMovementCheckerTest {
   }
 
   @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom58to47IsNotAllowed() {
+  void diagonalMoveOnBorderWithAPawnInFrontFrom58to47IsNotAllowed() throws InvalidParameterException {
     Game game = new Game(2);
     Pawn pawn = game.getPlayingPawn();
     GameBoard gameBoard = game.getGameBoard();

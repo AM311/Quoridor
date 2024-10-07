@@ -1,3 +1,4 @@
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.GameBoard.Tile;
@@ -46,7 +47,7 @@ public class PawnTest {
 
   @ParameterizedTest
   @CsvSource({"3,4", "7,5", "6,2", "5,5"})
-  void movePawnIsConsistent(int destinationTileRow, int destinationTileColumn) {
+  void movePawnIsConsistent(int destinationTileRow, int destinationTileColumn) throws InvalidParameterException {
     GameBoard gameBoard = new GameBoard();
     Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(), gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 10);
 
