@@ -2,10 +2,11 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.Game;
 import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.GameBoard.Tile;
+import it.units.sdm.quoridor.model.Tile;
+import it.units.sdm.quoridor.model.builder.IQuoridorBuilder;
 import it.units.sdm.quoridor.model.Wall;
-import it.units.sdm.quoridor.movemanager.ActionChecker;
-import it.units.sdm.quoridor.movemanager.WallPlacementChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.WallPlacementChecker;
 import it.units.sdm.quoridor.utils.WallOrientation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
     void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -45,7 +46,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
     void wallOnUpperLinkAfterHorizontalWallPlacement_tileBelowStartingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -66,7 +67,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
     void wallOnLowerLinkAfterHorizontalWallPlacement_tileRightToStartingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -87,7 +88,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"5, 2", "4, 3", "3, 1", "5, 6"})
     void wallOnUpperLinkAfterHorizontalWallPlacement_tileLowRightDiagToStartingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -107,7 +108,7 @@ public class PlaceWallTest {
 
     @Test
     void wallOnLowerLinkAfterHorizontalWallPlacement_startingTile_upperLeftCorner() throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(0, 0);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -128,7 +129,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
     void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -149,7 +150,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
     void wallOnLeftLinkAfterVerticalWallPlacement_tileAboveStartingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -170,7 +171,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
     void wallOnRightLinkAfterVerticalWallPlacement_tileLeftToStartingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -191,7 +192,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"4, 3", "3, 3", "5, 2", "5, 5"})
     void wallOnRightLinkAfterVerticalWallPlacement_tileUpLeftDiagToStartingTile_innerTiles(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -211,19 +212,19 @@ public class PlaceWallTest {
 
     @Test
     void wallOnLeftLinkAfterVerticalWallPlacement_startingTile_lowerRightCorner() throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
-        Tile startingTile = gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1);
+        Tile startingTile = gameBoard.getTile(GameBoard.sideLength - 1, GameBoard.sideLength - 1);
         Wall wall = new Wall(VERTICAL, startingTile);
         game.placeWall(wall);
 
         GameBoard.LinkState[] expected = new GameBoard.LinkState[]{WALL, EDGE, FREE, EDGE};
         GameBoard.LinkState[] actual = new GameBoard.LinkState[]
                 {
-                        gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(LEFT),
-                        gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(RIGHT),
-                        gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(UP),
-                        gameBoard.getTile(GameBoard.SIDE_LENGTH - 1, GameBoard.SIDE_LENGTH - 1).getLink(DOWN)
+                        gameBoard.getTile(GameBoard.sideLength - 1, GameBoard.sideLength - 1).getLink(LEFT),
+                        gameBoard.getTile(GameBoard.sideLength - 1, GameBoard.sideLength - 1).getLink(RIGHT),
+                        gameBoard.getTile(GameBoard.sideLength - 1, GameBoard.sideLength - 1).getLink(UP),
+                        gameBoard.getTile(GameBoard.sideLength - 1, GameBoard.sideLength - 1).getLink(DOWN)
                 };
 
         Assertions.assertArrayEquals(expected, actual);
@@ -232,30 +233,30 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"3, 3", "6, 2", "0, 0"})
     void horizontalWallIsAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
 
-        Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     }
 
 
     @ParameterizedTest
     @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
     void horizontalWallIsNotAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"0, 0", "3, 3", "6, 4"})
     void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Tile belowStartingTile = gameBoard.getTile(startingTile.getRow() + 1, startingTile.getColumn());
@@ -265,13 +266,13 @@ public class PlaceWallTest {
         belowStartingTile.setLink(RIGHT, WALL);
 
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"0, 0", "3, 4", "7, 2"})
     void horizontalWallAboveVerticalIsAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Tile belowStartingTile = gameBoard.getTile(startingTile.getRow() + 1, startingTile.getColumn());
@@ -279,25 +280,25 @@ public class PlaceWallTest {
 
         belowStartingTile.setLink(RIGHT, WALL);
 
-        Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"6, 1", "2, 5", "3, 2"})
     void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
         startingTile.setLink(DOWN, WALL);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"2, 3", "1, 4", "4, 7"})
     void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -305,13 +306,13 @@ public class PlaceWallTest {
 
         tileRightToStartingTile.setLink(DOWN, WALL);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"1, 6", "4, 4", "7, 7"})
     void horizontalWallsNearEachOtherIsAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
@@ -319,35 +320,35 @@ public class PlaceWallTest {
 
         tileLeftToStartingTile.setLink(DOWN, WALL);
 
-        Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"0, 0", "4, 0", "0, 7"})
     void verticalWallIsNotAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"8, 8", "4, 4", "1, 8"})
     void verticalWallIsAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
 
-        Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"3, 4", "5, 7", "1, 7"})
     void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -356,13 +357,13 @@ public class PlaceWallTest {
         startingTile.setLink(UP, WALL);
         tileLeftToStartingTile.setLink(UP, WALL);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"3, 4", "3, 3", "2, 4"})
     void verticalWallRightToHorizontalWallIsAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -370,26 +371,26 @@ public class PlaceWallTest {
 
         tileLeftToStartingTile.setLink(UP, WALL);
 
-        Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"1, 4", "7, 2", "4, 6"})
     void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
 
         startingTile.setLink(LEFT, WALL);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"5, 4", "5, 1", "6, 3"})
     void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -397,13 +398,13 @@ public class PlaceWallTest {
 
         tileAboveStartingTile.setLink(LEFT, WALL);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"6, 2", "3, 5", "5, 1"})
     void verticalWallsNearEachOtherIsAllowed(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(VERTICAL, startingTile);
@@ -411,26 +412,26 @@ public class PlaceWallTest {
 
         tileBelowStartingTile.setLink(DOWN, WALL);
 
-        Assertions.assertTrue(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"3, 3", "6, 2", "0, 0"})
     void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) throws InvalidParameterException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         for (int i = 0; i < 10; i++)
             game.getPlayingPawn().decrementNumberOfWalls();
         Tile startingTile = gameBoard.getTile(row, column);
         Wall wall = new Wall(HORIZONTAL, startingTile);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
     @ParameterizedTest
     @CsvSource({"3, 3", "6, 2", "0, 0"})
     void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();
         Tile startingTile = gameBoard.getTile(row, column);
@@ -445,7 +446,7 @@ public class PlaceWallTest {
     @ParameterizedTest
     @CsvSource({"3, 0", "6, 0", "7, 0"})
     void cannotPlaceWallIfItBlocksPath(int row, int column) throws InvalidParameterException, InvalidActionException {
-        Game game = new Game(2);
+        Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
         GameBoard gameBoard = game.getGameBoard();
         int[][] tileCoordinates = {
                 {row, column}, {row, column + 2}, {row, column + 4}, {row, column + 6}, {row, column + 8}
@@ -463,7 +464,7 @@ public class PlaceWallTest {
         Tile startingTile = gameBoard.getTile(row - 2, column + 7);
         Wall wall = new Wall(HORIZONTAL, startingTile);
 
-        Assertions.assertFalse(wallPlacementChecker.checkAction(game, wall));
+        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     }
 
 }

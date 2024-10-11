@@ -1,7 +1,7 @@
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.GameBoard.Tile;
+import it.units.sdm.quoridor.model.Tile;
 import it.units.sdm.quoridor.model.Pawn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

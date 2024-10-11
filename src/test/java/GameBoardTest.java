@@ -2,7 +2,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.GameBoard.Tile;
+import it.units.sdm.quoridor.model.Tile;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
 
     List<Tile> expected = new ArrayList<>();
-    for (int i = 0; i < GameBoard.SIDE_LENGTH; i++)
+    for (int i = 0; i < GameBoard.sideLength; i++)
       expected.add(gameBoard.getTile(row, i));
 
     Assertions.assertEquals(expected, gameBoard.getRowTiles(row));
@@ -66,7 +66,7 @@ public class GameBoardTest {
     GameBoard gameBoard = new GameBoard();
 
     List<Tile> expected = new ArrayList<>();
-    for (int i = 0; i < GameBoard.SIDE_LENGTH; i++)
+    for (int i = 0; i < GameBoard.sideLength; i++)
       expected.add(gameBoard.getTile(i, column));
 
     Assertions.assertEquals(expected, gameBoard.getColumnTiles(column));

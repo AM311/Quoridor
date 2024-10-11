@@ -2,8 +2,9 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.Game;
-import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.movemanager.PathExistenceChecker;
+import it.units.sdm.quoridor.model.Tile;
+import it.units.sdm.quoridor.model.builder.IQuoridorBuilder;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.PathExistenceChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,26 +18,26 @@ public class PathTest {
 
   @Test
   void checkStartPawn() throws InvalidParameterException {
-    Game game = new Game(2);
-    Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
+    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
+    Assertions.assertTrue(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
   }
 
   @Test
   void checkBlockedPath() throws InvalidParameterException {
-    Game game = new Game(2);
+    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
 
-    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(4)) {
+    for (Tile tile : game.getGameBoard().getRowTiles(4)) {
       tile.setLink(DOWN, WALL);
     }
-    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(5)) {
+    for (Tile tile : game.getGameBoard().getRowTiles(5)) {
       tile.setLink(UP, WALL);
     }
-    Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
   }
 
   @Test
   void checkBlockedPawnsFromCorrectSide() throws InvalidActionException, OutOfGameBoardException, InvalidParameterException {
-    Game game = new Game(2);
+    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
 
     //todo CHIAMATA PER MOSSA TROPPO VERBOSA... VALUTARE!!!
     for (int j = 0; j < 6; j++) {
@@ -52,18 +53,18 @@ public class PathTest {
 
     //-------------------
 
-    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(4)) {
+    for (Tile tile : game.getGameBoard().getRowTiles(4)) {
       tile.setLink(DOWN, WALL);
     }
-    for (GameBoard.Tile tile : game.getGameBoard().getRowTiles(5)) {
+    for (Tile tile : game.getGameBoard().getRowTiles(5)) {
       tile.setLink(UP, WALL);
     }
-    Assertions.assertTrue(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
+    Assertions.assertTrue(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
   }
 
   @Test
   void checkBlockedPath_OnlyForPawn1() throws InvalidParameterException {
-    Game game = new Game(2);
+    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
 
     for (int i = 0; i < 7; i++) {
       game.getGameBoard().getTile(4,i).setLink(DOWN, WALL);
@@ -75,12 +76,12 @@ public class PathTest {
       game.getGameBoard().getTile(i,7).setLink(LEFT, WALL);
     }
 
-    Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
   }
 
   @Test
   void checkBlockedPath_OnlyForPawn2() throws InvalidParameterException {
-    Game game = new Game(2);
+    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
 
     for (int i = 0; i < 7; i++) {
       game.getGameBoard().getTile(4,i).setLink(DOWN, WALL);
@@ -92,7 +93,7 @@ public class PathTest {
       game.getGameBoard().getTile(i,7).setLink(LEFT, WALL);
     }
 
-    Assertions.assertFalse(new PathExistenceChecker().checkAction(game, game.getGameBoard()));
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
   }
 
 }

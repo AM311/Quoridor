@@ -2,74 +2,43 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.GameBoard.Tile;
-import it.units.sdm.quoridor.movemanager.*;
-import it.units.sdm.quoridor.utils.Pair;
+import it.units.sdm.quoridor.movemanagement.actionmanagers.ActionManager;
+import it.units.sdm.quoridor.utils.ActionController;
+import it.units.sdm.quoridor.utils.Position;
+import it.units.sdm.quoridor.utils.WallOrientation;
 
-import java.awt.*;
 import java.util.List;
-import java.util.stream.IntStream;
 
-public class Game {
-  private List<Pawn> pawns;
-  private final GameBoard gameBoard;
-  private final GameActionManager actionManager;
-  private Pawn playingPawn;
+public class Game extends AbstractGame {
+  public final ActionManager actionManager;
+  public final ActionController<Wall> placeWallActionController;
+  public final ActionController<AbstractTile> movePawnActionController;
 
-  public Game(int numberOfPlayers) throws InvalidParameterException {
-    this.gameBoard = new GameBoard();
-
-    switch (numberOfPlayers) {
-      case 2 -> initialize(2);
-      case 4 -> initialize(4);
-      default -> throw new InvalidParameterException("Invalid number of players");
-    }
-
-    this.actionManager = new GameActionManager(this);
-    this.playingPawn = pawns.getFirst();
+  public Game(AbstractGameBoard gameBoard, List<AbstractPawn> pawns, int playingPawn, ActionManager actionManager, ActionController<AbstractTile> movePawnActionController, ActionController<Wall> placeWallActionController) {
+    super(gameBoard, pawns, playingPawn);
+    this.actionManager = actionManager;
+    this.placeWallActionController = placeWallActionController;
+    this.movePawnActionController = movePawnActionController;
   }
 
-  private void initialize(int numberOfPlayers) {
-    final int stdNumberOfWalls = 10;
-    int numberOfWalls = stdNumberOfWalls / (numberOfPlayers / 2);
+  public void placeWall(Position startingPosition, WallOrientation wallOrientation) throws InvalidActionException, InvalidParameterException {
+    AbstractTile startingTile = gameBoard.getTile(startingPosition);
+    Wall wall = new Wall(wallOrientation, startingTile);
 
-    List<Color> pawnsColors = List.of(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
-    List<Pair<Tile, List<Tile>>> startingAndDestinationTiles = gameBoard.getStartingAndDestinationTiles();
-
-    IntStream.range(0, numberOfPlayers).forEach(i -> startingAndDestinationTiles.get(i).getKey().setOccupied(true));
-    this.pawns = IntStream.range(0, numberOfPlayers).mapToObj(i -> new Pawn(startingAndDestinationTiles.get(i).getKey(), startingAndDestinationTiles.get(i).getValue(), pawnsColors.get(i), numberOfWalls)).toList();
+    actionManager.performAction(this, wall, placeWallActionController, false);
   }
 
-  public List<Pawn> getPawns() {
-    return pawns;
-  }
+  public void movePlayingPawn(Position destinationPosition) throws InvalidParameterException, InvalidActionException {
+    AbstractTile destinationTile = gameBoard.getTile(destinationPosition);
 
-  public GameBoard getGameBoard() {
-    return gameBoard;
-  }
-
-  public Pawn getPlayingPawn() {
-    return playingPawn;
-  }
-
-  //todo Qui e sotto: MEGLIO PASSARE SOLO COORDINATE? --> SEPARATION OF CONCERNS
-  public void placeWall(Wall wall) throws InvalidActionException {
-    actionManager.performAction(new WallPlacer(), new WallPlacementChecker(), wall);
-  }
-
-  public void movePlayingPawn(Tile destinationTile) throws InvalidActionException {
-    actionManager.performAction(new PawnMover(), new PawnMovementChecker(), destinationTile);
+    actionManager.performAction(this, destinationTile, movePawnActionController, false);
   }
 
   public void changeRound() {
-    try {
-      playingPawn = pawns.get(pawns.indexOf(playingPawn) + 1);
-    } catch (IndexOutOfBoundsException ex) {
-      playingPawn = pawns.getFirst();
-    }
+    playingPawn = (playingPawn + 1) % pawns.size();
   }
 
-  public boolean checkWin(){
-    return playingPawn.getDestinationTiles().contains(playingPawn.getCurrentTile());
+  public boolean isGameFinished() {
+    return getPlayingPawn().hasReachedDestination();
   }
 }
