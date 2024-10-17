@@ -16,11 +16,13 @@ public abstract class AbstractGameBoard implements Cloneable {
   protected AbstractTile[][] gameState;
   protected final int sideLength;
 
-  public AbstractGameBoard(it.units.sdm.quoridor.model.AbstractTile[][] gameState, int sideLength) {
+  public AbstractGameBoard(AbstractTile[][] gameState, int sideLength) {
     this.gameState = gameState;
     this.sideLength = sideLength;
   }
-
+  public int getSideLength() {
+    return sideLength;
+  }
   public AbstractTile[][] getGameState() {
     return Arrays.copyOf(gameState, sideLength);
   }
