@@ -12,6 +12,9 @@ public abstract class AbstractQuoridorBuilder {
     if (gameBoardSideLength <=0)
       throw new InvalidParameterException("GameBoard side length must be positive: " + gameBoardSideLength);
 
+    if (stdNumberOfWalls <0)
+      throw new InvalidParameterException("Number of walls must be null or positive: " + stdNumberOfWalls);
+
     this.gameBoardSideLength = gameBoardSideLength;
     this.stdNumberOfWalls = stdNumberOfWalls;
     this.numberOfPlayers = numberOfPlayers;

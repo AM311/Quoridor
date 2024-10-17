@@ -65,7 +65,12 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
       gameState[i][gameBoardSideLength - 1].setLink(RIGHT, EDGE);
     }
 
-    this.gameBoard = new GameBoard(gameState, gameBoardSideLength);
+    try {
+      this.gameBoard = new GameBoard(gameState);
+    } catch (InvalidParameterException e) {
+      throw new RuntimeException(e);
+    }
+    
     return this;
   }
 
