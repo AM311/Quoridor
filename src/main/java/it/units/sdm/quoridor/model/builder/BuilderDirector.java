@@ -4,7 +4,7 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.model.AbstractGame;
 
 public class BuilderDirector {
-  AbstractQuoridorBuilder builder;
+  private AbstractQuoridorBuilder builder;
 
   public BuilderDirector(AbstractQuoridorBuilder builder) {
     this.builder = builder;

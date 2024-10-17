@@ -17,7 +17,7 @@ import static it.units.sdm.quoridor.utils.directions.DiagonalDirection.*;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class GameBoard extends AbstractGameBoard {
-  public GameBoard(it.units.sdm.quoridor.model.AbstractTile[][] gameState, int sideLength) {
+  public GameBoard(AbstractTile[][] gameState, int sideLength) {
     super(gameState, sideLength);
   }
 

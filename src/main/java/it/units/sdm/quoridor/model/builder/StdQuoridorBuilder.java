@@ -31,7 +31,7 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
   public StdQuoridorBuilder(int numberOfPlayers) throws InvalidParameterException {
     super(9, 10, numberOfPlayers);
 
-    if (this.numberOfPlayers != 2 && this.numberOfPlayers != 4)
+    if (numberOfPlayers != 2 && numberOfPlayers != 4)
       throw new InvalidParameterException("Invalid number of players: " + numberOfPlayers);
   }
 
@@ -50,7 +50,7 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
 
   @Override
   AbstractQuoridorBuilder setIGameBoard() {
-    Tile[][] gameState = new Tile[gameBoardSideLength][gameBoardSideLength];
+    AbstractTile[][] gameState = new AbstractTile[gameBoardSideLength][gameBoardSideLength];
 
     for (int i = 0; i < gameBoardSideLength; i++) {
       for (int j = 0; j < gameBoardSideLength; j++) {
