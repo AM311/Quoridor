@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Game extends AbstractGame {
   public final ActionManager actionManager;
-  public final ActionController<Wall> placeWallActionController;
-  public final ActionController<AbstractTile> movePawnActionController;
+  public ActionController<Wall> placeWallActionController;
+  public ActionController<AbstractTile> movePawnActionController;
 
   public Game(AbstractGameBoard gameBoard, List<AbstractPawn> pawns, int playingPawn, ActionManager actionManager, ActionController<AbstractTile> movePawnActionController, ActionController<Wall> placeWallActionController) {
     super(gameBoard, pawns, playingPawn);
@@ -40,5 +40,15 @@ public class Game extends AbstractGame {
 
   public boolean isGameFinished() {
     return getPlayingPawn().hasReachedDestination();
+  }
+
+  @Override
+  public Game clone() throws CloneNotSupportedException {
+    Game clonedGame = (Game) super.clone();
+
+    clonedGame.movePawnActionController = new ActionController<>(movePawnActionController.action());
+    clonedGame.placeWallActionController = new ActionController<>(placeWallActionController.action());
+
+    return clonedGame;
   }
 }

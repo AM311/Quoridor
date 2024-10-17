@@ -40,7 +40,6 @@ public abstract class AbstractTile implements Cloneable {
   public Tile clone() throws CloneNotSupportedException {
     Tile clonedTile = (Tile) super.clone();
     clonedTile.links = new EnumMap<>(Map.of(UP, this.getLink(UP), RIGHT, this.getLink(RIGHT), DOWN, this.getLink(DOWN), LEFT, this.getLink(LEFT)));
-    clonedTile.occupiedBy = occupiedBy != null ? occupiedBy.clone() : null;
 
     return clonedTile;
   }
