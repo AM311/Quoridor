@@ -20,7 +20,9 @@ public abstract class AbstractGameBoard implements Cloneable {
     this.gameState = gameState;
     this.sideLength = sideLength;
   }
-
+  public int getSideLength() {
+    return sideLength;
+  }
   public AbstractTile[][] getGameState() {
     return Arrays.copyOf(gameState, sideLength);
   }
@@ -72,3 +74,4 @@ public abstract class AbstractGameBoard implements Cloneable {
 
   public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;
 }
+
