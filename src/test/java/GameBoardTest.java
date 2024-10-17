@@ -1,11 +1,11 @@
-import it.units.sdm.quoridor.exceptions.BuilderException;
-import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
-import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.exceptions.*;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
+
+import static it.units.sdm.quoridor.utils.WallOrientation.*;
+
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
@@ -67,7 +68,7 @@ public class GameBoardTest {
 
   @ParameterizedTest
   @ValueSource(ints = {-1, 9, 99})
-  void getRowTiles_InvalidParameterExceptionIsThrown(int row) throws InvalidParameterException, BuilderException{
+  void getRowTiles_InvalidParameterExceptionIsThrown(int row) throws InvalidParameterException, BuilderException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
@@ -327,123 +328,113 @@ public class GameBoardTest {
 
   @ParameterizedTest
   @CsvSource({"3,4", "7,6", "1,2"})
-  void isThereAWall_wallIsPresentBetweenTwoTiles(int testTileRow, int testTileColumn) throws InvalidParameterException, NotAdjacentTilesException, BuilderException {
+  void isThereAWall_horizontalWallIsPresentBetweenTwoAdjacentTiles(int testTileRow, int testTileColumn) throws InvalidParameterException, NotAdjacentTilesException, BuilderException, OutOfGameBoardException, InvalidActionException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
-    for (int i = testTileColumn; i < testTileColumn + 1; i++) {
-      gameBoard.getTile(testTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(testTileRow + 1, i).setLink(UP, WALL);
-    }
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    AbstractTile adjacentTestTile = gameBoard.getAdjacentTile(testTile, DOWN);
+    game.placeWall(testTilePosition, HORIZONTAL);
+    Assertions.assertTrue(gameBoard.isThereAWall(testTile, adjacentTestTile));
+  }
 
-    Assertions.assertTrue(gameBoard.isThereAWall(gameBoard.getTile(testTileRow, testTileColumn), gameBoard.getTile(testTileRow + 1, testTileColumn)));
+  @ParameterizedTest
+  @CsvSource({"5,6", "6,6", "3,1"})
+  void isThereAWall_verticalWallIsPresentBetweenTwoAdjacentTiles(int testTileRow, int testTileColumn) throws InvalidParameterException, NotAdjacentTilesException, BuilderException, OutOfGameBoardException, InvalidActionException {
+    builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    AbstractGame game = builderDirector.makeGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    AbstractTile adjacentTestTile = gameBoard.getAdjacentTile(testTile, LEFT);
+    game.placeWall(testTilePosition, VERTICAL);
+    Assertions.assertTrue(gameBoard.isThereAWall(testTile, adjacentTestTile));
   }
 
   @ParameterizedTest
   @CsvSource({"3,4", "7,6", "1,2"})
-  void isThereAWallTest_wallIsAbsent(int startingTileRow, int startingTileColumn) throws InvalidParameterException, NotAdjacentTilesException, BuilderException {
+  void isThereAWallTest_wallIsAbsent(int testTileRow, int testTileColumn) throws InvalidParameterException, NotAdjacentTilesException, BuilderException, InvalidActionException, OutOfGameBoardException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    for (int i = startingTileColumn - 2; i < startingTileColumn; i++) {
-      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
-    }
 
-    Assertions.assertFalse(gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), gameBoard.getTile(startingTileRow + 1, startingTileColumn)));
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    AbstractTile adjacentTestTile = gameBoard.getAdjacentTile(testTile, RIGHT);
+    game.placeWall(testTilePosition, VERTICAL);
+    game.placeWall(testTilePosition, HORIZONTAL);
+    Assertions.assertFalse(gameBoard.isThereAWall(testTile, adjacentTestTile));
   }
 
   @ParameterizedTest
   @CsvSource({"3,4", "7,6", "1,2"})
-  void isThereAWallTest_tilesAreNotAdjacent(int startingTileRow, int startingTileColumn) throws InvalidParameterException, BuilderException {
+  void isThereAWallTest_tilesAreNotAdjacent(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException, OutOfGameBoardException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    for (int i = startingTileColumn; i < startingTileColumn + 2; i++) {
-      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
-    }
 
-    Assertions.assertThrows(NotAdjacentTilesException.class, () -> gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), gameBoard.getTile(startingTileRow + 1, startingTileColumn + 1)));
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    AbstractTile adjacentTestTile = gameBoard.getAdjacentTile(testTile, LEFT);
+    AbstractTile notAdjacentTile = gameBoard.getAdjacentTile(adjacentTestTile, UP);
+    Assertions.assertThrows(NotAdjacentTilesException.class,
+            () -> gameBoard.isThereAWall(testTile, notAdjacentTile));
   }
 
   //=======================
 
   @ParameterizedTest
-  @CsvSource({"6,3", "2,3", "4,4"})
-  void isThereAWallTest2_wallIsPresent(int startingTileRow, int startingTileColumn) throws InvalidParameterException, BuilderException {
+  @CsvSource({"2,5", "1,4", "7,7"})
+  void isThereAWallOrEdgeTest_horizontalWallIsPresent(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException, InvalidActionException, OutOfGameBoardException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    for (int i = startingTileColumn; i < startingTileColumn + 1; i++) {
-      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
-    }
 
-    Assertions.assertTrue(gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), DOWN));
-  }
-
-  @ParameterizedTest
-  @CsvSource({"2,5", "5,2", "3,4"})
-  void isThereAWallTest2_wallIsAbsent(int startingTileRow, int startingTileColumn) throws InvalidParameterException, BuilderException {
-    builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
-    AbstractGame game = builderDirector.makeGame();
-    AbstractGameBoard gameBoard = game.getGameBoard();
-    for (int i = startingTileColumn - 2; i < startingTileColumn; i++) {
-      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
-    }
-
-    Assertions.assertFalse(gameBoard.isThereAWall(gameBoard.getTile(startingTileRow, startingTileColumn), DOWN));
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    game.placeWall(testTilePosition, HORIZONTAL);
+    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(testTile, DOWN));
   }
 
   @ParameterizedTest
   @CsvSource({"2,5", "1,4", "7,7"})
-  void isThereAWallOrEdgeTest_wallIsPresent(int startingTileRow, int startingTileColumn) throws InvalidParameterException, BuilderException {
+  void isThereAWallOrEdgeTest_verticalWallIsPresent(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException, OutOfGameBoardException, InvalidActionException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    for (int i = startingTileColumn; i < startingTileColumn + 1; i++) {
-      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
-    }
 
-    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), DOWN));
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    game.placeWall(testTilePosition, VERTICAL);
+    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(testTile, LEFT));
   }
 
   @ParameterizedTest
   @CsvSource({"1,2", "5,2", "4,3"})
-  void isThereAWallOrEdgeTest_wallIsAbsent(int startingTileRow, int startingTileColumn) throws InvalidParameterException, BuilderException {
+  void isThereAWallOrEdgeTest_wallOrEdgeIsAbsent(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    for (int i = startingTileColumn - 2; i < startingTileColumn; i++) {
-      gameBoard.getTile(startingTileRow, i).setLink(DOWN, WALL);
-      gameBoard.getTile(startingTileRow + 1, i).setLink(UP, WALL);
-    }
 
-    Assertions.assertFalse(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), DOWN));
+    Position testTilePosition = new Position(testTileRow, testTileColumn);
+    AbstractTile testTile = gameBoard.getTile(testTilePosition);
+    game.placeWall(testTilePosition, VERTICAL);
+    game.placeWall(testTilePosition, HORIZONTAL);
+    Assertions.assertFalse(gameBoard.isThereAWall(testTile, RIGHT));
   }
 
   @ParameterizedTest
   @CsvSource({"0,2,UP", "8,0,LEFT", "8,0,DOWN"})
-  void isThereAWallOrEdgeTest_edgeIsPresent(int startingTileRow, int startingTileColumn, StraightDirection direction) throws InvalidParameterException, BuilderException {
+  void isThereAWallOrEdgeTest_edgeIsPresent(int testTileRow, int testTileColumn, StraightDirection direction) throws InvalidParameterException, BuilderException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
-    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), direction));
-  }
-
-  @ParameterizedTest
-  @CsvSource({"3,2,UP", "8,0,UP", "5,5,DOWN"})
-  void isThereAWallOrEdgeTest_edgeIsAbsent(int startingTileRow, int startingTileColumn, StraightDirection direction) throws InvalidParameterException, BuilderException {
-    builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
-    AbstractGame game = builderDirector.makeGame();
-    AbstractGameBoard gameBoard = game.getGameBoard();
-
-    Assertions.assertFalse(gameBoard.isThereAWallOrEdge(gameBoard.getTile(startingTileRow, startingTileColumn), direction));
+    AbstractTile testTile = gameBoard.getTile(new Position(testTileRow, testTileColumn));
+    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(testTile, direction));
   }
 
   //=======================
@@ -454,13 +445,14 @@ public class GameBoardTest {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    Assertions.assertThrows(InvalidParameterException.class, () -> gameBoard.getTile(row, column));
+
+    Assertions.assertThrows(InvalidParameterException.class,
+            () -> gameBoard.getTile(new Position(row, column)));
   }
 
   //=======================
-
   @Test
-  void cloneTest_withoutWalls() throws CloneNotSupportedException, BuilderException, InvalidParameterException {
+  void cloneTest_cloneEqualToNewGameBoard() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
@@ -469,49 +461,43 @@ public class GameBoardTest {
   }
 
   @Test
-  void cloneTest_withWalls() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
+  void cloneTest_withWalls() throws CloneNotSupportedException, InvalidParameterException, BuilderException, InvalidActionException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    gameBoard.getTile(2, 3).setLink(UP, WALL);
-    gameBoard.getTile(5, 2).setLink(LEFT, WALL);
-    gameBoard.getTile(0, 0).setLink(DOWN, WALL);
 
+    game.placeWall(new Position(3, 4), HORIZONTAL);
+    game.placeWall(new Position(1, 6), VERTICAL);
+    game.placeWall(new Position(6, 5), HORIZONTAL);
     Assertions.assertEquals(gameBoard, gameBoard.clone());
   }
 
   @Test
-  void cloneTest_objectsAreIndependent_clonedIsModified() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
+  void cloneTest_objectsAreIndependent_clonedIsModified() throws CloneNotSupportedException, InvalidParameterException, BuilderException, InvalidActionException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    gameBoard.getTile(2, 3).setLink(UP, WALL);
-    gameBoard.getTile(5, 2).setLink(LEFT, WALL);
-    gameBoard.getTile(0, 0).setLink(DOWN, WALL);
+
+    game.placeWall(new Position(7, 3), HORIZONTAL);
 
     GameBoard clonedGameBoard = gameBoard.clone();
 
-    clonedGameBoard.getTile(6, 2).setLink(UP, WALL);
-    clonedGameBoard.getTile(1, 4).setLink(RIGHT, WALL);
-    clonedGameBoard.getTile(5, 2).setLink(LEFT, FREE);
+    game.placeWall(new Position(4, 1), VERTICAL);
 
     Assertions.assertNotEquals(gameBoard, clonedGameBoard);
   }
 
   @Test
-  void cloneTest_objectsAreIndependent_originalIsModified() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
+  void cloneTest_objectsAreIndependent_originalIsModified() throws CloneNotSupportedException, InvalidParameterException, BuilderException, InvalidActionException {
     builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
     AbstractGame game = builderDirector.makeGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-    gameBoard.getTile(2, 3).setLink(UP, WALL);
-    gameBoard.getTile(5, 2).setLink(LEFT, WALL);
-    gameBoard.getTile(0, 0).setLink(DOWN, WALL);
+
+    game.placeWall(new Position(7, 3), HORIZONTAL);
 
     GameBoard clonedGameBoard = gameBoard.clone();
 
-    gameBoard.getTile(6, 2).setLink(UP, WALL);
-    gameBoard.getTile(1, 4).setLink(RIGHT, WALL);
-    gameBoard.getTile(5, 2).setLink(LEFT, FREE);
+    game.placeWall(new Position(4, 1), VERTICAL);
 
     Assertions.assertNotEquals(gameBoard, clonedGameBoard);
   }

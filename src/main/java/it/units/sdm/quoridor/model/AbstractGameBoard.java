@@ -16,9 +16,14 @@ public abstract class AbstractGameBoard implements Cloneable {
   protected AbstractTile[][] gameState;
   protected final int sideLength;
 
-  public AbstractGameBoard(AbstractTile[][] gameState, int sideLength) {
+  public AbstractGameBoard(AbstractTile[][] gameState) throws InvalidParameterException{
     this.gameState = gameState;
-    this.sideLength = sideLength;
+    for (int i = 0; i < gameState.length; i++) {
+      if (gameState.length != gameState[i].length) {
+        throw new InvalidParameterException("The gameState has to be a square matrix!");
+      }
+    }
+    this.sideLength = gameState.length;
   }
   public int getSideLength() {
     return sideLength;
