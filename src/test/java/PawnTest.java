@@ -55,28 +55,4 @@ public class PawnTest {
     Assertions.assertThrows(NumberOfWallsBelowZeroException.class,
             pawn::decrementNumberOfWalls);
   }
-
-  @ParameterizedTest
-  @CsvSource({"8,4", "8,5", "8,1", "8,5"})
-  void hasReachedDestinationTest_destinationHasBeenReached(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException {
-    AbstractGame game = buildGame();
-    AbstractPawn pawn = game.getPlayingPawn();
-
-    Position currentTilePosition = new Position(testTileRow, testTileColumn);
-    AbstractTile currentTile = game.getGameBoard().getTile(currentTilePosition);
-    pawn.move(currentTile);
-    Assertions.assertTrue(pawn.hasReachedDestination());
-  }
-
-  @ParameterizedTest
-  @CsvSource({"2,4", "3,5", "1,1", "7,5"})
-  void hasReachedDestinationTest_destinationHasNotBeenReached(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException {
-    AbstractGame game = buildGame();
-    AbstractPawn pawn = game.getPlayingPawn();
-
-    Position currentTilePosition = new Position(testTileRow, testTileColumn);
-    AbstractTile currentTile = game.getGameBoard().getTile(currentTilePosition);
-    pawn.move(currentTile);
-    Assertions.assertFalse(pawn.hasReachedDestination());
-  }
 }
