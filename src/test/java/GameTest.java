@@ -1,6 +1,7 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
@@ -261,5 +263,113 @@ public class GameTest {
   void cloneTest_cloneEqualToNewGame() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     Assertions.assertEquals(game, game.clone());
+  }
+
+  @ParameterizedTest
+  @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
+  void horizontalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+
+    Position startingPosition = new Position(row, column);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPosition, HORIZONTAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"0, 0", "3, 3", "6, 4"})
+  void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+
+    Position startingPositionHorizontal = new Position(row, column);
+    Position startingPositionVertical = new Position(row + 1, column + 1);
+
+    game.placeWall(startingPositionVertical, VERTICAL);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPositionHorizontal, HORIZONTAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"6, 1", "2, 5", "3, 2"})
+  void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+
+    Position startingPosition = new Position(row, column);
+    game.placeWall(startingPosition, HORIZONTAL);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPosition, HORIZONTAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"2, 3", "1, 4", "4, 6"})
+  void horizontalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+
+    Position startingPositionFirst = new Position(row, column + 1);
+    Position startingPositionSecond = new Position(row, column);
+
+    game.placeWall(startingPositionFirst, HORIZONTAL);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPositionSecond, HORIZONTAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"0, 0", "4, 0", "0, 7"})
+  void verticalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+
+    Position startingPosition = new Position(row, column);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPosition, VERTICAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"3, 4", "5, 7", "1, 7"})
+  void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+
+    Position startingPositionHorizontal = new Position(row - 1, column - 1);
+    Position startingPositionVertical = new Position(row, column);
+
+   game.placeWall(startingPositionHorizontal, HORIZONTAL);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPositionVertical, VERTICAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"1, 4", "7, 2", "4, 6"})
+  void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+
+    Position startingPosition = new Position(row, column);
+
+    game.placeWall(startingPosition, VERTICAL);
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPosition, VERTICAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"5, 4", "5, 1", "6, 3"})
+  void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+
+    Position startingPositionFirst = new Position(row - 1, column);
+    Position startingPositionSecond = new Position(row, column);
+
+    game.placeWall(startingPositionFirst, VERTICAL);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPositionSecond, VERTICAL));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"3, 3", "6, 2", "0, 0"})
+  void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    for (int i = 0; i < 10; i++)
+      game.getPlayingPawn().decrementNumberOfWalls();
+
+    Position startingPosition = new Position(row, column);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPosition, HORIZONTAL));
   }
 }

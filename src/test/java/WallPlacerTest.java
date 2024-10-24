@@ -26,7 +26,7 @@ public class WallPlacerTest {
   private final WallPlacer wallPlacer = new WallPlacer();
 
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
     return builderDirector.makeGame();
   }
 
@@ -320,7 +320,7 @@ public class WallPlacerTest {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
       game.getPlayingPawn().decrementNumberOfWalls();
 
     AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
