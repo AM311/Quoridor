@@ -20,7 +20,7 @@ import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.LEFT;
 
-public class WallTest {
+public class WallPlacerTest {
 
   private final WallPlacer wallPlacer = new WallPlacer();
 

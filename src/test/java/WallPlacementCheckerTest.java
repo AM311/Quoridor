@@ -31,7 +31,7 @@ public class WallPlacementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallIsAllowed(int row, int column) throws InvalidParameterException, BuilderException {
+  void horizontalWallIsAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -269,33 +269,5 @@ public class WallPlacementCheckerTest {
 
     Assertions.assertEquals(numberOfWallsBeforePlacement - 1, game.getPlayingPawn().getNumberOfWalls());
   }
-
-
-
-//    @ParameterizedTest
-//    @CsvSource({"3, 0", "6, 0", "7, 0"})
-//    void cannotPlaceWallIfItBlocksPath(int row, int column) throws InvalidParameterException, InvalidActionException, BuilderException {
-//      AbstractGame game = buildGame();
-//      AbstractGameBoard gameBoard = game.getGameBoard();
-//        int[][] tileCoordinates = {
-//                {row, column}, {row, column + 2}, {row, column + 4}, {row, column + 6}, {row, column + 8}
-//        };
-//        WallOrientation[] orientations = {
-//                HORIZONTAL, HORIZONTAL, HORIZONTAL, HORIZONTAL, VERTICAL
-//        };
-//
-//        for (int i = 0; i < tileCoordinates.length; i++) {
-//            AbstractTile tile = gameBoard.getTile(new Position(tileCoordinates[i][0], tileCoordinates[i][1]));
-//            Wall wall = new Wall(orientations[i], tile);
-//            wallPlacer.execute(game, wall);
-//        }
-//
-//        AbstractTile startingTile = gameBoard.getTile(new Position(row - 2, column + 7));
-//        Wall wall = new Wall(HORIZONTAL, startingTile);
-//
-//        Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
-//    }
-
-  //todo check other corner cases (move to another class?)
 
 }

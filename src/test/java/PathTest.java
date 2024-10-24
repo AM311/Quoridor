@@ -1,99 +1,178 @@
+
+
+import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
-import it.units.sdm.quoridor.model.Game;
-import it.units.sdm.quoridor.model.Tile;
-import it.units.sdm.quoridor.model.builder.IQuoridorBuilder;
+import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.builder.BuilderDirector;
+import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.PathExistenceChecker;
+import it.units.sdm.quoridor.movemanagement.actions.PawnMover;
+import it.units.sdm.quoridor.movemanagement.actions.WallPlacer;
+import it.units.sdm.quoridor.utils.Position;
+import it.units.sdm.quoridor.utils.WallOrientation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
+import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
+import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class PathTest {
   //todo REPLACE TEST CODE FOR PLACING WALLS WITH A METHOD CALL TO "PLACE WALL"?
 
-  //-------------------------
+  private final ActionChecker<Wall> pathExistenceChecker = new PathExistenceChecker();
+  private final WallPlacer wallPlacer = new WallPlacer();
+  private final PawnMover pawnMover = new PawnMover();
 
-  @Test
-  void checkStartPawn() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Assertions.assertTrue(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
+  private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    return builderDirector.makeGame();
+  }
+
+  private void fillRowWithWalls(AbstractGame game, AbstractGameBoard gameBoard, int row) throws InvalidParameterException, InvalidActionException {
+    int[][] tileCoordinates = {
+            {row, 0}, {row, 2}, {row, 4}, {row, 6}
+    };
+    WallOrientation[] orientations = {
+            HORIZONTAL, HORIZONTAL, HORIZONTAL, HORIZONTAL
+    };
+
+    for (int i = 0; i < tileCoordinates.length; i++) {
+      AbstractTile tile = gameBoard.getTile(new Position(tileCoordinates[i][0], tileCoordinates[i][1]));
+      Wall wall = new Wall(orientations[i], tile);
+      wallPlacer.execute(game, wall);
+    }
   }
 
   @Test
-  void checkBlockedPath() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
+  void checkWithFreeGameBoard() throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    for (Tile tile : game.getGameBoard().getRowTiles(4)) {
-      tile.setLink(DOWN, WALL);
-    }
-    for (Tile tile : game.getGameBoard().getRowTiles(5)) {
-      tile.setLink(UP, WALL);
-    }
-    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
+    AbstractTile startingTile = gameBoard.getTile(new Position(3, 4));
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+
+    Assertions.assertTrue(pathExistenceChecker.isValidAction(game, wall));
   }
 
-  @Test
-  void checkBlockedPawnsFromCorrectSide() throws InvalidActionException, OutOfGameBoardException, InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
+  @ParameterizedTest
+  @ValueSource(ints = {3, 6, 7})
+  void checkBlockedPath(int row) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    //todo CHIAMATA PER MOSSA TROPPO VERBOSA... VALUTARE!!!
-    for (int j = 0; j < 6; j++) {
-      game.movePlayingPawn(game.getGameBoard().getAdjacentTile(game.getPlayingPawn().getCurrentTile(), DOWN));
+
+    fillRowWithWalls(game, gameBoard, row);
+    wallPlacer.execute(game, new Wall(VERTICAL, gameBoard.getTile(new Position(row , 8))));
+
+    AbstractTile startingTile = gameBoard.getTile(new Position(row - 2, 7));
+
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+
+    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+  }
+
+
+
+  @ParameterizedTest
+  @ValueSource(ints = {3, 4, 6})
+  void checkBlockedPawnsFromCorrectSide(int row) throws InvalidParameterException, BuilderException, InvalidActionException, OutOfGameBoardException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    while (game.getPlayingPawn().getCurrentTile().getRow() < 7) {
+      pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow() + 1, game.getPlayingPawn().getCurrentTile().getColumn())));
     }
 
     game.changeRound();
-    game.movePlayingPawn(game.getGameBoard().getAdjacentTile(game.getPlayingPawn().getCurrentTile(), LEFT));
 
-    for (int j = 0; j < 6; j++) {
-      game.movePlayingPawn(game.getGameBoard().getAdjacentTile(game.getPlayingPawn().getCurrentTile(), UP));
+    pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow(), game.getPlayingPawn().getCurrentTile().getColumn() - 1)));
+
+    while (game.getPlayingPawn().getCurrentTile().getRow() > 1) {
+      pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow() - 1, game.getPlayingPawn().getCurrentTile().getColumn())));
     }
 
-    //-------------------
+    fillRowWithWalls(game, gameBoard, row);
+    wallPlacer.execute(game, new Wall(VERTICAL, gameBoard.getTile(new Position(row , 8))));
 
-    for (Tile tile : game.getGameBoard().getRowTiles(4)) {
-      tile.setLink(DOWN, WALL);
-    }
-    for (Tile tile : game.getGameBoard().getRowTiles(5)) {
-      tile.setLink(UP, WALL);
-    }
-    Assertions.assertTrue(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
+    AbstractTile startingTile = gameBoard.getTile(new Position(row - 2, 7));
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+
+    Assertions.assertTrue(new PathExistenceChecker().isValidAction(game, wall));
+  }
+
+
+
+  @Test
+  void checkBlockedPath_OnlyForPawn1() throws InvalidParameterException, BuilderException, InvalidActionException, OutOfGameBoardException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    fillRowWithWalls(game, gameBoard, 1);
+
+    Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(1, 8)));
+
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, wall));
+
+  }
+
+
+  @Test
+  void checkBlockedPath_OnlyForPawn2() throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    fillRowWithWalls(game, gameBoard, 6);
+
+    Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(8, 8)));
+
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, wall));
   }
 
   @Test
-  void checkBlockedPath_OnlyForPawn1() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
+  void checkBlockedPath_OnlyForPawn1_whenOnSameSide() throws InvalidParameterException, BuilderException, InvalidActionException, OutOfGameBoardException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    for (int i = 0; i < 7; i++) {
-      game.getGameBoard().getTile(4,i).setLink(DOWN, WALL);
-      game.getGameBoard().getTile(5,i).setLink(UP, WALL);
+    game.changeRound();
+
+    pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow(), game.getPlayingPawn().getCurrentTile().getColumn() - 1)));
+
+    while (game.getPlayingPawn().getCurrentTile().getRow() > 1) {
+      pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow() - 1, game.getPlayingPawn().getCurrentTile().getColumn())));
     }
 
-    for (int i = 0; i < 5; i++) {
-      game.getGameBoard().getTile(i,6).setLink(RIGHT, WALL);
-      game.getGameBoard().getTile(i,7).setLink(LEFT, WALL);
-    }
+    fillRowWithWalls(game, gameBoard, 1);
+    Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(1, 8)));
 
-    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, wall));
+
   }
 
+
   @Test
-  void checkBlockedPath_OnlyForPawn2() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
+  void checkBlockedPath_OnlyForPawn2_whenOnSameSide() throws InvalidParameterException, BuilderException, InvalidActionException, OutOfGameBoardException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    for (int i = 0; i < 7; i++) {
-      game.getGameBoard().getTile(4,i).setLink(DOWN, WALL);
-      game.getGameBoard().getTile(5,i).setLink(UP, WALL);
+
+    pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow(), game.getPlayingPawn().getCurrentTile().getColumn() - 1)));
+
+    while (game.getPlayingPawn().getCurrentTile().getRow() < 7) {
+      pawnMover.execute(game, gameBoard.getTile(new Position(game.getPlayingPawn().getCurrentTile().getRow() + 1, game.getPlayingPawn().getCurrentTile().getColumn())));
     }
 
-    for (int i = 5; i < 9; i++) {
-      game.getGameBoard().getTile(i,6).setLink(RIGHT, WALL);
-      game.getGameBoard().getTile(i,7).setLink(LEFT, WALL);
-    }
+    fillRowWithWalls(game, gameBoard, 6);
+    Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(8, 8)));
 
-    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, game.getGameBoard()));
+    Assertions.assertFalse(new PathExistenceChecker().isValidAction(game, wall));
+
   }
 
 }
+
+
