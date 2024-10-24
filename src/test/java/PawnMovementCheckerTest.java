@@ -256,7 +256,7 @@ public class PawnMovementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"3, 1, 3, 2, 2, 2, 3, 3"})
-  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom31To22(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void goingDiagonalIfThereIsAPawnAndWallIsAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
