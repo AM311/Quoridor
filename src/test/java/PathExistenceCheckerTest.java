@@ -21,8 +21,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
-public class PathTest {
-  //todo REPLACE TEST CODE FOR PLACING WALLS WITH A METHOD CALL TO "PLACE WALL"?
+public class PathExistenceCheckerTest {
 
   private final ActionChecker<Wall> pathExistenceChecker = new PathExistenceChecker();
   private final WallPlacer wallPlacer = new WallPlacer();
@@ -64,7 +63,6 @@ public class PathTest {
   void checkBlockedPath(int row) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
-
 
     fillRowWithWalls(game, gameBoard, row);
     wallPlacer.execute(game, new Wall(VERTICAL, gameBoard.getTile(new Position(row , 8))));

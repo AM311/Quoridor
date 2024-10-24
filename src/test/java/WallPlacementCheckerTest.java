@@ -254,20 +254,4 @@ public class WallPlacementCheckerTest {
 
     Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
   }
-
-  @ParameterizedTest
-  @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) throws InvalidParameterException, InvalidActionException, BuilderException {
-    AbstractGame game = buildGame();
-    AbstractGameBoard gameBoard = game.getGameBoard();
-
-    int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();
-    AbstractTile startingTile = gameBoard.getTile(new Position(row,column));
-
-    Wall wall = new Wall(HORIZONTAL, startingTile);
-    wallPlacer.execute(game, wall);
-
-    Assertions.assertEquals(numberOfWallsBeforePlacement - 1, game.getPlayingPawn().getNumberOfWalls());
-  }
-
 }

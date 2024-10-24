@@ -1,6 +1,7 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.AbstractGameBoard;
 import it.units.sdm.quoridor.model.AbstractTile;
@@ -273,4 +274,59 @@ public class WallPlacerTest {
 
     Assertions.assertArrayEquals(expected, actual);
   }
+
+  @Test
+  void verticalWallOutOfEdges_throwsException() throws InvalidParameterException, InvalidActionException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    AbstractTile startingTile = gameBoard.getTile(new Position(0, 0));
+    Wall wall = new Wall(VERTICAL, startingTile);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> wallPlacer.execute(game, wall));
+
+  }
+
+  @Test
+  void horizontalWallOutOfEdges_throwsException() throws InvalidParameterException, InvalidActionException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    AbstractTile startingTile = gameBoard.getTile(new Position(8, 8));
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+
+    Assertions.assertThrows(InvalidActionException.class, () -> wallPlacer.execute(game, wall));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"3, 3", "6, 2", "0, 0"})
+  void numberOfWallsIsConsistentAfterPlacingAWall(int row, int column) throws InvalidParameterException, InvalidActionException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    int numberOfWallsBeforePlacement = game.getPlayingPawn().getNumberOfWalls();
+    AbstractTile startingTile = gameBoard.getTile(new Position(row,column));
+
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+    wallPlacer.execute(game, wall);
+
+    Assertions.assertEquals(numberOfWallsBeforePlacement - 1, game.getPlayingPawn().getNumberOfWalls());
+
+  }
+
+  @ParameterizedTest
+  @CsvSource({"3, 3", "6, 2", "0, 0"})
+  void ifZeroWallsRemaining_throwsException(int row, int column) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    for (int i = 0; i < 10; i++)
+      game.getPlayingPawn().decrementNumberOfWalls();
+
+    AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
+    Wall wall = new Wall(HORIZONTAL, startingTile);
+
+    Assertions.assertThrows(NumberOfWallsBelowZeroException.class, () -> wallPlacer.execute(game, wall));
+  }
 }
+
