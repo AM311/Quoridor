@@ -1,450 +1,412 @@
+import it.units.sdm.quoridor.exceptions.BuilderException;
+import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.Game;
-import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.Tile;
-import it.units.sdm.quoridor.model.builder.IQuoridorBuilder;
-import it.units.sdm.quoridor.model.Pawn;
+import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.builder.BuilderDirector;
+import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
+import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import static it.units.sdm.quoridor.utils.WallOrientation.*;
 
-import static it.units.sdm.quoridor.model.GameBoard.LinkState.WALL;
-import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class PawnMovementCheckerTest {
-  ActionChecker<Tile> pawnMovementChecker = new PawnMovementChecker();
+  ActionChecker<AbstractTile> pawnMovementChecker = new PawnMovementChecker();
+
+  private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    return builderDirector.makeGame();
+  }
+
+  private static void movePawn(AbstractGame game, Position position) throws InvalidParameterException {
+    game.getPlayingPawn().move(game.getGameBoard().getTile(position));
+    game.getGameBoard().getTile(position).setOccupiedBy(game.getPlayingPawn());
+  }
+
 
   //TODO metodi che chiedano caselle FUORI SCACCHIERA -- GESTIRE ECCEZIONI
 
-  @ParameterizedTest
-  @CsvSource({"1, 4, 1, 6", "1, 4, 1, 2", "1, 4, 2, 5", "1, 4, 3, 7", "1, 4, 2, 3", "1,7,0,6"})
-  void checkNotAdjacencyMoveNotAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(startingRow, startingColumn));
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationRow, destinationColumn));
+  @ParameterizedTest
+  @CsvSource({"1, 4, 1, 6", "1, 4, 1, 2", "1, 4, 2, 5", "1, 4, 3, 7", "1, 4, 2, 3", "1, 7, 0, 6"})
+  void checkNotAdjacencyMoveNotAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position destinationPosition = new Position(destinationRow, destinationColumn);
+
+    movePawn(game, startingPosition);
+    
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationPosition));
     Assertions.assertFalse(checkMove);
   }
 
-  @ParameterizedTest
-  @CsvSource({"1, 4, 0, 4", "1, 4, 1, 3", "1, 4, 2, 4", "1, 4, 1, 5"})
-  void checkAdjacencyMoveAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(startingRow, startingColumn));
-    gameBoard.getTile(destinationRow, destinationColumn).setOccupiedBy(false);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationRow, destinationColumn));
+  @ParameterizedTest
+  @CsvSource({"2, 4, 1, 4", "1, 4, 1, 3", "1, 4, 2, 4", "1, 4, 1, 5"})
+  void checkAdjacencyMoveAllowed(int startingRow, int startingColumn, int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position destinationPosition = new Position(destinationRow, destinationColumn);
+
+    movePawn(game, startingPosition);
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationPosition));
     Assertions.assertTrue(checkMove);
   }
 
-  @ParameterizedTest
-  @CsvSource({"3, 6, 2, 6", "4, 3, 3, 3", "8, 3, 8, 4"})
-  void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn) throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(startingRow, startingColumn));
-    gameBoard.getTile(occupiedRow, occupiedColumn).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(occupiedRow, occupiedColumn));
+  @ParameterizedTest
+  @CsvSource({"3, 6, 2, 6", "4, 3, 3, 3", "7, 3, 7, 4"})
+  void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(opponentPosition));
     Assertions.assertFalse(checkMove);
   }
 
-  //===========================
 
   @ParameterizedTest
   @CsvSource({"4, 3, 4, 4, 4, 5", "0, 4, 0, 3, 0, 2", "8, 6, 8, 7, 8, 8", "5, 6, 4, 6, 3, 6", "4, 8, 3, 8, 2, 8", "0, 2, 1, 2, 2, 2"})
-  void jumpingOverNeighborPawnAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  void jumpingOverNeighborPawnAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(startingRow, startingColumn));
-    gameBoard.getTile(occupiedRow, occupiedColumn).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetRow, targetColumn));
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertTrue(checkMove);
   }
+
 
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6, 0, 6", "3, 5, 4, 5, 6, 5", "8, 8, 8, 7, 8, 5", "1, 3, 1, 2, 1, 0"})
-  void jumpingTwoTilesOverNeighborPawnNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  void jumpingTwoTilesOverNeighborPawnNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(startingRow, startingColumn));
-    gameBoard.getTile(occupiedRow, occupiedColumn).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetRow, targetColumn));
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertFalse(checkMove);
+  }
+
+
+  @ParameterizedTest
+  @CsvSource({"5, 5, 5, 3, 5, 2", "7, 3, 7, 1, 7, 0", "1, 2, 1, 4, 1, 5", "8, 5, 8, 7, 8, 8"})
+  void jumpingTwoTilesOverNotNeighborPawnNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertFalse(checkMove);
+  }
+
+
+  @ParameterizedTest
+  @CsvSource({"5, 3, 4, 3, 4, 3", "3, 6 , 2, 6, 2, 6", "8, 0, 7, 0, 7, 0"})
+  void jumpingOverHorizontalWallNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position wallPosition = new Position(wallRow, wallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.placeWall(wallPosition, HORIZONTAL);
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertFalse(checkMove);
+  }
+
+
+  @ParameterizedTest
+  @CsvSource({"1, 7, 1, 6, 1, 7", "3, 3, 3, 2, 4, 3", "8, 1, 8, 0, 8, 1", "5, 7, 5, 8, 6 , 8"})
+  void jumpingOverVerticalWallNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position wallPosition = new Position(wallRow, wallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.placeWall(wallPosition, VERTICAL);
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertFalse(checkMove);
+  }
+
+
+
+  @ParameterizedTest
+  @CsvSource({"3, 1, 3, 2, 3, 3, 4, 3", "6, 6, 6, 5, 6, 4, 6, 5", "8, 6, 8, 7, 8, 8, 8, 8"})
+  void jumpingOverPawnHavingVerticalWallBehindNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+    Position wallPosition = new Position(wallRow, wallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    game.placeWall(wallPosition, VERTICAL);
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertFalse(checkMove);
   }
 
   @ParameterizedTest
-  @CsvSource({"5, 5, 5, 3, 5, 2", "7, 3, 7, 1, 7, 0", "1, 2, 1, 4, 1, 5", "8, 5, 8, 7, 8, 8"})
-  void jumpingTwoTilesOverNotNeighborPawnNotAllowed(int startingRow, int startingColumn, int occupiedRow, int occupiedColumn, int targetRow, int targetColumn) throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  @CsvSource({"7, 1, 6, 1, 5, 1, 5, 1", "2, 1, 1, 1, 0, 1, 0, 0", "2, 6, 3, 6, 4, 6, 3, 5"})
+  void jumpingOverPawnHavingHorizontalWallBehindNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(startingRow, startingColumn));
-    gameBoard.getTile(occupiedRow, occupiedColumn).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetRow, targetColumn));
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+    Position wallPosition = new Position(wallRow, wallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    game.placeWall(wallPosition, HORIZONTAL);
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertFalse(checkMove);
   }
 
-  //===========================
 
-  @Test
-  void jumpingOverWallFrom53To43NotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  @ParameterizedTest
+  @CsvSource({"3, 6, 2, 6, 2, 7, 1, 6", "7, 3, 6, 3, 6, 2, 5, 2", "7, 6, 6, 6, 6, 7, 5, 6"})
+  void goingDiagonalIfThereIsAPawnInFrontAndWallBehindIsAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(5, 3));
-    gameBoard.getTile(5, 3).setLink(UP, WALL);
-    gameBoard.getTile(5, 4).setLink(UP, WALL);
-    gameBoard.getTile(4, 3).setLink(DOWN, WALL);
-    gameBoard.getTile(4, 4).setLink(DOWN, WALL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(4, 3));
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+    Position wallPosition = new Position(wallRow, wallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    game.placeWall(wallPosition, HORIZONTAL);
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertTrue(checkMove);
+  }
+
+
+  @ParameterizedTest
+  @CsvSource({"3, 1, 3, 2, 2, 2, 3, 3"})
+  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom31To22(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+    Position wallPosition = new Position(wallRow, wallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    game.placeWall(wallPosition, VERTICAL);
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertTrue(checkMove);
+  }
+
+
+  @ParameterizedTest
+  @CsvSource({"7, 7, 7, 6, 6, 6, 8, 6, 6, 5", "3, 2, 2, 2, 2, 1, 2, 2, 1, 2", "2, 7, 3, 7, 3, 8, 4, 8, 3, 6"})
+  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int verticalWallRow, int verticalWallColumn, int horizontalWallRow, int horizontalWallColumn) throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+    Position horizontalwallPosition = new Position(horizontalWallRow, horizontalWallColumn);
+    Position verticalwallPosition = new Position(verticalWallRow, verticalWallColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    game.placeWall(verticalwallPosition, VERTICAL);
+    game.placeWall(horizontalwallPosition, HORIZONTAL);
+
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertFalse(checkMove);
   }
 
-  @Test
-  void jumpingOverWallFrom32To33NotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(3, 2));
-    gameBoard.getTile(3, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(2, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(3, 3).setLink(LEFT, WALL);
-    gameBoard.getTile(2, 3).setLink(LEFT, WALL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(3, 3));
-    Assertions.assertFalse(checkMove);
-  }
 
   @Test
-  void jumpingOverPawnHavingAWallBehindFrom31to33NotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  void isThereNotAdjacentWallIn43From63() throws InvalidParameterException, BuilderException, InvalidActionException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(3, 1));
-    gameBoard.getTile(3, 2).setOccupiedBy(true);
-    gameBoard.getTile(3, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(2, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(3, 3).setLink(LEFT, WALL);
-    gameBoard.getTile(2, 3).setLink(LEFT, WALL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(3, 3));
-    Assertions.assertFalse(checkMove);
-  }
+    Position startingPosition = new Position(4, 3);
+    Position opponentPosition = new Position(5, 3);
 
-  @Test
-  void jumpingOverPawnHavingAWallBehindFrom71to51NotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+    movePawn(game, startingPosition);
 
-    pawn.move(gameBoard.getTile(7, 1));
-    gameBoard.getTile(6, 1).setOccupiedBy(true);
-    gameBoard.getTile(6, 1).setLink(UP, WALL);
-    gameBoard.getTile(6, 2).setLink(UP, WALL);
-    gameBoard.getTile(5, 1).setLink(DOWN, WALL);
-    gameBoard.getTile(5, 2).setLink(DOWN, WALL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(5, 1));
-    Assertions.assertFalse(checkMove);
-  }
+    Position wallPosition = new Position(3, 3);
 
-  @Test
-  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom36To27() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+    game.placeWall(wallPosition, HORIZONTAL);
 
-    pawn.move(gameBoard.getTile(3, 6));
-    gameBoard.getTile(2, 6).setOccupiedBy(true);
-    gameBoard.getTile(2, 6).setLink(UP, WALL);
-    gameBoard.getTile(2, 7).setLink(UP, WALL);
-    gameBoard.getTile(1, 6).setLink(DOWN, WALL);
-    gameBoard.getTile(1, 7).setLink(DOWN, WALL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(2, 7));
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(opponentPosition));
     Assertions.assertTrue(checkMove);
   }
 
-  @Test
-  void goingDiagonalIfThereIsAPawnAndWallIsAllowedFrom31To22() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(3, 1));
-    gameBoard.getTile(3, 2).setOccupiedBy(true);
-    gameBoard.getTile(3, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(2, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(2, 3).setLink(LEFT, WALL);
-    gameBoard.getTile(3, 3).setLink(LEFT, WALL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(2, 2));
+  @ParameterizedTest
+  @CsvSource({"1, 1, 0, 2, 0, 1", "4, 1, 5, 0, 4, 0", "7, 1, 8, 0, 8, 1", "6, 7, 5, 8, 6, 8"})
+  void diagonalMoveOnBoarderWithAPawnInFrontAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
+    
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+    Position opponentPosition = new Position(opponentRow, opponentColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertTrue(checkMove);
   }
 
-  @Test
-  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom77To66() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(7, 7));
-    gameBoard.getTile(7, 6).setOccupiedBy(true);
-    gameBoard.getTile(7, 5).setLink(UP, WALL);
-    gameBoard.getTile(7, 6).setLink(UP, WALL);
-    gameBoard.getTile(6, 5).setLink(DOWN, WALL);
-    gameBoard.getTile(6, 6).setLink(DOWN, WALL);
-
-    gameBoard.getTile(7, 5).setLink(RIGHT, WALL);
-    gameBoard.getTile(8, 5).setLink(RIGHT, WALL);
-    gameBoard.getTile(7, 6).setLink(LEFT, WALL);
-    gameBoard.getTile(8, 6).setLink(LEFT, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(6, 6));
-    Assertions.assertFalse(checkMove);
-  }
 
   @Test
-  void goingDiagonalIfThereAreWallsPlacedAsTNotAllowedFrom74To65() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  void diagonalMoveOnBorderWithAPawnInFrontFrom21to02IsNotAllowed() throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(7, 4));
-    gameBoard.getTile(7, 5).setOccupiedBy(true);
-    gameBoard.getTile(7, 5).setLink(UP, WALL);
-    gameBoard.getTile(7, 6).setLink(UP, WALL);
-    gameBoard.getTile(6, 5).setLink(DOWN, WALL);
-    gameBoard.getTile(6, 6).setLink(DOWN, WALL);
+    Position startingPosition = new Position(2, 1);
+    Position targetPosition = new Position(0, 2);
+    Position opponentPosition = new Position(0, 1);
 
-    gameBoard.getTile(7, 5).setLink(RIGHT, WALL);
-    gameBoard.getTile(8, 5).setLink(RIGHT, WALL);
-    gameBoard.getTile(7, 6).setLink(LEFT, WALL);
-    gameBoard.getTile(8, 6).setLink(LEFT, WALL);
+    movePawn(game, startingPosition);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(6, 5));
-    Assertions.assertFalse(checkMove);
-  }
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
 
-  @Test
-  void isThereNotAdjacentWallIn43From63() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(4, 3));
-    gameBoard.getTile(4, 3).setLink(UP, WALL);
-    gameBoard.getTile(4, 4).setLink(UP, WALL);
-    gameBoard.getTile(3, 3).setLink(DOWN, WALL);
-    gameBoard.getTile(3, 4).setLink(DOWN, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(5, 3));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnAdjacentAndAWallBehindFrom52To41() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(5, 2));
-    gameBoard.getTile(4, 2).setOccupiedBy(true);
-    gameBoard.getTile(4, 2).setLink(UP, WALL);
-    gameBoard.getTile(4, 3).setLink(UP, WALL);
-    gameBoard.getTile(3, 2).setLink(DOWN, WALL);
-    gameBoard.getTile(3, 3).setLink(DOWN, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(4, 1));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAWallOnLeftAndAPawnBehindItFrom56To45() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(5, 6));
-    gameBoard.getTile(5, 5).setOccupiedBy(true);
-    gameBoard.getTile(5, 5).setLink(LEFT, WALL);
-    gameBoard.getTile(5, 4).setLink(RIGHT, WALL);
-    gameBoard.getTile(6, 4).setLink(RIGHT, WALL);
-    gameBoard.getTile(6, 5).setLink(LEFT, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(4, 5));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnOnTheLeftAndBehindAWallFrom42To51() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(4, 2));
-    gameBoard.getTile(4, 1).setOccupiedBy(true);
-    gameBoard.getTile(4, 1).setLink(LEFT, WALL);
-    gameBoard.getTile(4, 0).setLink(RIGHT, WALL);
-    gameBoard.getTile(5, 0).setLink(RIGHT, WALL);
-    gameBoard.getTile(5, 1).setLink(LEFT, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(5, 1));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnBelowAndAWallBehindFrom45To53() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(4, 5));
-    gameBoard.getTile(5, 5).setOccupiedBy(true);
-    gameBoard.getTile(5, 5).setLink(DOWN, WALL);
-    gameBoard.getTile(5, 6).setLink(DOWN, WALL);
-    gameBoard.getTile(6, 5).setLink(UP, WALL);
-    gameBoard.getTile(6, 6).setLink(LEFT, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(5, 4));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnInFrontOfMeAndAWallBehindFrom23To34() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(2, 3));
-    gameBoard.getTile(2, 4).setOccupiedBy(true);
-    gameBoard.getTile(2, 4).setLink(RIGHT, WALL);
-    gameBoard.getTile(1, 4).setLink(RIGHT, WALL);
-    gameBoard.getTile(2, 5).setLink(LEFT, WALL);
-    gameBoard.getTile(1, 5).setLink(LEFT, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(3, 4));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnBelowAndAWallBehindFrom66To75() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(6, 6));
-    gameBoard.getTile(7, 6).setOccupiedBy(true);
-    gameBoard.getTile(7, 6).setLink(DOWN, WALL);
-    gameBoard.getTile(7, 7).setLink(DOWN, WALL);
-    gameBoard.getTile(8, 5).setLink(UP, WALL);
-    gameBoard.getTile(8, 7).setLink(UP, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(7, 5));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnBelowAndAWallBehindFrom52To61() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(5, 2));
-    gameBoard.getTile(6, 2).setOccupiedBy(true);
-    gameBoard.getTile(6, 1).setLink(DOWN, WALL);
-    gameBoard.getTile(6, 2).setLink(DOWN, WALL);
-    gameBoard.getTile(7, 2).setLink(UP, WALL);
-    gameBoard.getTile(7, 1).setLink(UP, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(6, 1));
-    Assertions.assertTrue(checkMove);
-  }
-
-  @Test
-  void isThereAPawnBelowAndAWallBehindAndAWallOnRightFrom52To63IsNotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(5, 2));
-    gameBoard.getTile(6, 2).setOccupiedBy(true);
-    gameBoard.getTile(6, 1).setLink(DOWN, WALL);
-    gameBoard.getTile(6, 2).setLink(DOWN, WALL);
-    gameBoard.getTile(7, 2).setLink(UP, WALL);
-    gameBoard.getTile(7, 1).setLink(UP, WALL);
-
-    gameBoard.getTile(6, 3).setLink(LEFT, WALL);
-    gameBoard.getTile(6, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(7, 2).setLink(RIGHT, WALL);
-    gameBoard.getTile(7, 3).setLink(LEFT, WALL);
-
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(6, 3));
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertFalse(checkMove);
   }
 
   @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom11to02() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  void diagonalMoveOnBorderWithAPawnInFrontFrom58to47IsNotAllowed() throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    pawn.move(gameBoard.getTile(1, 1));
-    gameBoard.getTile(1, 1).setOccupiedBy(true);
-    gameBoard.getTile(0, 1).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(0, 2));
-    Assertions.assertTrue(checkMove);
-  }
+    Position startingPosition = new Position(5, 8);
+    Position targetPosition = new Position(4, 7);
+    Position opponentPosition = new Position(4, 8);
 
-  @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom61to50() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+    movePawn(game, startingPosition);
 
-    pawn.move(gameBoard.getTile(6, 1));
-    gameBoard.getTile(6, 1).setOccupiedBy(true);
-    gameBoard.getTile(6, 0).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(5, 0));
-    Assertions.assertTrue(checkMove);
-  }
+    game.changeRound();
+    movePawn(game, opponentPosition);
+    game.changeRound();
 
-  @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom21to02IsNotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
-
-    pawn.move(gameBoard.getTile(2, 1));
-    gameBoard.getTile(2, 1).setOccupiedBy(true);
-    gameBoard.getTile(0, 1).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(0, 2));
+    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
     Assertions.assertFalse(checkMove);
   }
 
-  @Test
-  void diagonalMoveOnBorderWithAPawnInFrontFrom58to47IsNotAllowed() throws InvalidParameterException {
-    Game game = new IQuoridorBuilder().setNumberOfPlayers(2).createGame();
-    Pawn pawn = game.getPlayingPawn();
-    GameBoard gameBoard = game.getGameBoard();
+  @ParameterizedTest
+  @CsvSource({"4, 3, 3, 3, 2, 3, 1, 3", "4, 3, 4, 2, 4, 1, 4, 0", "4, 5, 4, 6, 4, 7, 4, 8", "4, 5, 5, 5, 6, 5, 7, 5"})
+  void jumpingOverTwoPlayersNotAllowed(int startingRow, int startingColumn, int secondPlayerRow, int secondPlayerColumn, int thirdPlayerRow, int thirdPlayerColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
+    AbstractGame game = builderDirector.makeGame();
 
-    pawn.move(gameBoard.getTile(5, 8));
-    gameBoard.getTile(5, 8).setOccupiedBy(true);
-    gameBoard.getTile(4, 8).setOccupiedBy(true);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(4, 7));
+    Position startingPosition = new Position(startingRow, startingColumn);
+    Position secondPlayerPosition = new Position(secondPlayerRow, secondPlayerColumn);
+    Position thirdPlayerPosition = new Position(thirdPlayerRow, thirdPlayerColumn);
+    Position targetPosition = new Position(targetRow, targetColumn);
+
+    movePawn(game, startingPosition);
+
+    game.changeRound();
+    movePawn(game, secondPlayerPosition);
+
+    game.changeRound();
+    movePawn(game, thirdPlayerPosition);
+
+    game.changeRound();
+    game.changeRound();
+
+    boolean checkMove = pawnMovementChecker.isValidAction(game, game.getGameBoard().getTile(targetPosition));
     Assertions.assertFalse(checkMove);
   }
-
 }
+
