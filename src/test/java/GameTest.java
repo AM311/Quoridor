@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class GameTest {
-  BuilderDirector builderDirector;
+  private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    return builderDirector.makeGame();
+  }
   @Test
   void changeRoundOnceTest() throws InvalidParameterException, BuilderException {
-    builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
-    AbstractGame game = builderDirector.makeGame();
+    AbstractGame game = buildGame();
 
     game.changeRound();
     Assertions.assertEquals(game.getPawns().getLast(), game.getPlayingPawn());
@@ -19,8 +21,7 @@ public class GameTest {
 
   @Test
   void changeRoundTwiceTest() throws InvalidParameterException, BuilderException {
-    builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
-    AbstractGame game = builderDirector.makeGame();
+    AbstractGame game = buildGame();
 
     game.changeRound();
     game.changeRound();
