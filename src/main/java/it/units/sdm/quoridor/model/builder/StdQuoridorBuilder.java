@@ -49,7 +49,7 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
   //=====================
 
   @Override
-  AbstractQuoridorBuilder setIGameBoard() {
+  AbstractQuoridorBuilder setGameBoard() {
     AbstractTile[][] gameState = new AbstractTile[gameBoardSideLength][gameBoardSideLength];
 
     for (int i = 0; i < gameBoardSideLength; i++) {
@@ -75,7 +75,7 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
   }
 
   @Override
-  AbstractQuoridorBuilder setIPawnList() {
+  AbstractQuoridorBuilder setPawnList() {
     int numberOfWalls = stdNumberOfWalls / (numberOfPlayers / 2);
     List<TargetTiles> startingAndDestinationTiles = gameBoard.getStartingAndDestinationTiles();
 

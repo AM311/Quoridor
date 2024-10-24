@@ -22,9 +22,9 @@ public abstract class AbstractQuoridorBuilder {
 
   abstract AbstractGame buildGame();
 
-  abstract AbstractQuoridorBuilder setIGameBoard();
+  abstract AbstractQuoridorBuilder setGameBoard();
 
-  abstract AbstractQuoridorBuilder setIPawnList();
+  abstract AbstractQuoridorBuilder setPawnList();
 
   abstract AbstractQuoridorBuilder setActionManager();
 

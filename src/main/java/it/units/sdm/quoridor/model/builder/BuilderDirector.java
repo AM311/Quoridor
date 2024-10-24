@@ -16,7 +16,7 @@ public class BuilderDirector {
 
   public AbstractGame makeGame() throws BuilderException {
     try {
-      return builder.setIGameBoard().setIPawnList().setActionManager().setPlaceWallActionController().setMovePawnActionController().buildGame();
+      return builder.setGameBoard().setPawnList().setActionManager().setPlaceWallActionController().setMovePawnActionController().buildGame();
     } catch (RuntimeException e) {
       throw new BuilderException("Exception while building Game: " + e.getMessage());
     }
