@@ -100,15 +100,17 @@ public class ExceptionTest {
     Assertions.assertEquals("Test", exception.getMessage());
   }
 
-  //TODO SPOSTARE IN ALTRA CLASSE
-  /*
   @Test
-  void correctThrowNumberOfWallsBelowZeroException() {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(),
-            gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 0);
+  void correctBuilderException() {
+    Assertions.assertThrows(BuilderException.class, () -> {
+      throw new BuilderException();
+    });
 
-    Assertions.assertThrows(NumberOfWallsBelowZeroException.class, pawn::decrementNumberOfWalls);
+    Exception exception = Assertions.assertThrows(BuilderException.class, () -> {
+      throw new BuilderException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
   }
-  */
+
 }
