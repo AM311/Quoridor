@@ -12,41 +12,6 @@ public class PawnTest {
 
   BuilderDirector builderDirector;
 
-  /*
-  @Test
-  void constructorTest_startingTileIsConsistent() {
-    GameBoard gameBoard = new GameBoard();
-
-    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(), gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 10);
-
-    Assertions.assertEquals(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(), pawn.getCurrentTile());
-  }
-
-  @Test
-  void constructorTest_destinationTilesAreConsistent() {
-    GameBoard gameBoard = new GameBoard();
-
-    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(), gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 10);
-
-    Assertions.assertEquals(gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), pawn.getDestinationTiles());
-  }
-
-  @ParameterizedTest
-  @ValueSource(ints = {5, 10})
-  void constructorTest_numberOfWallsIsConsistent(int numberOfWalls) {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(), gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, numberOfWalls);
-    Assertions.assertEquals(numberOfWalls, pawn.getNumberOfWalls());
-  }
-
-  @Test
-  void constructorTest_colorIsConsistent() {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(), gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 10);
-    Assertions.assertEquals(Color.black, pawn.getColor());
-  }
-*/
-
   @ParameterizedTest
   @CsvSource({"3,4", "7,5", "6,2", "5,5"})
   void moveTest(int destinationTileRow, int destinationTileColumn) throws InvalidParameterException, BuilderException {

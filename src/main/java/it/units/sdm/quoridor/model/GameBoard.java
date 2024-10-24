@@ -52,8 +52,6 @@ public class GameBoard extends AbstractGameBoard {
       throw new InvalidParameterException("The provided coordinates are outside the GameBoard!");
     }
   }
-
-  //todo Valutare se può diventare Private (questo e il seguente)...
   @Override
   public List<AbstractTile> getRowTiles(int row) throws InvalidParameterException {
     try {
@@ -76,25 +74,6 @@ public class GameBoard extends AbstractGameBoard {
   public Collection<AbstractTile> getTiles() {
     return Arrays.stream(gameState).flatMap(Arrays::stream).collect(Collectors.toSet());
   }
-
-  /*
-  //todo VALUTARE SE QUESTI QUATTRO METODI SERVONO!
-  public boolean isInFirstRow(AbstractTile tile) {
-    return tile.getRow() == 0;
-  }
-
-  public boolean isInLastRow(AbstractTile tile) {
-    return tile.getRow() == sideLength - 1;
-  }
-
-  public boolean isInFirstColumn(AbstractTile tile) {
-    return tile.getColumn() == 0;
-  }
-
-  public boolean isInLastColumn(AbstractTile tile) {
-    return tile.getColumn() == sideLength - 1;
-  }
-  */
 
   @Override
   public boolean isThereAWall(AbstractTile tile1, AbstractTile tile2) throws NotAdjacentTilesException {
