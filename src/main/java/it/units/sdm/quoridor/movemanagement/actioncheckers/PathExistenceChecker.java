@@ -15,7 +15,7 @@ import static it.units.sdm.quoridor.model.AbstractTile.LinkState.WALL;
 public class PathExistenceChecker implements ActionChecker<Wall> {
   @Override
   public boolean isValidAction(AbstractGame game, Wall wall) {
-    AbstractGame dummyGame = buildDummyGame(game);      //todo VERIFICARE CON DEBUGGER CHE CLONI CORRETTAMENTE
+    AbstractGame dummyGame = buildDummyGame(game);
 
     try {
       dummyGame.placeWall(new Position(wall.startingTile().getRow(), wall.startingTile().getColumn()), wall.orientation());
@@ -77,7 +77,7 @@ public class PathExistenceChecker implements ActionChecker<Wall> {
     boolean existsPath = false;
 
     for (AbstractTile tile : potentials.keySet()) {
-      if (destinationTiles.contains(tile)) {
+      if (destinationTiles.contains(tile)) {              // todo check
         if (potentials.get(tile) == 0)
           existsPath = true;
       }
