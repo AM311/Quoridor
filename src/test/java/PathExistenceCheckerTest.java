@@ -12,7 +12,6 @@ import it.units.sdm.quoridor.movemanagement.actioncheckers.PathExistenceChecker;
 import it.units.sdm.quoridor.movemanagement.actions.PawnMover;
 import it.units.sdm.quoridor.movemanagement.actions.WallPlacer;
 import it.units.sdm.quoridor.utils.Position;
-import it.units.sdm.quoridor.utils.WallOrientation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

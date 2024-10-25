@@ -1,7 +1,6 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
@@ -17,7 +16,7 @@ import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class GameTest {
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
     return builderDirector.makeGame();
   }
 
@@ -31,7 +30,7 @@ public class GameTest {
     AbstractGame game = buildGame();
 
     game.changeRound();
-    Assertions.assertEquals(game.getPawns().getLast(), game.getPlayingPawn());
+    Assertions.assertEquals(game.getPawns().get(1), game.getPlayingPawn());
   }
 
   @Test
@@ -40,6 +39,18 @@ public class GameTest {
 
     game.changeRound();
     game.changeRound();
+    Assertions.assertEquals(game.getPawns().get(2), game.getPlayingPawn());
+  }
+
+  @Test
+  void changeRoundFourTimesTest() throws InvalidParameterException, BuilderException {
+    AbstractGame game = buildGame();
+
+    game.changeRound();
+    game.changeRound();
+    game.changeRound();
+    game.changeRound();
+
     Assertions.assertEquals(game.getPawns().getFirst(), game.getPlayingPawn());
   }
 
@@ -266,7 +277,7 @@ public class GameTest {
     Position startingPositionHorizontal = new Position(row - 1, column - 1);
     Position startingPositionVertical = new Position(row, column);
 
-   game.placeWall(startingPositionHorizontal, HORIZONTAL);
+    game.placeWall(startingPositionHorizontal, HORIZONTAL);
 
     Assertions.assertThrows(InvalidActionException.class, () -> game.placeWall(startingPositionVertical, VERTICAL));
   }
@@ -299,9 +310,8 @@ public class GameTest {
   @CsvSource({"3, 3", "6, 2", "0, 0"})
   void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
-    AbstractGameBoard gameBoard = game.getGameBoard();
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
       game.getPlayingPawn().decrementNumberOfWalls();
 
     Position startingPosition = new Position(row, column);
