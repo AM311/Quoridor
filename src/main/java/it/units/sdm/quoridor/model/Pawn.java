@@ -10,11 +10,9 @@ public class Pawn extends AbstractPawn {
     super(startingTile, destinationTiles, pawnAppearance, numberOfWalls);
   }
 
-
   public void move(AbstractTile destinationTile) {
     this.currentTile = destinationTile;
   }
-
 
   public boolean hasReachedDestination() {
     return destinationTiles.contains(currentTile);

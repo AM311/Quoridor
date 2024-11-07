@@ -24,7 +24,7 @@ public abstract class AbstractGame implements Cloneable {
   }
 
   public AbstractGameBoard getGameBoard() {
-    return gameBoard;       //todo Ritornare clone? Oppure trovare un workaround per clone? Perché sarebbe opportuno avere i fields final...
+    return gameBoard;
   }
 
   public AbstractPawn getPlayingPawn() {

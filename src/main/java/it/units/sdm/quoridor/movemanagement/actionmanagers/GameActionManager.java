@@ -11,7 +11,7 @@ public class GameActionManager implements ActionManager {
 	@Override
 	public <T> void performAction(AbstractGame game, T target, ActionController<T> actionController, boolean useOrInsteadOfAnd) throws InvalidActionException {
 		try {
-			boolean isValidMove = !useOrInsteadOfAnd;
+			boolean isValidMove = !useOrInsteadOfAnd || actionController.actionCheckers().length == 0;
 
 			for(ActionChecker<T> actionChecker : actionController.actionCheckers()) {
 				if(useOrInsteadOfAnd)
@@ -22,10 +22,11 @@ public class GameActionManager implements ActionManager {
 
 			if(isValidMove) {
 				actionController.action().execute(game, target);
+			} else {
+				throw new InvalidActionException("Invalid action: one or more checks failed.");
 			}
-
 		} catch (QuoridorRuntimeException ex) {
-			throw new InvalidActionException("Invalid move: " + ex.getMessage());
+			throw new InvalidActionException("Invalid action: " + ex.getMessage());
 		}
 	}
 }

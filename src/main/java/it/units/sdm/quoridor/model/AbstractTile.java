@@ -24,7 +24,7 @@ public abstract class AbstractTile implements Cloneable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(position, links, occupiedBy);
+    return Objects.hash(position, links);
   }
 
   @Override
@@ -33,14 +33,13 @@ public abstract class AbstractTile implements Cloneable {
       return true;
     if (!(o instanceof Tile tile))
       return false;
-    return Objects.equals(position, tile.position) && isOccupiedBy() == tile.isOccupiedBy() && Objects.equals(links, tile.links);
+    return Objects.equals(position, tile.position) && Objects.equals(isOccupiedBy(), tile.isOccupiedBy()) && Objects.equals(links, tile.links);
   }
 
   @Override
   public Tile clone() throws CloneNotSupportedException {
     Tile clonedTile = (Tile) super.clone();
     clonedTile.links = new EnumMap<>(Map.of(UP, this.getLink(UP), RIGHT, this.getLink(RIGHT), DOWN, this.getLink(DOWN), LEFT, this.getLink(LEFT)));
-    clonedTile.occupiedBy = occupiedBy.clone();
 
     return clonedTile;
   }

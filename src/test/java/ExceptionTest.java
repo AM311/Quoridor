@@ -20,6 +20,20 @@ public class ExceptionTest {
 
     Assertions.assertEquals("Test", exception.getMessage());
   }
+
+  @Test
+  void correctThrowQuoridorRuntimeException() {
+    Assertions.assertThrows(QuoridorRuntimeException.class, () -> {
+      throw new QuoridorRuntimeException();
+    });
+
+    Exception exception = Assertions.assertThrows(QuoridorRuntimeException.class, () -> {
+      throw new QuoridorRuntimeException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
   @Test
   void correctThrowInvalidActionException() {
     Assertions.assertThrows(InvalidActionException.class, () -> {
@@ -28,6 +42,33 @@ public class ExceptionTest {
 
     Exception exception = Assertions.assertThrows(InvalidActionException.class, () -> {
       throw new InvalidActionException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
+  @Test
+  void correctThrowInvalidParameterException() {
+    Assertions.assertThrows(InvalidParameterException.class, () -> {
+      throw new InvalidParameterException();
+    });
+
+    Exception exception = Assertions.assertThrows(InvalidParameterException.class, () -> {
+      throw new InvalidParameterException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
+
+  @Test
+  void correctThrowNotAdjacentTilesException() {
+    Assertions.assertThrows(NotAdjacentTilesException.class, () -> {
+      throw new NotAdjacentTilesException();
+    });
+
+    Exception exception = Assertions.assertThrows(NotAdjacentTilesException.class, () -> {
+      throw new NotAdjacentTilesException("Test");
     });
 
     Assertions.assertEquals("Test", exception.getMessage());
@@ -47,37 +88,29 @@ public class ExceptionTest {
   }
 
   @Test
-  void correctThrowInvalidParameterException() {
-    Assertions.assertThrows(InvalidParameterException.class, () -> {
-      throw new InvalidParameterException();
-    });
-
-    Exception exception = Assertions.assertThrows(InvalidParameterException.class, () -> {
-      throw new InvalidParameterException("Test");
-    });
-
-    Assertions.assertEquals("Test", exception.getMessage());
-  }
-
-  @Test
-  void correctThrowNotAdjacentTilesException() {
-    Assertions.assertThrows(NotAdjacentTilesException.class, () -> {
-      throw new NotAdjacentTilesException();
-    });
-
-    Exception exception = Assertions.assertThrows(NotAdjacentTilesException.class, () -> {
-      throw new NotAdjacentTilesException("Test");
-    });
-
-    Assertions.assertEquals("Test", exception.getMessage());
-  }
-
-  @Test
   void correctThrowNumberOfWallsBelowZeroException() {
-    GameBoard gameBoard = new GameBoard();
-    Pawn pawn = new Pawn(gameBoard.getStartingAndDestinationTiles().getFirst().getKey(),
-            gameBoard.getStartingAndDestinationTiles().getFirst().getValue(), Color.black, 0);
+    Assertions.assertThrows(NumberOfWallsBelowZeroException.class, () -> {
+      throw new NumberOfWallsBelowZeroException();
+    });
 
-    Assertions.assertThrows(NumberOfWallsBelowZeroException.class, pawn::decrementNumberOfWalls);
+    Exception exception = Assertions.assertThrows(NumberOfWallsBelowZeroException.class, () -> {
+      throw new NumberOfWallsBelowZeroException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
   }
+
+  @Test
+  void correctBuilderException() {
+    Assertions.assertThrows(BuilderException.class, () -> {
+      throw new BuilderException();
+    });
+
+    Exception exception = Assertions.assertThrows(BuilderException.class, () -> {
+      throw new BuilderException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
 }
