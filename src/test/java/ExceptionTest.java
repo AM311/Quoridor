@@ -1,10 +1,6 @@
 import it.units.sdm.quoridor.exceptions.*;
-import it.units.sdm.quoridor.model.GameBoard;
-import it.units.sdm.quoridor.model.Pawn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
 
 public class ExceptionTest {
 
@@ -108,6 +104,19 @@ public class ExceptionTest {
 
     Exception exception = Assertions.assertThrows(BuilderException.class, () -> {
       throw new BuilderException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
+  @Test
+  void correctThrowParserException() {
+    Assertions.assertThrows(ParserException.class, () -> {
+      throw new ParserException();
+    });
+
+    Exception exception = Assertions.assertThrows(ParserException.class, () -> {
+      throw new ParserException("Test");
     });
 
     Assertions.assertEquals("Test", exception.getMessage());
