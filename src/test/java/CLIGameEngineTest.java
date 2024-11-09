@@ -1,4 +1,6 @@
 import it.units.sdm.quoridor.cli.engine.CLIGameEngine;
+import it.units.sdm.quoridor.cli.engine.CLIInputProvider;
+import it.units.sdm.quoridor.cli.engine.InputProvider;
 import it.units.sdm.quoridor.cli.engine.QuoridorGameEngine;
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.model.AbstractGame;
@@ -8,8 +10,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 
 public class CLIGameEngineTest {
@@ -23,8 +23,8 @@ public class CLIGameEngineTest {
     String simulatedUserInput = numberOfPlayers + "\n";
     System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
 
-    Scanner scanner = new Scanner(System.in);
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(scanner, parser);
+    InputProvider inputProvider = new CLIInputProvider();
+    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
     AbstractGame game = cliGameEngine.createGame();
 
     Assertions.assertNotNull(game);
@@ -36,8 +36,8 @@ public class CLIGameEngineTest {
     String simulatedUserInput = numberOfPlayers + "\n";
     System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
 
-    Scanner scanner = new Scanner(System.in);
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(scanner, parser);
+    InputProvider inputProvider = new CLIInputProvider();
+    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
     AbstractGame game = cliGameEngine.createGame();
 
     Assertions.assertEquals(numberOfPlayers, game.getPawns().size());
@@ -49,8 +49,8 @@ public class CLIGameEngineTest {
     String simulatedUserInput = invalidNumberOfPlayers + "\n" + validNumberOfPlayers + "\n";
     System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
 
-    Scanner scanner = new Scanner(System.in);
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(scanner, parser);
+    InputProvider inputProvider = new CLIInputProvider();
+    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
     AbstractGame game = cliGameEngine.createGame();
 
     Assertions.assertNotNull(game);
@@ -62,11 +62,13 @@ public class CLIGameEngineTest {
     String simulatedUserInput = input + "\n" + validNumberOfPlayers + "\n";
     System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
 
-    Scanner scanner = new Scanner(System.in);
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(scanner, parser);
+    InputProvider inputProvider = new CLIInputProvider();
+    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
     AbstractGame game = cliGameEngine.createGame();
 
     Assertions.assertNotNull(game);
   }
+
+
 
 }

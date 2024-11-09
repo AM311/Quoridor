@@ -11,11 +11,11 @@ import java.util.Scanner;
 
 public class CLIGameEngine implements QuoridorGameEngine{
 
-  private final Scanner scanner;
+  private final InputProvider inputProvider;
   private final QuoridorParser parser;
 
-  public CLIGameEngine(Scanner scanner, QuoridorParser parser) {
-    this.scanner = scanner;
+  public CLIGameEngine(InputProvider inputProvider, QuoridorParser parser) {
+    this.inputProvider = inputProvider;
     this.parser = parser;
   }
 
@@ -26,7 +26,7 @@ public class CLIGameEngine implements QuoridorGameEngine{
     AbstractGame game = null;
     while (game == null) {
       try {
-        int numPlayers = Integer.parseInt(scanner.nextLine());
+        int numPlayers = Integer.parseInt(inputProvider.nextLine());
         BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numPlayers));
         game = builderDirector.makeGame();
       } catch (InvalidParameterException | BuilderException | NumberFormatException e) {
