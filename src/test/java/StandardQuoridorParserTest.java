@@ -133,10 +133,26 @@ public class StandardQuoridorParserTest {
   }
 
   @Test
-  public void parseTest_multipleStringsParsedCorrectly() throws ParserException {
+  public void parseTest_multipleStringsParsedCorrectlyFirstParameterIsCorrect() throws ParserException {
     QuoridorParser parser = new StandardQuoridorParser();
     parser.parse("w 2,3 v");
     parser.parse("Q");
     Assertions.assertEquals(parser.getCommandType().orElseThrow(), CommandType.QUIT);
+  }
+
+  @Test
+  public void parseTest_multipleStringsParsedCorrectlySecondParameterIsCorrect() throws ParserException {
+    QuoridorParser parser = new StandardQuoridorParser();
+    parser.parse("w 2,3 v");
+    parser.parse("Q");
+    Assertions.assertEquals(parser.getActionPosition(), Optional.empty());
+  }
+
+  @Test
+  public void parseTest_multipleStringsParsedCorrectlyThirdParameterIsCorrect() throws ParserException {
+    QuoridorParser parser = new StandardQuoridorParser();
+    parser.parse("w 2,3 v");
+    parser.parse("Q");
+    Assertions.assertEquals(parser.getWallOrientation(), Optional.empty());
   }
 }
