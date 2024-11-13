@@ -108,4 +108,25 @@ public class StandardQuoridorParserTest {
     QuoridorParser parser = new StandardQuoridorParser();
     Assertions.assertThrows(ParserException.class, () -> parser.acceptAndParse(command));
   }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"q 2,3", "Q 9,5 h"})
+  public void acceptAndParseTest_quitCommand_excessiveParametersAreRejected(String command) {
+    QuoridorParser parser = new StandardQuoridorParser();
+    Assertions.assertThrows(ParserException.class, () -> parser.acceptAndParse(command));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"m 4,3 V", "m 7,8 h"})
+  public void acceptAndParseTest_moveCommand_excessiveParametersAreRejected(String command) {
+    QuoridorParser parser = new StandardQuoridorParser();
+    Assertions.assertThrows(ParserException.class, () -> parser.acceptAndParse(command));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"w 3,1 V f", "W 2,8 h 5"})
+  public void acceptAndParseTest_wallCommand_excessiveParametersAreRejected(String command) {
+    QuoridorParser parser = new StandardQuoridorParser();
+    Assertions.assertThrows(ParserException.class, () -> parser.acceptAndParse(command));
+  }
 }

@@ -18,12 +18,17 @@ public class StandardQuoridorParser implements QuoridorParser {
 
     try {
       this.commandType = switch (commandTokens[0]) {
-        case "Q" -> CommandType.QUIT;
+        case "Q" -> {
+          verifyNumberOfParameters(0);
+          yield CommandType.QUIT;
+        }
         case "M" -> {
+          verifyNumberOfParameters(1);
           parseActionPosition(commandTokens[1].split(","));
           yield CommandType.MOVE;
         }
         case "W" -> {
+          verifyNumberOfParameters(2);
           parseActionPosition(commandTokens[1].split(","));
           parseWallOrientation(commandTokens[2]);
           yield CommandType.WALL;
@@ -34,6 +39,11 @@ public class StandardQuoridorParser implements QuoridorParser {
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new ParserException("No command found!");
     }
+  }
+
+  private void verifyNumberOfParameters(int num) throws ParserException {
+    if (commandTokens.length - 1 != num)
+      throw new ParserException("Wrong number of parameters provided for this command!");
   }
 
   @Override
