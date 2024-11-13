@@ -13,7 +13,7 @@ public class StandardQuoridorParser implements QuoridorParser {
   private Position position;
   private WallOrientation wallOrientation;
 
-  public void acceptAndParse(String command) throws ParserException {
+  public void parse(String command) throws ParserException {
     this.commandTokens = command.toUpperCase().split("\\s+");
 
     try {
@@ -40,6 +40,7 @@ public class StandardQuoridorParser implements QuoridorParser {
       throw new ParserException("No command found!");
     }
   }
+
 
   private void verifyNumberOfParameters(int num) throws ParserException {
     if (commandTokens.length - 1 != num)
