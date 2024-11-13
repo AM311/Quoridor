@@ -2,10 +2,16 @@ package it.units.sdm.quoridor.cli.engine;
 
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
+import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.utils.Position;
+
+import java.util.Objects;
+import java.util.Optional;
 
 
 public class CLIGameEngine implements QuoridorGameEngine {
@@ -57,7 +63,7 @@ public class CLIGameEngine implements QuoridorGameEngine {
     printWallsConvention();
 
     String command = inputProvider.nextLine();
-    performCommand(command);
+    performCommand(command, game);
 
     if(game.isGameFinished()) {
       System.out.println(game.getPlayingPawn() + " won!");
@@ -66,8 +72,26 @@ public class CLIGameEngine implements QuoridorGameEngine {
     game.changeRound();
   }
 
-  private void performCommand(String command) {
-    System.out.println("Command " + command + " executed");
+  private void performCommand(String command, AbstractGame game) {
+    boolean commandExecuted = false;
+    while (!commandExecuted) {
+      try {
+        parser.acceptAndParse(command);
+        Optional<Position> targetPosition = parser.getActionPosition();
+        switch (parser.getCommandType().orElse(null)) {
+          case MOVE -> game.movePlayingPawn(targetPosition.orElse(null));
+          case WALL -> game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+          case QUIT -> endGame();
+          case null -> {}
+        }
+        commandExecuted = true;
+        System.out.println("Command executed");
+
+      } catch (InvalidActionException | InvalidParameterException | ParserException e) {
+        System.out.println("Enter a valid command:");
+        command = inputProvider.nextLine();
+      }
+    }
   }
 
   private void printWallsConvention() {
