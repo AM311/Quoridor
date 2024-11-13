@@ -74,6 +74,7 @@ public class StandardQuoridorParserTest {
     parser.parse("q");
     Assertions.assertEquals(Optional.empty(), parser.getWallOrientation());
   }
+
   @ParameterizedTest
   @ValueSource(strings = {"m 5,2", "M 6,1"})
   public void parseTest_moveCommand_wallOrientationIsAbsent(String command) throws ParserException {
@@ -81,6 +82,7 @@ public class StandardQuoridorParserTest {
     parser.parse(command);
     Assertions.assertEquals(Optional.empty(), parser.getWallOrientation());
   }
+
   @ParameterizedTest
   @ValueSource(strings = {"", "  ", "aBCde", "MaySeemAMoveCommand", "wOW"})
   public void parseTest_wrongCommandIsRejected(String command) {
@@ -128,5 +130,13 @@ public class StandardQuoridorParserTest {
   public void parseTest_wallCommand_excessiveParametersAreRejected(String command) {
     QuoridorParser parser = new StandardQuoridorParser();
     Assertions.assertThrows(ParserException.class, () -> parser.parse(command));
+  }
+
+  @Test
+  public void parseTest_multipleStringsParsedCorrectly() throws ParserException {
+    QuoridorParser parser = new StandardQuoridorParser();
+    parser.parse("w 2,3 v");
+    parser.parse("Q");
+    Assertions.assertEquals(parser.getCommandType().orElseThrow(), CommandType.QUIT);
   }
 }

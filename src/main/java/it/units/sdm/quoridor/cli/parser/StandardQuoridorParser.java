@@ -15,6 +15,7 @@ public class StandardQuoridorParser implements QuoridorParser {
 
   public void parse(String command) throws ParserException {
     this.commandTokens = command.toUpperCase().split("\\s+");
+    initializeFieldsToNull();
 
     try {
       this.commandType = switch (commandTokens[0]) {
@@ -41,6 +42,11 @@ public class StandardQuoridorParser implements QuoridorParser {
     }
   }
 
+  private void initializeFieldsToNull() {
+    this.commandType = null;
+    this.position = null;
+    this.wallOrientation = null;
+  }
 
   private void verifyNumberOfParameters(int num) throws ParserException {
     if (commandTokens.length - 1 != num)
