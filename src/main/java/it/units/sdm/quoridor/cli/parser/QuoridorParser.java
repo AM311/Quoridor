@@ -7,7 +7,7 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 import java.util.Optional;
 
 public interface QuoridorParser {
-  void acceptAndParse(String command) throws ParserException;
+  void parse(String command) throws ParserException;
 
   Optional<CommandType> getCommandType();
 
