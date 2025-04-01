@@ -1,12 +1,14 @@
 package it.units.sdm.quoridor.cli.engine;
 
-import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 
-public interface QuoridorGameEngine {
+public abstract class QuoridorGameEngine {
 
-  AbstractGame createGame();
+  AbstractQuoridorBuilder builder;
 
-  void startGame(AbstractGame game);
+  public QuoridorGameEngine(AbstractQuoridorBuilder builder) {
+    this.builder = builder;
+  }
 
-  void endGame();
+  public void startGame() {}
 }
