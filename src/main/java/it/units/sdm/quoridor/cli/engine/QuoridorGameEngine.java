@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.cli.engine;
 
+import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 
 public abstract class QuoridorGameEngine {
@@ -10,5 +11,5 @@ public abstract class QuoridorGameEngine {
     this.builder = builder;
   }
 
-  public void startGame() {}
+  public void startGame() throws BuilderException {}
 }

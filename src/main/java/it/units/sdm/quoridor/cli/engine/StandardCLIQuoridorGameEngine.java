@@ -6,92 +6,89 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 
-import java.util.Objects;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Optional;
 
 
-public class CLIGameEngine implements QuoridorGameEngine {
+public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
-  private final InputProvider inputProvider;
+  private final BufferedReader reader;
   private final QuoridorParser parser;
 
-  private boolean testingMode = false;
-
-  public CLIGameEngine(InputProvider inputProvider, QuoridorParser parser) {
-    this.inputProvider = inputProvider;
+  public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
+    super(builder);
+    this.reader = reader;
     this.parser = parser;
   }
 
-
   @Override
-  public AbstractGame createGame() {
-    System.out.println("Choose number of players (2 or 4): ");
-    AbstractGame game = null;
-    while (game == null) {
-      try {
-        int numPlayers = Integer.parseInt(inputProvider.nextLine());
-        BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numPlayers));
-        game = builderDirector.makeGame();
-      } catch (InvalidParameterException | BuilderException | NumberFormatException e) {
-        System.out.println("Enter a valid number:");
-      }
-    }
-    return game;
-  }
+  public void startGame() throws BuilderException {  // rename to runGame()?
+    AbstractGame game = createGame();
+    System.out.println(game);
 
-  @Override
-  public void startGame(AbstractGame game) {
-    while(true){
+    while (!game.isGameFinished()) {
+      game.changeRound();
       executeRound(game);
-
-      if (testingMode) {
-        break;
-      }
     }
+
+    System.out.println(game.getPlayingPawn() + " won!");
+    endGame();
   }
 
-  @Override
-  public void endGame() {
-    System.out.println("Game over!");
+  private AbstractGame createGame() throws BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(builder);
+
+    return builderDirector.makeGame();
+  }
+
+  private void endGame() {
+    System.exit(0);
   }
 
   private void executeRound(AbstractGame game) {
     printWallsConvention();
-
-    String command = inputProvider.nextLine();
+    System.out.println(parser.toString());
+    System.out.println(game.getPlayingPawn() + "'s round");
+    String command = askCommand();
     performCommand(command, game);
-
-    if(game.isGameFinished()) {
-      System.out.println(game.getPlayingPawn() + " won!");
-      endGame();
-    }
-    game.changeRound();
+    System.out.println(game);
   }
 
   private void performCommand(String command, AbstractGame game) {
     boolean commandExecuted = false;
-    while (!commandExecuted) {
+    do {
       try {
         parser.acceptAndParse(command);
         Optional<Position> targetPosition = parser.getActionPosition();
-        switch (parser.getCommandType().orElse(null)) {
+        switch (parser.getCommandType().orElseThrow()) {
           case MOVE -> game.movePlayingPawn(targetPosition.orElse(null));
           case WALL -> game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
           case QUIT -> endGame();
-          case null -> {}
         }
         commandExecuted = true;
-        System.out.println("Command executed");
+        System.out.println("Command " + command + " executed");
 
       } catch (InvalidActionException | InvalidParameterException | ParserException e) {
+        System.out.println(e.getMessage());
         System.out.println("Enter a valid command:");
-        command = inputProvider.nextLine();
+        command = askCommand();
       }
+    } while (!commandExecuted);
+  }
+
+  private String askCommand() {
+    String command;
+    try {
+      command = String.valueOf(reader.readLine());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+    return command;
   }
 
   private void printWallsConvention() {
@@ -107,9 +104,5 @@ public class CLIGameEngine implements QuoridorGameEngine {
     System.out.println("     + ─── + ─── +        \n");
     System.out.println("           h              \n");
     System.out.println("                          \n");
-  }
-
-  public void enableTestingMode() {
-    this.testingMode = true;
   }
 }

@@ -1,195 +1,112 @@
-import it.units.sdm.quoridor.cli.engine.CLIGameEngine;
-import it.units.sdm.quoridor.cli.engine.CLIInputProvider;
-import it.units.sdm.quoridor.cli.engine.InputProvider;
-import it.units.sdm.quoridor.cli.engine.QuoridorGameEngine;
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractTile;
-import it.units.sdm.quoridor.movemanagement.actions.PawnMover;
-import it.units.sdm.quoridor.utils.Position;
-import it.units.sdm.quoridor.utils.WallOrientation;
+import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StubQuoridorParser;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.Optional;
+import testDoubles.StubStandardCLIQuoridorGameEngine;
+import java.io.*;
 
 public class CLIGameEngineTest {
 
+  QuoridorParser parser = new StubQuoridorParser();
 
-  QuoridorParser parser = new QuoridorParser() {
-    @Override
-    public void acceptAndParse(String command) throws ParserException {
-      if(command.equals("invalid")){
-        throw new ParserException();
-      }
-    }
+  @Test
+  void createdGameIsNotNull() throws InvalidParameterException {
+    String simulatedUserInput = "0";
 
-    @Override
-    public Optional<CommandType> getCommandType() {
-      return Optional.empty();
-    }
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
 
-    @Override
-    public Optional<Position> getActionPosition() {
-      return Optional.empty();
-    }
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    @Override
-    public Optional<WallOrientation> getWallOrientation() {
-      return Optional.empty();
-    }
-  };
+    engine.setLoopStoppedImmediately(true);
+    engine.startGame();
 
-  @ParameterizedTest
-  @ValueSource(ints = {2, 4})
-  void gameCreatedIsNotNull_withValidInput(int numberOfPlayers) {
-    String simulatedUserInput = numberOfPlayers + "\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-
-    InputProvider inputProvider = new CLIInputProvider();
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
-    AbstractGame game = cliGameEngine.createGame();
-
-    Assertions.assertNotNull(game);
-  }
-
-  @ParameterizedTest
-  @ValueSource(ints = {2, 4})
-  void numberOfPlayersIsCoherent_withValidInput(int numberOfPlayers) {
-    String simulatedUserInput = numberOfPlayers + "\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-
-    InputProvider inputProvider = new CLIInputProvider();
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
-    AbstractGame game = cliGameEngine.createGame();
-
-    Assertions.assertEquals(numberOfPlayers, game.getPawns().size());
-  }
-
-  @ParameterizedTest
-  @CsvSource({"5, 2", "1, 2", "3, 4", "5, 4"})
-  void numberOfPlayersIsAskedAgain_withInvalidNumber_thenGameCreated(int invalidNumberOfPlayers, int validNumberOfPlayers) {
-    String simulatedUserInput = invalidNumberOfPlayers + "\n" + validNumberOfPlayers + "\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-
-    InputProvider inputProvider = new CLIInputProvider();
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
-    AbstractGame game = cliGameEngine.createGame();
-
-    Assertions.assertNotNull(game);
-  }
-
-  @ParameterizedTest
-  @CsvSource({"q, 2", "notANumber, 4", "two, 2"})
-  void numberOfPlayersIsAskedAgain_withInvalidInput_thenGameCreated(String input, int validNumberOfPlayers) {
-    String simulatedUserInput = input + "\n" + validNumberOfPlayers + "\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-
-    InputProvider inputProvider = new CLIInputProvider();
-    QuoridorGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
-    AbstractGame game = cliGameEngine.createGame();
-
-    Assertions.assertNotNull(game);
+    Assertions.assertNotNull(engine.getCurrentGame());
   }
 
   @Test
-  void inputCommandIsPerformed() {
-    String simulatedUserInput = "2\nmoveFirstIn1,4\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
+  void movementCommandIsExecuted() throws InvalidParameterException {
+    String simulatedUserInput = "1";
 
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
 
-    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStreamCaptor));
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    InputProvider inputProvider = new CLIInputProvider();
-    CLIGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
+    engine.setLoopStoppedImmediately(true);
+    engine.startGame();
 
-    cliGameEngine.enableTestingMode();
-    AbstractGame game = cliGameEngine.createGame();
-
-    cliGameEngine.startGame(game);
-
-    String output = outputStreamCaptor.toString();
-    Assertions.assertTrue(output.contains("Command executed"));
+    Assertions.assertTrue(engine.isPawnMoved());
   }
 
   @Test
-  void inputCommandAskedAgain_thenIsPerformed() {
-    String simulatedUserInput = "2\ninvalid\nmoveFirstIn1,4\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
+  void wallCommandIsExecuted() throws InvalidParameterException {
+    String simulatedUserInput = "2";
 
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
 
-    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStreamCaptor));
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    InputProvider inputProvider = new CLIInputProvider();
-    CLIGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
+    engine.setLoopStoppedImmediately(true);
+    engine.startGame();
 
-    cliGameEngine.enableTestingMode();
-    AbstractGame game = cliGameEngine.createGame();
-
-    cliGameEngine.startGame(game);
-
-    String output = outputStreamCaptor.toString();
-    Assertions.assertTrue(output.contains("Enter a valid command:"));
+    Assertions.assertTrue(engine.isWallPlaced());
   }
 
 
   @Test
-  void roundIsProperlyChanged() {
-    String simulatedUserInput = "2\nmoveFirstIn1,4\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
+  void quitCommandIsExecuted() throws InvalidParameterException {
+    String simulatedUserInput = "3";
 
-    InputProvider inputProvider = new CLIInputProvider();
-    CLIGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
 
-    cliGameEngine.enableTestingMode();
-    AbstractGame game = cliGameEngine.createGame();
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    cliGameEngine.startGame(game);
+    engine.setLoopStoppedImmediately(true);
+    engine.startGame();
+
+    Assertions.assertTrue(engine.isGameQuit());
+  }
+
+  @Test
+  void turnIsChanged_afterValidCommand() throws InvalidParameterException {
+    String simulatedUserInput = "4";
+
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
+
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+
+    engine.setLoopStoppedAfterOneTurn(true);
+    engine.startGame();
+
+    AbstractGame game = engine.getCurrentGame();
+
+    Assertions.assertEquals(game.getPlayingPawn(), game.getPawns().getFirst());
+  }
+
+
+  @Test
+  void turnIsNotChanged_afterInvalidCommand() throws InvalidParameterException {
+    String simulatedUserInput = "invalid";
+
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
+
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+
+    engine.setLoopStoppedImmediately(true);
+    engine.startGame();
+
+    AbstractGame game = engine.getCurrentGame();
 
     Assertions.assertEquals(game.getPlayingPawn(), game.getPawns().get(1));
-
   }
-
-  @Test
-  void winningPawnProperlyRecognized() throws InvalidParameterException {
-    String simulatedUserInput = "2\nmakeFirstPawnWin\n";
-    System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-
-
-    ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outputStreamCaptor));
-
-    InputProvider inputProvider = new CLIInputProvider();
-    CLIGameEngine cliGameEngine = new CLIGameEngine(inputProvider, parser);
-
-    cliGameEngine.enableTestingMode();
-    AbstractGame game = cliGameEngine.createGame();
-
-    PawnMover pawnMover = new PawnMover();
-    AbstractTile target = game.getGameBoard().getTile(new Position(1,5));
-    pawnMover.execute(game, target);
-
-    while(game.getPawns().getFirst().getCurrentTile().getRow() != 8){
-      pawnMover.execute(game, game.getGameBoard().getTile(new Position(game.getPawns().getFirst().getCurrentTile().getRow() + 1,5)));
-    }
-
-    cliGameEngine.startGame(game);
-
-    String output = outputStreamCaptor.toString();
-    Assertions.assertTrue(output.contains(game.getPawns().getFirst() + " won!"));
-  }
-
-
-
-
 }
