@@ -3,7 +3,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
-import it.units.sdm.quoridor.model.builder.StubQuoridorParser;
+import testDoubles.StubQuoridorParser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

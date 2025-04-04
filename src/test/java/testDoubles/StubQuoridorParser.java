@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.model.builder;
+package testDoubles;
 
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.ParserException;
