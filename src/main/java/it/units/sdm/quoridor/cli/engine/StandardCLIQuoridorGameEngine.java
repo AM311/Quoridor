@@ -27,7 +27,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   @Override
-  public void startGame() throws BuilderException {  // rename to runGame()?
+  public void startGame() throws BuilderException {  // rename to runGame() since it does more than just starting it?
     AbstractGame game = createGame();
     System.out.println(game);
 
@@ -42,7 +42,6 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   private AbstractGame createGame() throws BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(builder);
-
     return builderDirector.makeGame();
   }
 
@@ -53,9 +52,11 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   private void executeRound(AbstractGame game) {
     printWallsConvention();
     System.out.println(parser.toString());
-    System.out.println(game.getPlayingPawn() + "'s round");
+    printGameStatusInfo(game);
+
     String command = askCommand();
     performCommand(command, game);
+
     System.out.println(game);
   }
 
@@ -94,15 +95,22 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   private void printWallsConvention() {
     final String RED_SQUARE = "\u001B[31m■\u001B[0m";
 
-    System.out.println("How walls are placed:");
+    String figure = "How walls are placed:\n\n" +
+            "     +     +     +        \n" +
+            "     |                    \n" +
+            "  v  +     +     +        \n" +
+            "     |  " + RED_SQUARE + "\n" +
+            "     + ─── + ─── +        \n" +
+            "           h              \n" +
+            "                          \n";
 
-    System.out.println("                          \n");
-    System.out.println("     +     +     +        \n");
-    System.out.println("     |                    \n");
-    System.out.println("  v  +     +     +        \n");
-    System.out.println("     |  " + RED_SQUARE + "\n");
-    System.out.println("     + ─── + ─── +        \n");
-    System.out.println("           h              \n");
-    System.out.println("                          \n");
+    System.out.print(figure);
+  }
+
+  private void printGameStatusInfo(AbstractGame game){
+    System.out.println(game.getPlayingPawn() + "'s round");
+    System.out.println("Current Tile: " + game.getPlayingPawn().getCurrentTile().getRow() + ", " + game.getPlayingPawn().getCurrentTile().getColumn());
+    System.out.println("Destination row: " + game.getPlayingPawn().getDestinationTiles().iterator().next().getRow());
+    System.out.println("Make your move:");
   }
 }

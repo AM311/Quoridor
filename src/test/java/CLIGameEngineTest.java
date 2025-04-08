@@ -3,7 +3,6 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
-import it.units.sdm.quoridor.utils.Position;
 import testDoubles.StubQuoridorParser;
 
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +23,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertNotNull(engine.getCurrentGame());
@@ -39,7 +38,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertTrue(engine.isPawnMoved());
@@ -54,7 +53,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertTrue(engine.isWallPlaced());
@@ -70,7 +69,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertTrue(engine.isGameQuit());
@@ -85,7 +84,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedAfterOneTurn(true);
+    engine.setLoopStoppedAfterTwoRounds(true);
     engine.startGame();
 
     AbstractGame game = engine.getCurrentGame();
@@ -103,7 +102,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     AbstractGame game = engine.getCurrentGame();
@@ -120,7 +119,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertTrue(engine.isParserExceptionCaught());
@@ -135,7 +134,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertTrue(engine.isInvalidParameterExceptionCaught());
@@ -150,7 +149,7 @@ public class CLIGameEngineTest {
 
     StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.startGame();
 
     Assertions.assertTrue(engine.isInvalidActionExceptionCaught());

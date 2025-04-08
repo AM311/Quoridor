@@ -25,8 +25,8 @@ public class StubStandardCLIQuoridorGameEngine {
   private boolean isGameQuit;
   private boolean isGameEnded;
   private AbstractGame currentGame;
-  private boolean isLoopStoppedImmediately;
-  private boolean isLoopStoppedAfterOneTurn;
+  private boolean isLoopStoppedAfterOneRound;
+  private boolean isLoopStoppedAfterTwoRounds;
   private int loopCounter;
   private boolean isInvalidParameterExceptionCaught;
   private boolean isParserExceptionCaught;
@@ -57,11 +57,11 @@ public class StubStandardCLIQuoridorGameEngine {
         AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
         currentGame.getPlayingPawn().move(destinationTile);
       }
-      if (isLoopStoppedAfterOneTurn && loopCounter == 1) {
+      if (isLoopStoppedAfterTwoRounds && loopCounter == 1) {
         break;
       }
       executeRound(game);
-      if (isLoopStoppedImmediately) {
+      if (isLoopStoppedAfterOneRound) {
         break;
       }
       loopCounter++;
@@ -148,12 +148,12 @@ public class StubStandardCLIQuoridorGameEngine {
     return currentGame;
   }
 
-  public void setLoopStoppedImmediately(boolean loopStoppedImmediately) {
-    isLoopStoppedImmediately = loopStoppedImmediately;
+  public void setLoopStoppedAfterOneRound(boolean loopStoppedAfterOneRound) {
+    isLoopStoppedAfterOneRound = loopStoppedAfterOneRound;
   }
 
-  public void setLoopStoppedAfterOneTurn(boolean loopStoppedAfterOneTurn) {
-    isLoopStoppedAfterOneTurn = loopStoppedAfterOneTurn;
+  public void setLoopStoppedAfterTwoRounds(boolean loopStoppedAfterTwoRounds) {
+    isLoopStoppedAfterTwoRounds = loopStoppedAfterTwoRounds;
   }
 
   public boolean isInvalidParameterExceptionCaught() {
