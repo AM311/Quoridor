@@ -6,6 +6,7 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.utils.Position;
@@ -22,10 +23,16 @@ public class StubStandardCLIQuoridorGameEngine {
   private boolean isPawnMoved;
   private boolean isWallPlaced;
   private boolean isGameQuit;
+  private boolean isGameEnded;
   private AbstractGame currentGame;
   private boolean isLoopStoppedImmediately;
   private boolean isLoopStoppedAfterOneTurn;
-  private int loopCounter = 0;
+  private int loopCounter;
+  private boolean isInvalidParameterExceptionCaught;
+  private boolean isParserExceptionCaught;
+  private boolean isInvalidActionExceptionCaught;
+  private boolean pawn0HasToWin;
+  private boolean pawn1HasToWin;
 
   public StubStandardCLIQuoridorGameEngine(Reader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
@@ -33,18 +40,28 @@ public class StubStandardCLIQuoridorGameEngine {
     this.builder = builder;
   }
 
-  public void startGame() {
+  public void startGame() throws InvalidParameterException {
     AbstractGame game = createGame();
     currentGame = game;
-    System.out.println(game);
 
     while (!game.isGameFinished()) {
       game.changeRound();
+
+      if (pawn0HasToWin && loopCounter == 1) {
+        Position destinationTilePosition = new Position(8, 5);
+        AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
+        currentGame.getPlayingPawn().move(destinationTile);
+      }
+      if (pawn1HasToWin && loopCounter == 0) {
+        Position destinationTilePosition = new Position(0, 5);
+        AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
+        currentGame.getPlayingPawn().move(destinationTile);
+      }
       if (isLoopStoppedAfterOneTurn && loopCounter == 1) {
         break;
       }
       executeRound(game);
-      if(isLoopStoppedImmediately) {
+      if (isLoopStoppedImmediately) {
         break;
       }
       loopCounter++;
@@ -52,7 +69,8 @@ public class StubStandardCLIQuoridorGameEngine {
     endGame();
   }
 
-  private void endGame(){
+  private void endGame() {
+    isGameEnded = true;
   }
 
   private AbstractGame createGame() {
@@ -101,7 +119,14 @@ public class StubStandardCLIQuoridorGameEngine {
         }
         commandExecuted = true;
 
-      } catch (ParserException | InvalidParameterException | InvalidActionException e) {
+      } catch (ParserException e) {
+        isParserExceptionCaught = true;
+        break;
+      } catch (InvalidParameterException e) {
+        isInvalidParameterExceptionCaught = true;
+        break;
+      } catch (InvalidActionException e) {
+        isInvalidActionExceptionCaught = true;
         break;
       }
     } while (!commandExecuted);
@@ -129,6 +154,30 @@ public class StubStandardCLIQuoridorGameEngine {
 
   public void setLoopStoppedAfterOneTurn(boolean loopStoppedAfterOneTurn) {
     isLoopStoppedAfterOneTurn = loopStoppedAfterOneTurn;
+  }
+
+  public boolean isInvalidParameterExceptionCaught() {
+    return isInvalidParameterExceptionCaught;
+  }
+
+  public boolean isParserExceptionCaught() {
+    return isParserExceptionCaught;
+  }
+
+  public boolean isInvalidActionExceptionCaught() {
+    return isInvalidActionExceptionCaught;
+  }
+
+  public void setPawn0HasToWin(boolean pawn0HasToWin) {
+    this.pawn0HasToWin = pawn0HasToWin;
+  }
+
+  public void setPawn1HasToWin(boolean pawn1HasToWin) {
+    this.pawn1HasToWin = pawn1HasToWin;
+  }
+
+  public boolean isGameEnded() {
+    return isGameEnded;
   }
 }
 
