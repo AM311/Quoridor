@@ -5,11 +5,11 @@ import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 
 public abstract class QuoridorGameEngine {
 
-  AbstractQuoridorBuilder builder;
+  protected AbstractQuoridorBuilder builder;
 
   public QuoridorGameEngine(AbstractQuoridorBuilder builder) {
     this.builder = builder;
   }
 
-  public void startGame() throws BuilderException {}
+  public abstract void runGame() throws BuilderException;
 }

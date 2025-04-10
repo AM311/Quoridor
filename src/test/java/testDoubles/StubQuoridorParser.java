@@ -1,8 +1,6 @@
 package testDoubles;
 
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
-import it.units.sdm.quoridor.exceptions.InvalidActionException;
-import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
@@ -22,11 +20,11 @@ public class StubQuoridorParser implements QuoridorParser {
     switch (command) {
       case "0"-> {
         this.commandType = MOVE;
-        this.position = new Position(8, 5);
+        this.position = new Position(1, 5);
       }
       case "1" -> {
         this.commandType = MOVE;
-        this.position = new Position(7, 4);
+        this.position = new Position(1, 4);
       }
       case "2" -> {
         this.commandType = CommandType.WALL;
@@ -38,7 +36,7 @@ public class StubQuoridorParser implements QuoridorParser {
       }
       case "4" -> {
         this.commandType = MOVE;
-        this.position = new Position(8, 3);
+        this.position = new Position(0, 3);
       }
       case "5" ->{
         this.commandType = MOVE;

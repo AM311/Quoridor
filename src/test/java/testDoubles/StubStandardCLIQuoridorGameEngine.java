@@ -40,19 +40,17 @@ public class StubStandardCLIQuoridorGameEngine {
     this.builder = builder;
   }
 
-  public void startGame() throws InvalidParameterException {
+  public void runGame() throws InvalidParameterException, BuilderException {
     AbstractGame game = createGame();
     currentGame = game;
 
     while (!game.isGameFinished()) {
-      game.changeRound();
-
-      if (pawn0HasToWin && loopCounter == 1) {
+      if (pawn0HasToWin && loopCounter == 0) {
         Position destinationTilePosition = new Position(8, 5);
         AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
         currentGame.getPlayingPawn().move(destinationTile);
       }
-      if (pawn1HasToWin && loopCounter == 0) {
+      if (pawn1HasToWin && loopCounter == 1) {
         Position destinationTilePosition = new Position(0, 5);
         AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
         currentGame.getPlayingPawn().move(destinationTile);
@@ -64,6 +62,9 @@ public class StubStandardCLIQuoridorGameEngine {
       if (isLoopStoppedAfterOneRound) {
         break;
       }
+      if (!game.isGameFinished()) {
+        game.changeRound();
+      }
       loopCounter++;
     }
     endGame();
@@ -73,52 +74,25 @@ public class StubStandardCLIQuoridorGameEngine {
     isGameEnded = true;
   }
 
-  private AbstractGame createGame() {
+  private AbstractGame createGame() throws BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(builder);
-    try {
-      return builderDirector.makeGame();
-    } catch (BuilderException e) {
-      throw new RuntimeException(e);
-    }
+    return builderDirector.makeGame();
   }
 
   private void executeRound(AbstractGame game) {
-    String command = askCommand();
-    performCommand(command, game);
+    performInputCommand(game);
   }
 
-  private String askCommand() {
+  private void performInputCommand(AbstractGame game) {
     String command;
-    try {
-      command = String.valueOf((char) reader.read());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    return command;
-  }
-
-  private void performCommand(String command, AbstractGame game) {
     boolean commandExecuted = false;
     do {
       try {
-        parser.acceptAndParse(command);
-        Optional<Position> targetPosition = parser.getActionPosition();
-        switch (parser.getCommandType().orElseThrow()) {
-          case MOVE -> {
-            isPawnMoved = true;
-            game.movePlayingPawn(targetPosition.orElse(null));
-          }
-          case WALL -> {
-            isWallPlaced = true;
-            game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
-          }
-          case QUIT -> {
-            isGameQuit = true;
-            endGame();
-          }
-        }
+        command = askCommand();
+        performCommand(command, game);
         commandExecuted = true;
-
+      } catch (IOException e) {
+        break;
       } catch (ParserException e) {
         isParserExceptionCaught = true;
         break;
@@ -130,6 +104,29 @@ public class StubStandardCLIQuoridorGameEngine {
         break;
       }
     } while (!commandExecuted);
+  }
+
+  private void performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+    parser.acceptAndParse(command);
+    Optional<Position> targetPosition = parser.getActionPosition();
+    switch (parser.getCommandType().orElseThrow()) {
+      case MOVE -> {
+        isPawnMoved = true;
+        game.movePlayingPawn(targetPosition.orElse(null));
+      }
+      case WALL -> {
+        isWallPlaced = true;
+        game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+      }
+      case QUIT -> {
+        isGameQuit = true;
+        endGame();
+      }
+    }
+  }
+
+  private String askCommand() throws IOException {
+    return String.valueOf((char) reader.read());
   }
 
   public boolean isPawnMoved() {
