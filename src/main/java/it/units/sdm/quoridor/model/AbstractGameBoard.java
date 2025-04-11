@@ -80,5 +80,61 @@ public abstract class AbstractGameBoard implements Cloneable {
   public abstract AbstractTile getLandingTile(AbstractTile tile, StraightDirection direction) throws OutOfGameBoardException;
 
   public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;
+
+  public String toString(){
+    String gameBoardString = "";
+
+    // Clean screen
+    gameBoardString += "\n".repeat(20);
+  
+    int sideLength = gameBoard.getSideLength();
+    AbstractTile[][] gameState = gameBoard.getGameState();
+  
+    // upper numbers
+    gameBoardString += "      ";
+    for (int i = 0; i < sideLength; i++) {
+      gameBoardString += i + "     ";
+    }
+    gameBoardString += "\n";
+  
+    // upper edge
+    gameBoardString += "   *";
+    for (int i = 0; i < sideLength; i++) {
+      gameBoardString += "-----*";
+    }
+    gameBoardString += "\n";
+  
+    // row by row
+    for (int row = 0; row < sideLength; row++) {
+      gameBoardString += row + "  |";
+      for (int col = 0; col < sideLength; col++) {
+        AbstractTile currentTile = gameState[row][col];
+        String content = currentTile.isOccupiedBy().isPresent() ? currentTile.isOccupiedBy().get().toString() : "     ";
+        gameBoardString += content;
+        gameBoardString += currentTile.isThereAWallOrEdge(RIGHT) ? "|" : " ";
+      }
+      gameBoardString += "\n";
+  
+      // row of horizontal walls, except the last one
+      if (row < sideLength - 1) {
+        gameBoardString += "   *";
+        for (int col = 0; col < sideLength - 1; col++) {
+          gameBoardString += gameState[row][col].isThereAWallOrEdge(DOWN) ? "-----" : "     ";
+          gameBoardString += "+";
+        }
+        gameBoardString += gameState[row][sideLength - 1].isThereAWallOrEdge(DOWN) ? "-----" : "     ";
+        gameBoardString += "*\n";
+      }
+    }
+  
+    // lower edge
+    gameBoardString += "   *";
+    for (int i = 0; i < sideLength - 1; i++) {
+      gameBoardString += "-----*";
+    }
+    gameBoardString += "-----*\n";
+  
+    return gameBoardString;
+  }
 }
 
