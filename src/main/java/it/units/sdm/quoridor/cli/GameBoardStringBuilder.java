@@ -1,3 +1,4 @@
+
 package it.units.sdm.quoridor.cli;
 
 import it.units.sdm.quoridor.model.AbstractGameBoard;
@@ -9,73 +10,65 @@ import static it.units.sdm.quoridor.utils.directions.StraightDirection.RIGHT;
 
 public class GameBoardStringBuilder {
 
-
-
   public static String createGameBoardString(AbstractGameBoard gameBoard) {
-    String gameBoardString = "";
+    StringBuilder gameBoardString = new StringBuilder();
 
-    gameBoardString += "\n".repeat(20);
+    gameBoardString.append("\n".repeat(20));
 
-    gameBoardString += appendTopBorderString(gameBoard);
-    gameBoardString += appendCellRowsString(gameBoard);
-    gameBoardString += appendBottomBorderString(gameBoard);
+    appendTopBorderString(gameBoard, gameBoardString);
+    appendCellRowsString(gameBoard, gameBoardString);
+    appendBottomBorderString(gameBoard, gameBoardString);
 
-    return gameBoardString;
+    return gameBoardString.toString();
   }
 
-  private static String appendTopBorderString(AbstractGameBoard gameBoard) {
+  private static void appendTopBorderString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
     int sideLength = gameBoard.getSideLength();
-    String result = appendTopNumbersString(sideLength);
-    result += "   *" + "-----*".repeat(Math.max(0, sideLength)) + "\n";
-    return result;
+    appendTopNumbersString(sideLength, gameBoardString);
+
+    gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength))).append("\n");
   }
 
-  private static String appendTopNumbersString(int sideLength) {
-    String result = "      ";
+
+  private static void appendTopNumbersString(int sideLength, StringBuilder gameBoardString) {
+    gameBoardString.append("      ");
+
     for (int i = 0; i < sideLength; i++) {
-      result += i + "     ";
+      gameBoardString.append(i).append("     ");
     }
-    result += "\n";
-    return result;
+    gameBoardString.append("\n");
   }
 
-  private static String appendCellRowsString(AbstractGameBoard gameBoard) {
-    String result = "";
+
+  private static void appendCellRowsString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
     int sideLength = gameBoard.getSideLength();
     AbstractTile[][] gameState = gameBoard.getGameState();
 
     for (int row = 0; row < sideLength; row++) {
-      result += row + "  |";
+      gameBoardString.append(row).append("  |");
 
       for (int col = 0; col < sideLength; col++) {
         AbstractTile currentTile = gameState[row][col];
-        String content = currentTile.isOccupiedBy().isPresent()
-                ? currentTile.isOccupiedBy().get().toString()
-                : "     ";
-        result += content;
-        result += currentTile.isThereAWallOrEdge(RIGHT) ? "|" : " ";
+
+        gameBoardString.append(currentTile.isOccupiedBy().isPresent() ? currentTile.isOccupiedBy().get() : "     ")
+                .append(currentTile.isThereAWallOrEdge(RIGHT) ? "|" : " ");
       }
-      result += "\n";
+      gameBoardString.append("\n");
 
       if (row < sideLength - 1) {
-        result += "   *";
+        gameBoardString.append("   *");
         for (int col = 0; col < sideLength - 1; col++) {
-          result += gameState[row][col].isThereAWallOrEdge(DOWN) ? "-----" : "     ";
-          result += "+";
+          gameBoardString.append(gameState[row][col].isThereAWallOrEdge(DOWN) ? "-----" : "     ").append("+");
         }
-        result += gameState[row][sideLength - 1].isThereAWallOrEdge(DOWN) ? "-----" : "     ";
-        result += "*\n";
+        gameBoardString.append(gameState[row][sideLength - 1].isThereAWallOrEdge(DOWN) ? "-----" : "     ").append("*").append("\n");
       }
     }
-
-    return result;
   }
 
-  private static String appendBottomBorderString(AbstractGameBoard gameBoard) {
+
+  private static void appendBottomBorderString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
     int sideLength = gameBoard.getSideLength();
-    return "   *" + "-----*".repeat(Math.max(0, sideLength - 1)) + "-----*\n";
+    gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength - 1))).append("-----*").append("\n");
   }
-
-
 
 }
