@@ -14,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Optional;
 
-
 public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   private final BufferedReader reader;
@@ -81,7 +80,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private void performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
-    parser.acceptAndParse(command);
+    parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
     switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> game.movePlayingPawn(targetPosition.orElse(null));

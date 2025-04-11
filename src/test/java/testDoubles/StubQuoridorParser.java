@@ -16,7 +16,7 @@ public class StubQuoridorParser implements QuoridorParser {
   WallOrientation wallOrientation;
 
   @Override
-  public void acceptAndParse(String command) throws ParserException {
+  public void parse(String command) throws ParserException {
     switch (command) {
       case "0"-> {
         this.commandType = MOVE;

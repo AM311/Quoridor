@@ -107,7 +107,7 @@ public class StubStandardCLIQuoridorGameEngine {
   }
 
   private void performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
-    parser.acceptAndParse(command);
+    parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
     switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
