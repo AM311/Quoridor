@@ -7,6 +7,7 @@ import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 import it.units.sdm.quoridor.utils.directions.Direction;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
+import static it.units.sdm.quoridor.cli.GameBoardStringBuilder.createGameBoardString;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -80,5 +81,9 @@ public abstract class AbstractGameBoard implements Cloneable {
   public abstract AbstractTile getLandingTile(AbstractTile tile, StraightDirection direction) throws OutOfGameBoardException;
 
   public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;
+
+  public String toString(){
+    return createGameBoardString(this);
+  }
 }
 

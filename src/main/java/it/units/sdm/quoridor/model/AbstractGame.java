@@ -4,7 +4,9 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
+import static it.units.sdm.quoridor.cli.GameStringBuilder.createGameString;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,8 +59,16 @@ public abstract class AbstractGame implements Cloneable {
   public AbstractGame clone() throws CloneNotSupportedException {
     AbstractGame clonedGame = (AbstractGame) super.clone();
     clonedGame.gameBoard = gameBoard.clone();
-    clonedGame.pawns = List.copyOf(pawns);
+    clonedGame.pawns = new ArrayList<>();
+    for(AbstractPawn pawn : pawns){
+      clonedGame.pawns.add(pawn.clone());
+    }
 
     return clonedGame;
   }
+  public String toString(){
+    return createGameString(this);
+  }
+
+    
 }
