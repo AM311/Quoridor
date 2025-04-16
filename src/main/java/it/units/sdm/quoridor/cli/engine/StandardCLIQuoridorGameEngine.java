@@ -8,6 +8,7 @@ import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
+import it.units.sdm.quoridor.utils.Color;
 import it.units.sdm.quoridor.utils.Position;
 
 import java.io.BufferedReader;
@@ -95,14 +96,14 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private void printWallsConvention() {
-    final String RED_SQUARE = "\u001B[31m■\u001B[0m";
+    final String SQUARE = Color.MAGENTA.getAnsiEscapeCode() + "     " + "\u001B[0m";
 
     String figure = "How walls are placed:\n\n" +
             "     +     +     +        \n" +
             "     |                    \n" +
             "  v  +     +     +        \n" +
-            "     |  " + RED_SQUARE + "\n" +
-            "     + ─── + ─── +        \n" +
+            "     |" + SQUARE + "\n" +
+            "     +-----+-----+        \n" +
             "           h              \n" +
             "                          \n";
 
