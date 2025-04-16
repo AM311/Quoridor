@@ -34,6 +34,10 @@ public class StandardQuoridorParser implements QuoridorParser {
           parseWallOrientation(commandTokens[2]);
           yield CommandType.WALL;
         }
+        case "H" -> {
+          verifyNumberOfParameters(0);
+          yield CommandType.HELP;
+        }
 
         default -> throw new ParserException("Unexpected value for Action Type: " + commandTokens[0]);
       };
@@ -91,7 +95,7 @@ public class StandardQuoridorParser implements QuoridorParser {
     };
   }
 
-  public String toString(){
+  public String toString() {
     return """
             The expected format of your commands is the following: \r
             1) if you want to move your pawn in the cell of coordinates (r,c) insert "m r,c" \r

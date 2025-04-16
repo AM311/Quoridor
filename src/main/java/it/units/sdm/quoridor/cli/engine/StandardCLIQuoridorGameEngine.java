@@ -30,7 +30,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     AbstractGame game = createGame();
     System.out.println(game);
     printWallsConvention();
-    System.out.println(parser.toString());
+    System.out.println(parser);
 
     while (!game.isGameFinished()) {
       executeRound(game);
@@ -86,6 +86,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       case MOVE -> game.movePlayingPawn(targetPosition.orElse(null));
       case WALL -> game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
       case QUIT -> endGame();
+      case HELP -> System.out.println(parser);
     }
   }
 
