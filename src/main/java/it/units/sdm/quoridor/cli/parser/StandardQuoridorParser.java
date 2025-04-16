@@ -97,10 +97,12 @@ public class StandardQuoridorParser implements QuoridorParser {
 
   public String toString() {
     return """
-            The expected format of your commands is the following: \r
-            1) if you want to move your pawn in the cell of coordinates (r,c) insert "m r,c" \r
-            2) if you want to place an horizontal wall near the cell of coordinates (r,c) insert "w r,c h"\r
-            3) if you want to place a vertical wall near the cell of coordinates (r,c) insert "w r,c v"\r
-            4) if you want to quit the game insert "q\"""";
+            Command format:
+            1) "m r,c" => move the pawn in the cell (r,c)
+            2) "w r,c h" => place an horizontal wall near the cell (r,c)
+            3) "w r,c v" => place a vertical wall near the cell (r,c)
+            4) "h" => obtain information about the commands' format
+            5) "q" =>  quit the game
+            """;
   }
 }
