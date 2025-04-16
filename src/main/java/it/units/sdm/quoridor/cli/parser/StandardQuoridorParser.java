@@ -97,6 +97,7 @@ public class StandardQuoridorParser implements QuoridorParser {
 
   public String toString() {
     return """
+            
             Command format:
             1) "m r,c" => move the pawn in the cell (r,c)
             2) "w r,c h" => place an horizontal wall near the cell (r,c)

@@ -32,6 +32,13 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     printWallsConvention();
     System.out.println(parser);
 
+    System.out.println("Press ENTER to start the game...");
+    try {
+      reader.readLine();
+    } catch (IOException e) {
+      System.err.println("Error reading input: " + e.getMessage());
+    }
+
     while (!game.isGameFinished()) {
       System.out.println(game);
       executeRound(game);
