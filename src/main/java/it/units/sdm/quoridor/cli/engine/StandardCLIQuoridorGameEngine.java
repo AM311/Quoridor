@@ -27,14 +27,13 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   @Override
-  public void runGame() throws BuilderException {  // rename to runGame() since it does more than just starting it?
+  public void runGame() throws BuilderException {
     AbstractGame game = createGame();
-    System.out.println(game);
     printWallsConvention();
     System.out.println(parser);
 
     while (!game.isGameFinished()) {
-
+      System.out.println(game);
       executeRound(game);
 
       if (!game.isGameFinished()) {
@@ -42,7 +41,8 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       }
     }
 
-    System.out.println(game.getPlayingPawn() + " has won!");
+    System.out.print(game);
+    System.out.print(game.getPlayingPawn() + " has won!");
     endGame();
   }
 
@@ -56,9 +56,8 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private void executeRound(AbstractGame game) {
-    System.out.print("Make your move:");
+    System.out.print("Make your move: ");
     performInputCommand(game);
-    System.out.println(game);
   }
 
   private void performInputCommand(AbstractGame game) {
