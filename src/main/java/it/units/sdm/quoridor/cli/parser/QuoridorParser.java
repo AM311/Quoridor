@@ -15,6 +15,8 @@ public interface QuoridorParser {
 
   Optional<WallOrientation> getWallOrientation();
 
+  String toString();
+
   enum CommandType {
     QUIT, MOVE, WALL
   }

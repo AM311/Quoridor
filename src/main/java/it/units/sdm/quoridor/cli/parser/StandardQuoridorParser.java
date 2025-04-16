@@ -90,4 +90,13 @@ public class StandardQuoridorParser implements QuoridorParser {
       default -> throw new ParserException("Unrecognized wall orientation: " + wallOrientation);
     };
   }
+
+  public String toString(){
+    return """
+            The expected format of your commands is the following: \r
+            1) if you want to move your pawn in the cell of coordinates (r,c) insert "m r,c" \r
+            2) if you want to place an horizontal wall near the cell of coordinates (r,c) insert "w r,c h"\r
+            3) if you want to place a vertical wall near the cell of coordinates (r,c) insert "w r,c v"\r
+            4) if you want to quit the game insert "q\"""";
+  }
 }
