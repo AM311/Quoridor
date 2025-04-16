@@ -4,6 +4,8 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import testDoubles.StubQuoridorParser;
 
 import org.junit.jupiter.api.Assertions;
@@ -199,5 +201,50 @@ public class CLIGameEngineTest {
     engine.runGame();
 
     Assertions.assertEquals(engine.getCurrentGame().getPlayingPawn(), engine.getCurrentGame().getPawns().get(1));
+  }
+
+  @Test
+  void helpCommandIsExecuted() throws InvalidParameterException, BuilderException{
+    String simulatedUserInput = "9";
+
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
+
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isHelpAsked());
+  }
+
+  @Test
+  void commandExecutedIsFalse_afterHelpCommand() throws InvalidParameterException, BuilderException {
+    String simulatedUserInput = "9";
+
+    Reader reader = new StringReader(simulatedUserInput);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
+
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.runGame();
+
+    Assertions.assertFalse(engine.isCommandExecuted());
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"1", "2", "3"})
+  void commandExecutedIsTrue_afterActualCommand(String input) throws InvalidParameterException, BuilderException {
+
+    Reader reader = new StringReader(input);
+    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
+
+    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isCommandExecuted());
   }
 }

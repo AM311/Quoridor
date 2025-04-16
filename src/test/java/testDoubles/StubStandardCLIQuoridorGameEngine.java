@@ -33,6 +33,8 @@ public class StubStandardCLIQuoridorGameEngine {
   private boolean isInvalidActionExceptionCaught;
   private boolean pawn0HasToWin;
   private boolean pawn1HasToWin;
+  private boolean isHelpAsked;
+  private boolean isCommandExecuted;
 
   public StubStandardCLIQuoridorGameEngine(Reader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
@@ -65,6 +67,7 @@ public class StubStandardCLIQuoridorGameEngine {
       if (!game.isGameFinished()) {
         game.changeRound();
       }
+
       loopCounter++;
     }
     endGame();
@@ -85,12 +88,15 @@ public class StubStandardCLIQuoridorGameEngine {
 
   private void performInputCommand(AbstractGame game) {
     String command;
-    boolean commandExecuted = false;
+    boolean commandExecuted;
     do {
       try {
         command = askCommand();
-        performCommand(command, game);
-        commandExecuted = true;
+        commandExecuted = performCommand(command, game);
+        isCommandExecuted = commandExecuted;
+        if(isHelpAsked){
+          break;
+        }
       } catch (IOException e) {
         break;
       } catch (ParserException e) {
@@ -106,23 +112,30 @@ public class StubStandardCLIQuoridorGameEngine {
     } while (!commandExecuted);
   }
 
-  private void performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+  private boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
-    switch (parser.getCommandType().orElseThrow()) {
+    return switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
         isPawnMoved = true;
         game.movePlayingPawn(targetPosition.orElse(null));
+        yield true;
       }
       case WALL -> {
         isWallPlaced = true;
         game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        yield true;
       }
       case QUIT -> {
         isGameQuit = true;
         endGame();
+        yield true;
       }
-    }
+      case HELP -> {
+        isHelpAsked = true;
+        yield false;
+      }
+    };
   }
 
   private String askCommand() throws IOException {
@@ -175,6 +188,14 @@ public class StubStandardCLIQuoridorGameEngine {
 
   public boolean isGameEnded() {
     return isGameEnded;
+  }
+
+  public boolean isHelpAsked() {
+    return isHelpAsked;
+  }
+
+  public boolean isCommandExecuted() {
+    return isCommandExecuted;
   }
 }
 

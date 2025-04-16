@@ -67,9 +67,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     do {
       try {
         command = askCommand();
-        performCommand(command, game);
-        commandExecuted = true;
-        System.out.println("Command " + command + " executed");
+        commandExecuted = performCommand(command, game);
       } catch (IOException e) {
         System.err.println("Error reading input: " + e.getMessage());
         System.out.println("Please try entering your command again:");
@@ -80,15 +78,27 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     } while (!commandExecuted);
   }
 
-  private void performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+  private boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
-    switch (parser.getCommandType().orElseThrow()) {
-      case MOVE -> game.movePlayingPawn(targetPosition.orElse(null));
-      case WALL -> game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
-      case QUIT -> endGame();
-      case HELP -> System.out.println(parser);
-    }
+    return switch (parser.getCommandType().orElseThrow()) {
+      case MOVE -> {
+        game.movePlayingPawn(targetPosition.orElse(null));
+        yield true;
+      }
+      case WALL -> {
+        game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        yield true;
+      }
+      case QUIT -> {
+        endGame();
+        yield true;
+      }
+      case HELP -> {
+        System.out.println(parser);
+        yield false;
+      }
+    };
   }
 
   private String askCommand() throws IOException {

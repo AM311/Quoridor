@@ -7,6 +7,7 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.util.Optional;
 
+import static it.units.sdm.quoridor.cli.parser.QuoridorParser.CommandType.HELP;
 import static it.units.sdm.quoridor.cli.parser.QuoridorParser.CommandType.MOVE;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 
@@ -52,6 +53,9 @@ public class StubQuoridorParser implements QuoridorParser {
       case "8" ->{
         this.commandType = MOVE;
         this.position = new Position(4, 4);
+      }
+      case "9" -> {
+        this.commandType = HELP;
       }
     };
   }
