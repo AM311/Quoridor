@@ -33,6 +33,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.println(parser);
 
     while (!game.isGameFinished()) {
+
       executeRound(game);
 
       if (!game.isGameFinished()) {
@@ -54,8 +55,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private void executeRound(AbstractGame game) {
-    System.out.println(game.getPlayingPawn() + "'s round");
-    System.out.println("Make your move:");
+    System.out.print("Make your move:");
     performInputCommand(game);
     System.out.println(game);
   }

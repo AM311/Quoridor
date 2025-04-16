@@ -9,7 +9,7 @@ public class GameStringBuilder {
 
   public static String createGameString(AbstractGame game) {
     StringBuilder gameString = new StringBuilder(game.getGameBoard().toString());
-    gameString.append("\n\n").append(game.getPlayingPawn()).append("'s turn").append("\n\n");
+    gameString.append("\n\n").append(game.getPlayingPawn()).append("'s round").append("\n\n");
     appendRemainingWallsInfoString(game, gameString);
 
     gameString.append("\n".repeat(3));
