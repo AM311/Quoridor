@@ -49,7 +49,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     }
 
     System.out.print(game);
-    System.out.print(game.getPlayingPawn() + " has won!");
+    System.out.println(game.getPlayingPawn() + " has won!");
     endGame();
   }
 
