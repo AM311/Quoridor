@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record PawnAppearance(Color color) {
-  private static final List<Color> defaultColors = List.of(Color.RED, Color.BLUE, Color.GREEN, Color.WHITE);
+  public static final String RESET_STRING = "\u001B[0m";
+  private static final List<Color> defaultColors = List.of(Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA);
 
   public static List<PawnAppearance> getDefaultPawnStyles() {
     return defaultColors.stream().map(PawnAppearance::new)
@@ -15,8 +16,7 @@ public record PawnAppearance(Color color) {
 
   @Override
   public String toString() {
-    String RESET = "\u001B[0m";
-    return color.getAnsiEscapeCode() + "     " + RESET;
+    return " " + color.getAnsiEscapeCode() + "   " + RESET_STRING + " ";
   }
 }
 
