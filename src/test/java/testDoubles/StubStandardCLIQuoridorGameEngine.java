@@ -11,13 +11,14 @@ import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.utils.Position;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Optional;
 
 public class StubStandardCLIQuoridorGameEngine {
 
-  private final Reader reader;
+  private final BufferedReader reader;
   private final QuoridorParser parser;
   private final AbstractQuoridorBuilder builder;
   private boolean isPawnMoved;
@@ -36,7 +37,7 @@ public class StubStandardCLIQuoridorGameEngine {
   private boolean isHelpAsked;
   private boolean isCommandExecuted;
 
-  public StubStandardCLIQuoridorGameEngine(Reader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
+  public StubStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
     this.parser = parser;
     this.builder = builder;
@@ -139,7 +140,7 @@ public class StubStandardCLIQuoridorGameEngine {
   }
 
   private String askCommand() throws IOException {
-    return String.valueOf((char) reader.read());
+    return String.valueOf(reader.readLine());
   }
 
   public boolean isPawnMoved() {

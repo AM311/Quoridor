@@ -4,6 +4,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import testDoubles.StubQuoridorParser;
@@ -11,20 +12,28 @@ import testDoubles.StubQuoridorParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import testDoubles.StubStandardCLIQuoridorGameEngine;
+
 import java.io.*;
 
 public class CLIGameEngineTest {
 
-  QuoridorParser parser = new StubQuoridorParser();
+  QuoridorParser parser;
+  AbstractQuoridorBuilder builder;
+
+  @BeforeEach
+  void setUp() throws InvalidParameterException {
+    parser = new StubQuoridorParser();
+    builder = new StdQuoridorBuilder(2);
+  }
+
+  private StubStandardCLIQuoridorGameEngine createEngineWithInput(String input) {
+    BufferedReader reader = new BufferedReader(new StringReader(input));
+    return new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+  }
 
   @Test
   void createdGameIsNotNull() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "0";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("0");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -34,12 +43,7 @@ public class CLIGameEngineTest {
 
   @Test
   void movementCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "1";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -49,12 +53,7 @@ public class CLIGameEngineTest {
 
   @Test
   void wallCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "2";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("2");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -62,15 +61,9 @@ public class CLIGameEngineTest {
     Assertions.assertTrue(engine.isWallPlaced());
   }
 
-
   @Test
   void quitCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "3";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("3");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -80,12 +73,7 @@ public class CLIGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidCommand() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "4";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("4");
 
     engine.setLoopStoppedAfterTwoRounds(true);
     engine.runGame();
@@ -98,12 +86,7 @@ public class CLIGameEngineTest {
 
   @Test
   void turnHasNotChanged_afterInvalidCommand() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "5";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("5");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -115,12 +98,7 @@ public class CLIGameEngineTest {
 
   @Test
   void parserExceptionIsCaught() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "6";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("6");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -130,12 +108,7 @@ public class CLIGameEngineTest {
 
   @Test
   void invalidParameterExceptionIsCaught() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "7";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("7");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -145,12 +118,7 @@ public class CLIGameEngineTest {
 
   @Test
   void invalidActionExceptionIsCaught() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "8";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("8");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -160,12 +128,7 @@ public class CLIGameEngineTest {
 
   @Test
   void gameEndedAfterWin() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "1";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setPawn0HasToWin(true);
     engine.runGame();
@@ -175,12 +138,7 @@ public class CLIGameEngineTest {
 
   @Test
   void pawn0CorrectlyWins() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "1";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setPawn0HasToWin(true);
     engine.runGame();
@@ -190,12 +148,7 @@ public class CLIGameEngineTest {
 
   @Test
   void pawn1CorrectlyWins() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "1";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setPawn1HasToWin(true);
     engine.runGame();
@@ -204,13 +157,8 @@ public class CLIGameEngineTest {
   }
 
   @Test
-  void helpCommandIsExecuted() throws InvalidParameterException, BuilderException{
-    String simulatedUserInput = "9";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+  void helpCommandIsExecuted() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("9");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -220,12 +168,7 @@ public class CLIGameEngineTest {
 
   @Test
   void commandExecutedIsFalse_afterHelpCommand() throws InvalidParameterException, BuilderException {
-    String simulatedUserInput = "9";
-
-    Reader reader = new StringReader(simulatedUserInput);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("9");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -236,11 +179,7 @@ public class CLIGameEngineTest {
   @ParameterizedTest
   @ValueSource(strings = {"1", "2", "3"})
   void commandExecutedIsTrue_afterActualCommand(String input) throws InvalidParameterException, BuilderException {
-
-    Reader reader = new StringReader(input);
-    AbstractQuoridorBuilder builder = new StdQuoridorBuilder(2);
-
-    StubStandardCLIQuoridorGameEngine engine = new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput(input);
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
