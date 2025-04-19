@@ -38,6 +38,10 @@ public class StandardQuoridorParser implements QuoridorParser {
           verifyNumberOfParameters(0);
           yield CommandType.HELP;
         }
+        case "R" -> {
+          verifyNumberOfParameters(0);
+          yield CommandType.RESTART;
+        }
 
         default -> throw new ParserException("Unexpected value for Action Type: " + commandTokens[0]);
       };

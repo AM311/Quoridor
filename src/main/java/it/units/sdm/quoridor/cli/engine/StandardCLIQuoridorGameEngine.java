@@ -45,7 +45,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.print(game);
     System.out.println(game.getPlayingPawn() + " has won!");
 
-    endGame();
+    handleEndGame();
   }
 
   private AbstractGame createGame() throws BuilderException {
@@ -72,6 +72,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
     do {
       try {
+        System.out.print("\nMake your move: ");
         String command = askCommand();
         commandExecuted = performCommand(command, game);
       } catch (IOException e) {
@@ -83,8 +84,25 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     } while (!commandExecuted);
   }
 
-  private void endGame() {
-    System.exit(0);
+  private void handleEndGame() {
+    try {
+      System.out.println("\n----------------------------\n");
+      System.out.println("Quit (q) or restart (r)?");
+      String command = askCommand();
+      parser.parse(command);
+
+      switch (parser.getCommandType().orElseThrow()) {
+        case QUIT -> System.exit(0);
+        case RESTART -> runGame();
+      }
+    } catch (IOException e) {
+      System.err.println("Error reading input: " + e.getMessage());
+      System.out.println("Please try entering your command again:");
+      handleEndGame();
+    } catch (ParserException | BuilderException e) {
+      System.err.println(e.getMessage());
+      handleEndGame();
+    }
   }
 
   private void printWallsConvention() {
@@ -103,7 +121,6 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private String askCommand() throws IOException {
-    System.out.print("\nMake your move: ");
     return String.valueOf(reader.readLine());
   }
 
@@ -121,12 +138,16 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
         yield true;
       }
       case QUIT -> {
-        endGame();
+        handleEndGame();
         yield true;
       }
       case HELP -> {
         printWallsConvention();
         System.out.println(parser);
+        yield false;
+      }
+      case RESTART -> {
+        System.out.println("Restart command is only available after quitting the current game.");
         yield false;
       }
     };
