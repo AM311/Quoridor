@@ -63,26 +63,38 @@ public class StatisticsCounter {
 
   public String generateStatisticsReport(AbstractGame game) {
     StringBuilder report = new StringBuilder();
-    report.append("\n===== LAST GAME STATISTICS =====\n");
-    for (int i = 0; i < game.getPawns().size(); i++) {
-      String pawn = String.valueOf(game.getPawns().get(i));
-      report.append("Player ").append(i + 1).append(" (").append(pawn).append("):\n");
-      report.append("  Moves Made: ").append(getGameMoves(pawn)).append("\n");
-      report.append("  Walls Placed: ").append(getGameWalls(pawn)).append("\n\n");
-    }
-
-
-    report.append("\n===== GLOBAL STATISTICS =====\n");
-    report.append("Total Games Played: ").append(totalGamesPlayed).append("\n\n");
+    report.append("\n============ LAST GAME STATISTICS ============\n");
+    report.append("-".repeat(46)).append("\n");
+    report.append(String.format("%-16s | %-10s | %-12s |\n", "Player", "Moves Made", "Walls Placed"));
+    report.append("-".repeat(46)).append("\n");
 
     for (int i = 0; i < game.getPawns().size(); i++) {
       String pawn = String.valueOf(game.getPawns().get(i));
-      report.append("Player ").append(i + 1).append(" (").append(pawn).append("):\n");
-      report.append("  Wins: ").append(getTotalWins(pawn)).append("\n");
-      report.append("  Win Rate: ").append(String.format("%.1f%%", getWinRate(pawn))).append("\n");
-      report.append("  Total Moves Made: ").append(getTotalMoves(pawn)).append("\n");
-      report.append("  Total Walls Placed: ").append(getTotalWalls(pawn)).append("\n\n");
+      String playerLabel = "Player " + (i + 1) + " (" + pawn + ")";
+      report.append(String.format("%-15s | %-10d | %-12d |\n",
+              playerLabel, getGameMoves(pawn), getGameWalls(pawn)));
     }
+    report.append("-".repeat(46)).append("\n");
+
+    report.append("\nTotal Games Played: ").append(totalGamesPlayed).append("\n");
+
+    report.append("\n======================== GLOBAL STATISTICS ========================\n");
+    report.append("-".repeat(67)).append("\n");
+    report.append(String.format("%-16s | %-5s | %-8s | %-12s | %-12s |\n",
+            "Player", "Wins", "Win Rate", "Total Moves", "Total Walls"));
+    report.append("-".repeat(67)).append("\n");
+
+    for (int i = 0; i < game.getPawns().size(); i++) {
+      String pawn = String.valueOf(game.getPawns().get(i));
+      String playerLabel = "Player " + (i + 1) + " (" + pawn + ")";
+      report.append(String.format("%-15s | %-5d | %-8s | %-12d | %-12d |\n",
+              playerLabel,
+              getTotalWins(pawn),
+              String.format("%.1f%%", getWinRate(pawn)),
+              getTotalMoves(pawn),
+              getTotalWalls(pawn)));
+    }
+    report.append("-".repeat(67)).append("\n");
 
     return report.toString();
   }

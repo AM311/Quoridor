@@ -33,7 +33,6 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   @Override
   public void runGame() throws BuilderException {
     AbstractGame game = createGame();
-
     printInitialInformation();
 
     while (!game.isGameFinished()) {
@@ -45,11 +44,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       }
     }
 
-    statisticsCounter.updateAllTotalStats(game);
-    System.out.print(game);
-    System.out.println(game.getPlayingPawn() + " has won!");
-    System.out.println(statisticsCounter.generateStatisticsReport(game));
-    statisticsCounter.resetGameStats();
+    printEndGameInformation(game);
     handleEndGame();
   }
 
@@ -72,6 +67,15 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     }
   }
 
+  private void printEndGameInformation(AbstractGame game) {
+    statisticsCounter.updateAllTotalStats(game);
+    System.out.print(game);
+    System.out.println(generateSeparator());
+    System.out.println(game.getPlayingPawn() + " has won!");
+    System.out.println(statisticsCounter.generateStatisticsReport(game));
+    statisticsCounter.resetGameStats();
+  }
+
   private void executeRound(AbstractGame game) {
     boolean commandExecuted = false;
 
@@ -91,7 +95,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   private void handleEndGame() {
     try {
-      System.out.println("\n----------------------------\n");
+      System.out.println(generateSeparator());
       System.out.println("Quit (q) or restart (r)?");
       String command = askCommand();
       parser.parse(command);
@@ -159,6 +163,10 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
         yield false;
       }
     };
+  }
+
+  private String generateSeparator(){
+    return "-".repeat(67) + "\n";
   }
 
 }
