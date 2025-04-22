@@ -45,6 +45,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     }
 
     printEndGameInformation(game);
+    statisticsCounter.resetGameStats();
     handleEndGame();
   }
 
@@ -73,7 +74,6 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.println(generateSeparator());
     System.out.println(game.getPlayingPawn() + " has won!");
     System.out.println(statisticsCounter.generateStatisticsReport(game));
-    statisticsCounter.resetGameStats();
   }
 
   private void executeRound(AbstractGame game) {
@@ -166,7 +166,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private String generateSeparator(){
-    return "-".repeat(67) + "\n";
+    return "\n" + "-".repeat(27) + "\n";
   }
 
 }
