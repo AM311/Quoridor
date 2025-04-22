@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.cli.engine;
 
+import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
@@ -20,11 +21,13 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   private final BufferedReader reader;
   private final QuoridorParser parser;
+  private final StatisticsCounter statisticsCounter;
 
-  public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
+  public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
     super(builder);
     this.reader = reader;
     this.parser = parser;
+    this.statisticsCounter = statisticsCounter;
   }
 
   @Override
@@ -42,9 +45,11 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       }
     }
 
+    statisticsCounter.updateAllTotalStats(game);
     System.out.print(game);
     System.out.println(game.getPlayingPawn() + " has won!");
-
+    System.out.println(statisticsCounter.generateStatisticsReport(game));
+    statisticsCounter.resetGameStats();
     handleEndGame();
   }
 
@@ -131,10 +136,13 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     return switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
         game.movePlayingPawn(targetPosition.orElse(null));
+
+        statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
       case WALL -> {
         game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
       case QUIT -> {
@@ -152,4 +160,5 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       }
     };
   }
+
 }
