@@ -18,6 +18,6 @@ public interface QuoridorParser {
   String toString();
 
   enum CommandType {
-    QUIT, MOVE, WALL, HELP
+    QUIT, MOVE, WALL, HELP, RESTART
   }
 }

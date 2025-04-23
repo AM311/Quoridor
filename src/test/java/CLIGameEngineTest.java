@@ -186,4 +186,24 @@ public class CLIGameEngineTest {
 
     Assertions.assertTrue(engine.isCommandExecuted());
   }
+
+  @Test
+  void gameIsCompletelyQuit() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("3");
+
+    engine.setLoopStoppedImmediately(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameCompletelyQuit());
+  }
+
+  @Test
+  void gameIsRestarted() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("10");
+
+    engine.setLoopStoppedImmediately(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameRestarted());
+  }
 }

@@ -13,7 +13,6 @@ import it.units.sdm.quoridor.utils.Position;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Optional;
 
 public class StubStandardCLIQuoridorGameEngine {
@@ -36,6 +35,9 @@ public class StubStandardCLIQuoridorGameEngine {
   private boolean pawn1HasToWin;
   private boolean isHelpAsked;
   private boolean isCommandExecuted;
+  private boolean isGameCompletelyQuit;
+  private boolean isLoopStoppedImmediately;
+  private boolean isGameRestarted;
 
   public StubStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
@@ -48,6 +50,9 @@ public class StubStandardCLIQuoridorGameEngine {
     currentGame = game;
 
     while (!game.isGameFinished()) {
+      if(isLoopStoppedImmediately){
+        break;
+      }
       if (pawn0HasToWin && loopCounter == 0) {
         Position destinationTilePosition = new Position(8, 5);
         AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
@@ -71,11 +76,25 @@ public class StubStandardCLIQuoridorGameEngine {
 
       loopCounter++;
     }
-    endGame();
+    handleEndGame();
   }
 
-  private void endGame() {
+  private void handleEndGame() {
     isGameEnded = true;
+    try {
+      String command = askCommand();
+      parser.parse(command);
+
+      switch (parser.getCommandType().orElseThrow()) {
+        case QUIT -> isGameCompletelyQuit = true;
+        case RESTART -> isGameRestarted = true;
+      }
+    } catch (IOException e) {
+      handleEndGame();
+    } catch (ParserException e) {
+      System.err.println(e.getMessage());
+      handleEndGame();
+    }
   }
 
   private AbstractGame createGame() throws BuilderException {
@@ -129,11 +148,15 @@ public class StubStandardCLIQuoridorGameEngine {
       }
       case QUIT -> {
         isGameQuit = true;
-        endGame();
+        handleEndGame();
         yield true;
       }
       case HELP -> {
         isHelpAsked = true;
+        yield false;
+      }
+      case RESTART -> {
+        System.out.println("Restart command is only available after quitting the current game.");
         yield false;
       }
     };
@@ -197,6 +220,18 @@ public class StubStandardCLIQuoridorGameEngine {
 
   public boolean isCommandExecuted() {
     return isCommandExecuted;
+  }
+
+  public boolean isGameCompletelyQuit() {
+    return isGameCompletelyQuit;
+  }
+
+  public boolean isGameRestarted() {
+    return isGameRestarted;
+  }
+
+  public void setLoopStoppedImmediately(boolean loopStoppedImmediately) {
+    isLoopStoppedImmediately = loopStoppedImmediately;
   }
 }
 
