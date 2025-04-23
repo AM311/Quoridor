@@ -24,7 +24,7 @@ public abstract class AbstractTile implements Cloneable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(position, links);
+    return Objects.hash(position);
   }
 
   @Override
@@ -33,7 +33,7 @@ public abstract class AbstractTile implements Cloneable {
       return true;
     if (!(o instanceof Tile tile))
       return false;
-    return Objects.equals(position, tile.position) && Objects.equals(isOccupiedBy(), tile.isOccupiedBy()) && Objects.equals(links, tile.links);
+    return Objects.equals(position, tile.position);
   }
 
   @Override

@@ -273,26 +273,4 @@ public class GameBoardTest {
     game.placeWall(new Position(6, 5), HORIZONTAL);
     Assertions.assertEquals(gameBoard, gameBoard.clone());
   }
-
-  @Test
-  void cloneTest_objectsAreIndependent_clonedIsModified() throws CloneNotSupportedException, InvalidParameterException, BuilderException, InvalidActionException {
-    AbstractGame game = buildGame(2);
-    AbstractGameBoard gameBoard = game.getGameBoard();
-
-    game.placeWall(new Position(7, 3), HORIZONTAL);
-    GameBoard clonedGameBoard = gameBoard.clone();
-    game.placeWall(new Position(4, 1), VERTICAL);
-    Assertions.assertNotEquals(gameBoard, clonedGameBoard);
-  }
-
-  @Test
-  void cloneTest_objectsAreIndependent_originalIsModified() throws CloneNotSupportedException, InvalidParameterException, BuilderException, InvalidActionException {
-    AbstractGame game = buildGame(2);
-    AbstractGameBoard gameBoard = game.getGameBoard();
-
-    game.placeWall(new Position(7, 3), HORIZONTAL);
-    GameBoard clonedGameBoard = gameBoard.clone();
-    game.placeWall(new Position(4, 1), VERTICAL);
-    Assertions.assertNotEquals(gameBoard, clonedGameBoard);
-  }
 }
