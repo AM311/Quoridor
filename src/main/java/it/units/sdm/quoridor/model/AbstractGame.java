@@ -25,6 +25,10 @@ public abstract class AbstractGame implements Cloneable {
     return List.copyOf(pawns);
   }
 
+  public int getPlayingPawnIndex() {
+    return playingPawn;
+  }
+
   public AbstractGameBoard getGameBoard() {
     return gameBoard;
   }
