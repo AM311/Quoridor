@@ -55,7 +55,6 @@ public class GameBoardPanel extends JPanel {
     String[] pawnColors = new String[game.getPawns().size()];
     for (int i = 0; i < pawnColors.length; i++) {
       pawnColors[i] = game.getPawns().get(i).getPawnAppearance().color().toString();
-      System.out.println(pawnColors[i]);
     }
     return pawnColors;
   }

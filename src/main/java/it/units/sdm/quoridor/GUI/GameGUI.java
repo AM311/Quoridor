@@ -1,8 +1,11 @@
 package it.units.sdm.quoridor.GUI;
 
+import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.model.builder.BuilderDirector;
+import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -13,11 +16,8 @@ import java.util.Map;
 
 public class GameGUI implements GameEventListener {
 
-  private static final Color BACKGROUND_COLOR = Color.DARK_GRAY;
-  private static final Color TEXT_COLOR = Color.ORANGE;
-
   private final int numberOfPlayers;
-  private final AbstractGame game;
+  private AbstractGame game;
   private GameBoardPanel gameBoardPanel;
   private JFrame mainFrame;
 
@@ -40,8 +40,9 @@ public class GameGUI implements GameEventListener {
     JPanel rootPanel = createRootPanel();
     mainFrame.setContentPane(rootPanel);
     mainFrame.setVisible(true);
-  }
 
+    showHelpDialog();
+  }
 
   private JPanel createRootPanel() {
     JPanel rootPanel = new JPanel(new GridBagLayout());
@@ -51,13 +52,13 @@ public class GameGUI implements GameEventListener {
     gbc.weighty = 1;
 
     JPanel leftPanel = new JPanel(new GridBagLayout());
-    leftPanel.setBackground(BACKGROUND_COLOR);
+    leftPanel.setBackground(Color.DARK_GRAY);
     gbc.gridx = 0;
     gbc.weightx = 3.5;
     rootPanel.add(leftPanel, gbc);
 
     JPanel centerWrapper = new JPanel(new GameBoardPanelLayoutManager());
-    centerWrapper.setBackground(BACKGROUND_COLOR);
+    centerWrapper.setBackground(Color.DARK_GRAY);
     gbc.gridx = 1;
     gbc.weightx = 9;
     rootPanel.add(centerWrapper, gbc);
@@ -68,7 +69,7 @@ public class GameGUI implements GameEventListener {
     centerWrapper.add(gameBoardPanel);
 
     JPanel rightPanel = new JPanel(new GridBagLayout());
-    rightPanel.setBackground(BACKGROUND_COLOR);
+    rightPanel.setBackground(Color.DARK_GRAY);
     gbc.gridx = 2;
     gbc.weightx = 3.5;
     rootPanel.add(rightPanel, gbc);
@@ -128,15 +129,15 @@ public class GameGUI implements GameEventListener {
   private JPanel createPlayerPanel(String playerName, int wallCount, int playerIndex) {
     JPanel playerPanel = new JPanel();
     playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
-    playerPanel.setBackground(BACKGROUND_COLOR);
+    playerPanel.setBackground(Color.DARK_GRAY);
 
     JLabel nameLabel = new JLabel(playerName, SwingConstants.CENTER);
-    nameLabel.setForeground(TEXT_COLOR);
+    nameLabel.setForeground(Color.ORANGE);
     nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JLabel wallsLabel = new JLabel("Remaining walls: " + wallCount, SwingConstants.CENTER);
-    wallsLabel.setForeground(TEXT_COLOR);
+    wallsLabel.setForeground(Color.ORANGE);
     wallsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
     wallsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -160,14 +161,14 @@ public class GameGUI implements GameEventListener {
 
     currentActionPanel = new JPanel();
     currentActionPanel.setLayout(new BoxLayout(currentActionPanel, BoxLayout.Y_AXIS));
-    currentActionPanel.setBackground(BACKGROUND_COLOR);
+    currentActionPanel.setBackground(Color.DARK_GRAY);
     currentActionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel actionButtonsPanel = createActionButtonsPanel(playerIndex);
-    addButton(playerIndex, actionButtonsPanel);
+    addActionButtonsPanel(playerIndex, actionButtonsPanel);
   }
 
-  private void addButton(int playerIndex, JPanel actionButtonsPanel) {
+  private void addActionButtonsPanel(int playerIndex, JPanel actionButtonsPanel) {
     currentActionPanel.add(actionButtonsPanel);
     currentActionPanel.add(Box.createVerticalStrut(10));
 
@@ -179,10 +180,9 @@ public class GameGUI implements GameEventListener {
     playerPanels[playerIndex].repaint();
   }
 
-
   private JPanel createActionButtonsPanel(int playerIndex) {
     JPanel actionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    actionButtonsPanel.setBackground(BACKGROUND_COLOR);
+    actionButtonsPanel.setBackground(Color.DARK_GRAY);
 
     JButton moveButton = new JButton("Move");
     moveButton.addActionListener(e -> {
@@ -195,14 +195,6 @@ public class GameGUI implements GameEventListener {
       }
     });
 
-    JButton placeWallButton = getPlaceWallButton(playerIndex, moveButton);
-
-    actionButtonsPanel.add(moveButton);
-    actionButtonsPanel.add(placeWallButton);
-    return actionButtonsPanel;
-  }
-
-  private JButton getPlaceWallButton(int playerIndex, JButton moveButton) {
     JButton placeWallButton = new JButton("Place Wall");
     placeWallButton.addActionListener(e -> {
       gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
@@ -211,33 +203,31 @@ public class GameGUI implements GameEventListener {
       if (game.getPlayingPawn().getNumberOfWalls() > 0) {
         showWallDirectionButtons(playerIndex);
       } else {
-        JOptionPane.showMessageDialog(mainFrame,
-                "No walls available!",
-                "Warning",
-                JOptionPane.WARNING_MESSAGE);
+        showNotification("No walls available!", playerIndex);
       }
 
     });
-    return placeWallButton;
-  }
 
+    actionButtonsPanel.add(moveButton);
+    actionButtonsPanel.add(placeWallButton);
+    return actionButtonsPanel;
+  }
 
   private void showWallDirectionButtons(int playerIndex) {
     playerPanels[playerIndex].remove(currentActionPanel);
 
     currentActionPanel = new JPanel();
     currentActionPanel.setLayout(new BoxLayout(currentActionPanel, BoxLayout.Y_AXIS));
-    currentActionPanel.setBackground(BACKGROUND_COLOR);
+    currentActionPanel.setBackground(Color.DARK_GRAY);
     currentActionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel directionButtonsPanel = createWallDirectionButtonsPanel(playerIndex);
-    addButton(playerIndex, directionButtonsPanel);
+    addActionButtonsPanel(playerIndex, directionButtonsPanel);
   }
-
 
   private JPanel createWallDirectionButtonsPanel(int playerIndex) {
     JPanel directionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    directionButtonsPanel.setBackground(BACKGROUND_COLOR);
+    directionButtonsPanel.setBackground(Color.DARK_GRAY);
 
     JButton verticalButton = new JButton("Vertical");
     verticalButton.addActionListener(e -> {
@@ -268,7 +258,7 @@ public class GameGUI implements GameEventListener {
 
   private JPanel createHelpQuitPanel() {
     JPanel helpQuitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    helpQuitPanel.setBackground(BACKGROUND_COLOR);
+    helpQuitPanel.setBackground(Color.DARK_GRAY);
 
     JButton helpButton = new JButton("Help");
     helpButton.addActionListener(e -> showHelpDialog());
@@ -279,19 +269,6 @@ public class GameGUI implements GameEventListener {
     helpQuitPanel.add(helpButton);
     helpQuitPanel.add(quitButton);
     return helpQuitPanel;
-  }
-
-  private void confirmQuit() {
-    int choice = JOptionPane.showConfirmDialog(mainFrame,
-            "Are you sure you want to quit?",
-            "Confirmation",
-            JOptionPane.YES_NO_OPTION);
-
-    if (choice == JOptionPane.YES_OPTION && numberOfPlayers == 2) {
-      showGameFinishedDialog(1 - game.getPlayingPawnIndex());
-    } else if (choice == JOptionPane.YES_OPTION) {
-      System.exit(0);
-    }
   }
 
 
@@ -331,7 +308,7 @@ public class GameGUI implements GameEventListener {
     );
   }
 
-  private static JPanel getVisualPanel() {
+  private JPanel getVisualPanel() {
     JPanel visualPanel = new JPanel(new GridLayout(2, 2, 0, 0));
     visualPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     visualPanel.setMaximumSize(new Dimension(200, 200));
@@ -374,8 +351,7 @@ public class GameGUI implements GameEventListener {
     return visualPanel;
   }
 
-
-  private static JLabel getWallConventionLabel() {
+  private JLabel getWallConventionLabel() {
     JLabel explanationLabel = new JLabel(
             "<html><div style='width: 300px; text-align: left;'>" +
                     "The chosen tile is in the bottom-left.<br>" +
@@ -390,7 +366,7 @@ public class GameGUI implements GameEventListener {
     return explanationLabel;
   }
 
-  private static JLabel getInstructionsLabel() {
+  private JLabel getInstructionsLabel() {
     JLabel instructionsLabel = new JLabel(
             "<html><div style='width: 300px; text-align: left;'>" +
                     "<h3>How to play Quoridor:</h3>" +
@@ -405,6 +381,91 @@ public class GameGUI implements GameEventListener {
     return instructionsLabel;
   }
 
+  private void confirmQuit() {
+    int choice = JOptionPane.showConfirmDialog(mainFrame,
+            "Are you sure you want to quit?",
+            "Confirmation",
+            JOptionPane.YES_NO_OPTION);
+
+    if (choice == JOptionPane.YES_OPTION) {
+      showGameFinishedDialog(1 - game.getPlayingPawnIndex());
+    }
+  }
+
+
+  protected void showNotification(String message, int playerIndex) {
+    JDialog popup = new JDialog(mainFrame);
+    popup.setUndecorated(true);
+    popup.setSize(310, 150);
+
+    if (playerIndex == 0 || playerIndex == 2) {
+      popup.setLocation(30, 350);
+    } else {
+      popup.setLocation(1180, 350);
+    }
+
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+    panel.setBackground(Color.WHITE);
+
+    JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
+    messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    messageLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+    messageLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    panel.add(messageLabel, BorderLayout.CENTER);
+
+    popup.add(panel);
+    popup.setVisible(true);
+
+    Timer timer = new Timer(3000, e -> popup.dispose());
+    timer.setRepeats(false);
+    timer.start();
+  }
+
+  private void showGameFinishedDialog(int winnerIndex) {
+    JDialog popup = new JDialog(mainFrame, true);
+    popup.setUndecorated(true);
+    popup.setSize(400, 200);
+    popup.setLocationRelativeTo(mainFrame);
+    popup.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+    panel.setBackground(Color.GREEN);
+
+    JLabel messageLabel = new JLabel("<html>" +
+            (numberOfPlayers == 2 || game.isGameFinished() ? "Player " + (winnerIndex + 1) + " WINS<br><br>" : "") +
+            "Restart the game?<br><br></html>",
+            SwingConstants.CENTER);
+    messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    messageLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+    messageLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
+    panel.add(messageLabel, BorderLayout.NORTH);
+
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+    buttonPanel.setBackground(Color.GREEN);
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
+
+    JButton restartButton = new JButton("RESTART");
+    restartButton.setFont(new Font("Arial", Font.BOLD, 16));
+    restartButton.setPreferredSize(new Dimension(120, 40));
+    restartButton.addActionListener(e -> {
+      popup.dispose();
+      restartGame();
+    });
+
+    JButton exitButton = new JButton("EXIT");
+    exitButton.setFont(new Font("Arial", Font.BOLD, 16));
+    exitButton.setPreferredSize(new Dimension(120, 40));
+    exitButton.addActionListener(e -> System.exit(0));
+
+    buttonPanel.add(restartButton);
+    buttonPanel.add(exitButton);
+    panel.add(buttonPanel, BorderLayout.CENTER);
+
+    popup.add(panel);
+    popup.setVisible(true);
+  }
 
 
   private void showErrorDialog(String message) {
@@ -414,15 +475,20 @@ public class GameGUI implements GameEventListener {
             JOptionPane.ERROR_MESSAGE);
   }
 
+  private void restartGame() {
+    if (mainFrame != null) {
+      mainFrame.dispose();
+    }
 
-  private void showGameFinishedDialog(int winnerIndex) {
-    JOptionPane.showMessageDialog(mainFrame,
-            "Player " + (winnerIndex + 1) + " wins!",
-            "Game Over",
-            JOptionPane.INFORMATION_MESSAGE);
-    System.exit(0);
+    try {
+      BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numberOfPlayers));
+      this.game = builderDirector.makeGame();
+
+      showGUI();
+    } catch (InvalidParameterException | BuilderException e) {
+      showErrorDialog("Error restarting game: " + e.getMessage());
+    }
   }
-
 
 
   @Override
@@ -433,21 +499,16 @@ public class GameGUI implements GameEventListener {
   @Override
   public void onInvalidWallPlacement(Position position, WallOrientation orientation) {
     String orientationStr = orientation.toString().toLowerCase();
-    String message = "Cannot place " + orientationStr + " wall at " +
-            position.row() + "," + position.column();
-    JOptionPane.showMessageDialog(mainFrame,
-            message,
-            "Invalid Wall Placement",
-            JOptionPane.WARNING_MESSAGE);
+    String article = orientation.equals(WallOrientation.HORIZONTAL) ? "an " : "a ";
+    String message = "Can't place " + article + orientationStr + " wall at "
+            + (position.row() + 1) + "," + (position.column() + 1);
+    showNotification(message, game.getPlayingPawnIndex());
   }
 
   @Override
   public void onInvalidMove(Position position) {
-    String message = "Cannot move to " + position.row() + "," + position.column();
-    JOptionPane.showMessageDialog(mainFrame,
-            message,
-            "Invalid Move",
-            JOptionPane.WARNING_MESSAGE);
+    String message = "Can't move to " + (position.row() + 1) + "," + (position.column() + 1);
+    showNotification(message, game.getPlayingPawnIndex());
   }
 
   @Override
