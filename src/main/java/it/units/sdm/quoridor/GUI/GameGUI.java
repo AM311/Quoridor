@@ -382,14 +382,47 @@ public class GameGUI implements GameEventListener {
   }
 
   private void confirmQuit() {
-    int choice = JOptionPane.showConfirmDialog(mainFrame,
-            "Are you sure you want to quit?",
-            "Confirmation",
-            JOptionPane.YES_NO_OPTION);
+    JDialog popup = new JDialog(mainFrame, true);
+    popup.setUndecorated(true);
+    popup.setSize(400, 200);
+    popup.setLocationRelativeTo(mainFrame);
+    popup.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-    if (choice == JOptionPane.YES_OPTION) {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(GUIConstants.POPUP_BORDER);
+    panel.setBackground(GUIConstants.BACKGROUND_COLOR);
+
+    JLabel messageLabel = new JLabel("<html>Are you sure you want to quit?<br><br></html>",
+            SwingConstants.CENTER);
+    messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    messageLabel.setFont(GUIConstants.NORMAL_FONT);
+    messageLabel.setForeground(GUIConstants.TEXT_COLOR);
+    messageLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
+    panel.add(messageLabel, BorderLayout.NORTH);
+
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+    buttonPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
+
+    JButton yesButton = new JButton("YES");
+    yesButton.setFont(GUIConstants.BUTTON_FONT);
+    yesButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
+    yesButton.addActionListener(e -> {
+      popup.dispose();
       showGameFinishedDialog(1 - game.getPlayingPawnIndex());
-    }
+    });
+
+    JButton noButton = new JButton("NO");
+    noButton.setFont(GUIConstants.BUTTON_FONT);
+    noButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
+    noButton.addActionListener(e -> popup.dispose());
+
+    buttonPanel.add(yesButton);
+    buttonPanel.add(noButton);
+    panel.add(buttonPanel, BorderLayout.CENTER);
+
+    popup.add(panel);
+    popup.setVisible(true);
   }
 
 
