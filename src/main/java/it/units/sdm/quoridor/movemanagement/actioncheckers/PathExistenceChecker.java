@@ -14,16 +14,18 @@ import static it.units.sdm.quoridor.model.AbstractTile.LinkState.WALL;
 
 public class PathExistenceChecker implements ActionChecker<Wall> {
   @Override
-  public boolean isValidAction(AbstractGame game, Wall wall) {
+  public CheckResult isValidAction(AbstractGame game, Wall wall) {
     AbstractGame dummyGame = buildDummyGame(game);
 
     try {
       dummyGame.placeWall(new Position(wall.startingTile().getRow(), wall.startingTile().getColumn()), wall.orientation());
     } catch (InvalidActionException | InvalidParameterException e) {
-      return false;
+      return CheckResult.INVALID_WALL_POSITION;
     }
-
-    return executeDijkstraAlgorithm(dummyGame);
+    if (executeDijkstraAlgorithm(dummyGame)) {
+      return CheckResult.OKAY;
+    }
+    return CheckResult.BLOCKING_WALL;
   }
 
   private AbstractGame buildDummyGame(AbstractGame game) {
