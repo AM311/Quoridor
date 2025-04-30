@@ -102,12 +102,13 @@ public class GameGUI implements GameEventListener {
     gbc.anchor = GridBagConstraints.NORTH;
 
     AbstractPawn[] pawns = game.getPawns().toArray(new AbstractPawn[0]);
+    String[] pawnColors = gameBoardPanel.getPawnColors();
 
     gbc.gridy = 0;
     gbc.weighty = 0.2;
-    leftPanel.add(createPlayerPanel("Player 1 (RED)", pawns[0].getNumberOfWalls(), 0), gbc);
+    leftPanel.add(createPlayerPanel("Player 1 (" + pawnColors[0] + ")", pawns[0].getNumberOfWalls(), 0), gbc);
 
-    rightPanel.add(createPlayerPanel("Player 2 (BLUE)", pawns[1].getNumberOfWalls(), 1), gbc);
+    rightPanel.add(createPlayerPanel("Player 2 (" + pawnColors[1] + ")", pawns[1].getNumberOfWalls(), 1), gbc);
 
     if (numberOfPlayers == 4) {
       gbc.gridy = 1;
@@ -118,9 +119,9 @@ public class GameGUI implements GameEventListener {
       gbc.gridy = 2;
       gbc.weighty = 0.4;
       gbc.anchor = GridBagConstraints.CENTER;
-      leftPanel.add(createPlayerPanel("Player 3 (GREEN)", pawns[2].getNumberOfWalls(), 2), gbc);
+      leftPanel.add(createPlayerPanel("Player 3 (" + pawnColors[2] + ")", pawns[2].getNumberOfWalls(), 2), gbc);
 
-      rightPanel.add(createPlayerPanel("Player 4 (MAGENTA)", pawns[3].getNumberOfWalls(), 3), gbc);
+      rightPanel.add(createPlayerPanel("Player 4 (" + pawnColors[3] + ")", pawns[3].getNumberOfWalls(), 3), gbc);
     }
   }
 

@@ -28,8 +28,8 @@ public class GameBoardPanel extends JPanel {
   private static final int ICON_SIZE = 50;
   private static final Color HIGHLIGHT_COLOR = Color.LIGHT_GRAY;
   private static final Color WALL_COLOR = Color.BLACK;
-  private static final String[] PAWN_COLORS = {"red", "blue", "green", "magenta"};
 
+  private final String[] PAWN_COLORS;
   private final JButton[][] tiles;
   private final AbstractGame game;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
@@ -41,6 +41,7 @@ public class GameBoardPanel extends JPanel {
 
   public GameBoardPanel(AbstractGame game, GameEventListener eventListener, Position... pawnPositions) {
     this.game = game;
+    this.PAWN_COLORS = getPawnColors();
     this.eventListener = eventListener;
     this.pawnIcons = loadPawnIcons(pawnPositions.length);
     int gameBoardSize = game.getGameBoard().getSideLength();
@@ -48,6 +49,15 @@ public class GameBoardPanel extends JPanel {
 
     setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
     initializeTiles(pawnPositions);
+  }
+
+  protected String[] getPawnColors() {
+    String[] pawnColors = new String[game.getPawns().size()];
+    for (int i = 0; i < pawnColors.length; i++) {
+      pawnColors[i] = game.getPawns().get(i).getPawnAppearance().color().toString();
+      System.out.println(pawnColors[i]);
+    }
+    return pawnColors;
   }
 
 
@@ -59,7 +69,6 @@ public class GameBoardPanel extends JPanel {
       ImageIcon icon = new ImageIcon(Objects.requireNonNull(
               GameBoardPanel.class.getResource(resourcePath)));
 
-      // Scale the icon
       Image img = icon.getImage();
       Image scaledImg = img.getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);
       icons[i] = new ImageIcon(scaledImg);
