@@ -25,9 +25,9 @@ public class GameBoardPanel extends JPanel {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
   }
 
-  private static final int ICON_SIZE = 50;
-  private static final Color HIGHLIGHT_COLOR = Color.LIGHT_GRAY;
-  private static final Color WALL_COLOR = Color.BLACK;
+  private static final int ICON_SIZE = GUIConstants.ICON_SIZE;
+  private static final Color HIGHLIGHT_COLOR = GUIConstants.HIGHLIGHT_COLOR;
+  private static final Color WALL_COLOR = GUIConstants.WALL_COLOR;
 
   private final String[] PAWN_COLORS;
   private final JButton[][] tiles;

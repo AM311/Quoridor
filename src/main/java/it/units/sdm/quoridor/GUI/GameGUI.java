@@ -52,13 +52,13 @@ public class GameGUI implements GameEventListener {
     gbc.weighty = 1;
 
     JPanel leftPanel = new JPanel(new GridBagLayout());
-    leftPanel.setBackground(Color.DARK_GRAY);
+    leftPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
     gbc.gridx = 0;
     gbc.weightx = 3.5;
     rootPanel.add(leftPanel, gbc);
 
     JPanel centerWrapper = new JPanel(new GameBoardPanelLayoutManager());
-    centerWrapper.setBackground(Color.DARK_GRAY);
+    centerWrapper.setBackground(GUIConstants.BACKGROUND_COLOR);
     gbc.gridx = 1;
     gbc.weightx = 9;
     rootPanel.add(centerWrapper, gbc);
@@ -69,7 +69,7 @@ public class GameGUI implements GameEventListener {
     centerWrapper.add(gameBoardPanel);
 
     JPanel rightPanel = new JPanel(new GridBagLayout());
-    rightPanel.setBackground(Color.DARK_GRAY);
+    rightPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
     gbc.gridx = 2;
     gbc.weightx = 3.5;
     rootPanel.add(rightPanel, gbc);
@@ -129,16 +129,16 @@ public class GameGUI implements GameEventListener {
   private JPanel createPlayerPanel(String playerName, int wallCount, int playerIndex) {
     JPanel playerPanel = new JPanel();
     playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
-    playerPanel.setBackground(Color.DARK_GRAY);
+    playerPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JLabel nameLabel = new JLabel(playerName, SwingConstants.CENTER);
-    nameLabel.setForeground(Color.ORANGE);
-    nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    nameLabel.setForeground(GUIConstants.TEXT_COLOR);
+    nameLabel.setFont(GUIConstants.HEADER_FONT);
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JLabel wallsLabel = new JLabel("Remaining walls: " + wallCount, SwingConstants.CENTER);
-    wallsLabel.setForeground(Color.ORANGE);
-    wallsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+    wallsLabel.setForeground(GUIConstants.TEXT_COLOR);
+    wallsLabel.setFont(GUIConstants.NORMAL_FONT);
     wallsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     wallLabels[playerIndex] = wallsLabel;
@@ -146,7 +146,7 @@ public class GameGUI implements GameEventListener {
 
     playerPanel.add(Box.createVerticalStrut(20));
     playerPanel.add(nameLabel);
-    playerPanel.add(Box.createVerticalStrut(10));
+    playerPanel.add(Box.createVerticalStrut(GUIConstants.VERTICAL_SPACING));
     playerPanel.add(wallsLabel);
     playerPanel.add(Box.createVerticalStrut(20));
 
@@ -161,7 +161,7 @@ public class GameGUI implements GameEventListener {
 
     currentActionPanel = new JPanel();
     currentActionPanel.setLayout(new BoxLayout(currentActionPanel, BoxLayout.Y_AXIS));
-    currentActionPanel.setBackground(Color.DARK_GRAY);
+    currentActionPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
     currentActionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel actionButtonsPanel = createActionButtonsPanel(playerIndex);
@@ -170,7 +170,7 @@ public class GameGUI implements GameEventListener {
 
   private void addActionButtonsPanel(int playerIndex, JPanel actionButtonsPanel) {
     currentActionPanel.add(actionButtonsPanel);
-    currentActionPanel.add(Box.createVerticalStrut(10));
+    currentActionPanel.add(Box.createVerticalStrut(GUIConstants.VERTICAL_SPACING));
 
     JPanel helpQuitPanel = createHelpQuitPanel();
     currentActionPanel.add(helpQuitPanel);
@@ -182,12 +182,12 @@ public class GameGUI implements GameEventListener {
 
   private JPanel createActionButtonsPanel(int playerIndex) {
     JPanel actionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    actionButtonsPanel.setBackground(Color.DARK_GRAY);
+    actionButtonsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JButton moveButton = new JButton("Move");
     moveButton.addActionListener(e -> {
       gameBoardPanel.setCurrentAction(GameBoardPanel.Action.MOVE);
-      moveButton.setBackground(Color.GREEN);
+      moveButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       try {
         gameBoardPanel.highlightValidMoves();
       } catch (InvalidParameterException ex) {
@@ -218,7 +218,7 @@ public class GameGUI implements GameEventListener {
 
     currentActionPanel = new JPanel();
     currentActionPanel.setLayout(new BoxLayout(currentActionPanel, BoxLayout.Y_AXIS));
-    currentActionPanel.setBackground(Color.DARK_GRAY);
+    currentActionPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
     currentActionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel directionButtonsPanel = createWallDirectionButtonsPanel(playerIndex);
@@ -227,18 +227,18 @@ public class GameGUI implements GameEventListener {
 
   private JPanel createWallDirectionButtonsPanel(int playerIndex) {
     JPanel directionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    directionButtonsPanel.setBackground(Color.DARK_GRAY);
+    directionButtonsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JButton verticalButton = new JButton("Vertical");
     verticalButton.addActionListener(e -> {
-      verticalButton.setBackground(Color.GREEN);
+      verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       gameBoardPanel.setCurrentAction(GameBoardPanel.Action.PLACE_VERTICAL_WALL);
     });
 
     JButton horizontalButton = new JButton("Horizontal");
     horizontalButton.addActionListener(e -> {
       verticalButton.setBackground(UIManager.getColor("Button.background"));
-      horizontalButton.setBackground(Color.GREEN);
+      horizontalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       gameBoardPanel.setCurrentAction(GameBoardPanel.Action.PLACE_HORIZONTAL_WALL);
     });
 
@@ -258,7 +258,7 @@ public class GameGUI implements GameEventListener {
 
   private JPanel createHelpQuitPanel() {
     JPanel helpQuitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    helpQuitPanel.setBackground(Color.DARK_GRAY);
+    helpQuitPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JButton helpButton = new JButton("Help");
     helpButton.addActionListener(e -> showHelpDialog());
@@ -279,15 +279,15 @@ public class GameGUI implements GameEventListener {
     JLabel instructionsLabel = getInstructionsLabel();
     helpPanel.add(instructionsLabel);
 
-    helpPanel.add(Box.createVerticalStrut(10));
+    helpPanel.add(Box.createVerticalStrut(GUIConstants.VERTICAL_SPACING));
     helpPanel.add(new JSeparator());
-    helpPanel.add(Box.createVerticalStrut(10));
+    helpPanel.add(Box.createVerticalStrut(GUIConstants.VERTICAL_SPACING));
 
     JLabel wallExplanationTitle = new JLabel("Wall Placement Convention:");
     wallExplanationTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-    wallExplanationTitle.setFont(new Font("Arial", Font.PLAIN, 14));
+    wallExplanationTitle.setFont(GUIConstants.SMALL_FONT);
     helpPanel.add(wallExplanationTitle);
-    helpPanel.add(Box.createVerticalStrut(10));
+    helpPanel.add(Box.createVerticalStrut(GUIConstants.VERTICAL_SPACING));
 
     JPanel visualPanel = getVisualPanel();
 
@@ -318,7 +318,7 @@ public class GameGUI implements GameEventListener {
     JButton bottomLeft = new JButton();
     JButton bottomRight = new JButton();
 
-    bottomLeft.setBackground(Color.GREEN);
+    bottomLeft.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
 
     Dimension buttonSize = new Dimension(60, 60);
     topLeft.setPreferredSize(buttonSize);
@@ -329,19 +329,19 @@ public class GameGUI implements GameEventListener {
     Map<JButton, BorderManager> borderManagers = new HashMap<>();
 
     BorderManager blBorder = borderManagers.computeIfAbsent(bottomLeft, k -> new BorderManager());
-    blBorder.setBorderSide(BorderManager.LEFT, Color.BLACK, 5);
+    blBorder.setBorderSide(BorderManager.LEFT, GUIConstants.WALL_COLOR, 5);
     blBorder.applyTo(bottomLeft);
 
     BorderManager tlBorder = borderManagers.computeIfAbsent(topLeft, k -> new BorderManager());
-    tlBorder.setBorderSide(BorderManager.LEFT, Color.BLACK, 5);
+    tlBorder.setBorderSide(BorderManager.LEFT, GUIConstants.WALL_COLOR, 5);
     tlBorder.applyTo(topLeft);
 
     BorderManager brBorder = borderManagers.computeIfAbsent(bottomRight, k -> new BorderManager());
-    brBorder.setBorderSide(BorderManager.BOTTOM, Color.BLACK, 5);
+    brBorder.setBorderSide(BorderManager.BOTTOM, GUIConstants.WALL_COLOR, 5);
     brBorder.applyTo(bottomRight);
 
     BorderManager blBottomBorder = borderManagers.computeIfAbsent(bottomLeft, k -> new BorderManager());
-    blBottomBorder.setBorderSide(BorderManager.BOTTOM, Color.BLACK, 5);
+    blBottomBorder.setBorderSide(BorderManager.BOTTOM, GUIConstants.WALL_COLOR, 5);
     blBottomBorder.applyTo(bottomLeft);
 
     visualPanel.add(topLeft);
@@ -405,19 +405,19 @@ public class GameGUI implements GameEventListener {
     }
 
     JPanel panel = new JPanel(new BorderLayout());
-    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-    panel.setBackground(Color.WHITE);
+    panel.setBorder(GUIConstants.POPUP_BORDER);
+    panel.setBackground(GUIConstants.POPUP_BACKGROUND);
 
     JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    messageLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+    messageLabel.setFont(GUIConstants.SMALL_FONT);
     messageLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     panel.add(messageLabel, BorderLayout.CENTER);
 
     popup.add(panel);
     popup.setVisible(true);
 
-    Timer timer = new Timer(3000, e -> popup.dispose());
+    Timer timer = new Timer(GUIConstants.POPUP_DURATION, e -> popup.dispose());
     timer.setRepeats(false);
     timer.start();
   }
@@ -430,33 +430,33 @@ public class GameGUI implements GameEventListener {
     popup.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
     JPanel panel = new JPanel(new BorderLayout());
-    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-    panel.setBackground(Color.GREEN);
+    panel.setBorder(GUIConstants.POPUP_BORDER);
+    panel.setBackground(GUIConstants.WIN_SCREEN_BACKGROUND);
 
     JLabel messageLabel = new JLabel("<html>" +
             (numberOfPlayers == 2 || game.isGameFinished() ? "Player " + (winnerIndex + 1) + " WINS<br><br>" : "") +
             "Restart the game?<br><br></html>",
             SwingConstants.CENTER);
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    messageLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+    messageLabel.setFont(GUIConstants.NORMAL_FONT);
     messageLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
     panel.add(messageLabel, BorderLayout.NORTH);
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-    buttonPanel.setBackground(Color.GREEN);
+    buttonPanel.setBackground(GUIConstants.WIN_SCREEN_BACKGROUND);
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
     JButton restartButton = new JButton("RESTART");
-    restartButton.setFont(new Font("Arial", Font.BOLD, 16));
-    restartButton.setPreferredSize(new Dimension(120, 40));
+    restartButton.setFont(GUIConstants.BUTTON_FONT);
+    restartButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     restartButton.addActionListener(e -> {
       popup.dispose();
       restartGame();
     });
 
     JButton exitButton = new JButton("EXIT");
-    exitButton.setFont(new Font("Arial", Font.BOLD, 16));
-    exitButton.setPreferredSize(new Dimension(120, 40));
+    exitButton.setFont(GUIConstants.BUTTON_FONT);
+    exitButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     exitButton.addActionListener(e -> System.exit(0));
 
     buttonPanel.add(restartButton);
