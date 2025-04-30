@@ -3,6 +3,9 @@ package it.units.sdm.quoridor.GUI;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.AbstractTile;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -11,6 +14,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.List;
 
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
@@ -22,6 +26,7 @@ public class GameBoardPanel extends JPanel {
   }
 
   private static final int ICON_SIZE = 50;
+  private static final Color HIGHLIGHT_COLOR = Color.LIGHT_GRAY;
   private static final Color WALL_COLOR = Color.BLACK;
   private static final String[] PAWN_COLORS = {"red", "blue", "green", "magenta"};
 
@@ -90,6 +95,15 @@ public class GameBoardPanel extends JPanel {
 
   public void setCurrentAction(Action currentAction) {
     this.currentAction = currentAction;
+  }
+
+
+  public void highlightValidMoves() throws InvalidParameterException {
+    clearHighlights();
+    List<Position> validPositions = getValidMovePositions();
+    for (Position position : validPositions) {
+      tiles[position.row()][position.column()].setBackground(HIGHLIGHT_COLOR);
+    }
   }
 
 
@@ -178,6 +192,22 @@ public class GameBoardPanel extends JPanel {
     manager.applyTo(button);
   }
 
+
+  private List<Position> getValidMovePositions() throws InvalidParameterException {
+    List<Position> validPositions = new ArrayList<>();
+    ActionChecker<AbstractTile> checker = new PawnMovementChecker();
+
+    for (int i = 0; i < tiles.length; i++) {
+      for (int j = 0; j < tiles.length; j++) {
+        Position position = new Position(i, j);
+        if (checker.isValidAction(game, game.getGameBoard().getTile(position))) {
+          validPositions.add(position);
+        }
+      }
+    }
+
+    return validPositions;
+  }
 
   @Override
   public Dimension getPreferredSize() {

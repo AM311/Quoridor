@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.GUI;
 
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.Position;
@@ -29,8 +30,7 @@ public class GameGUI implements GameEventListener {
     this.wallLabels = new JLabel[numberOfPlayers];
   }
 
-
-  public void initializeAndShowUI() {
+  public void showGUI() {
     mainFrame = new JFrame("Quoridor");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -179,7 +179,11 @@ public class GameGUI implements GameEventListener {
     moveButton.addActionListener(e -> {
       gameBoardPanel.setCurrentAction(GameBoardPanel.Action.MOVE);
       moveButton.setBackground(Color.GREEN);
-
+      try {
+        gameBoardPanel.highlightValidMoves();
+      } catch (InvalidParameterException ex) {
+        showErrorDialog("Error highlighting moves: " + ex.getMessage());
+      }
     });
 
     JButton placeWallButton = getPlaceWallButton(playerIndex, moveButton);
@@ -259,6 +263,12 @@ public class GameGUI implements GameEventListener {
   }
 
 
+  private void showErrorDialog(String message) {
+    JOptionPane.showMessageDialog(mainFrame,
+            message,
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+  }
 
 
   private void showGameFinishedDialog(int winnerIndex) {
