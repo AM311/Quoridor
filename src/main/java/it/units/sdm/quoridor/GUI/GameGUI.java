@@ -8,6 +8,8 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameGUI implements GameEventListener {
 
@@ -161,9 +163,15 @@ public class GameGUI implements GameEventListener {
     currentActionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel actionButtonsPanel = createActionButtonsPanel(playerIndex);
+    addButton(playerIndex, actionButtonsPanel);
+  }
+
+  private void addButton(int playerIndex, JPanel actionButtonsPanel) {
     currentActionPanel.add(actionButtonsPanel);
     currentActionPanel.add(Box.createVerticalStrut(10));
 
+    JPanel helpQuitPanel = createHelpQuitPanel();
+    currentActionPanel.add(helpQuitPanel);
 
     playerPanels[playerIndex].add(currentActionPanel);
     playerPanels[playerIndex].revalidate();
@@ -222,12 +230,7 @@ public class GameGUI implements GameEventListener {
     currentActionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel directionButtonsPanel = createWallDirectionButtonsPanel(playerIndex);
-    currentActionPanel.add(directionButtonsPanel);
-    currentActionPanel.add(Box.createVerticalStrut(10));
-
-    playerPanels[playerIndex].add(currentActionPanel);
-    playerPanels[playerIndex].revalidate();
-    playerPanels[playerIndex].repaint();
+    addButton(playerIndex, directionButtonsPanel);
   }
 
 
@@ -261,6 +264,146 @@ public class GameGUI implements GameEventListener {
     directionButtonsPanel.add(cancelButton);
     return directionButtonsPanel;
   }
+
+  private JPanel createHelpQuitPanel() {
+    JPanel helpQuitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    helpQuitPanel.setBackground(BACKGROUND_COLOR);
+
+    JButton helpButton = new JButton("Help");
+    helpButton.addActionListener(e -> showHelpDialog());
+
+    JButton quitButton = new JButton("Quit");
+    quitButton.addActionListener(e -> confirmQuit());
+
+    helpQuitPanel.add(helpButton);
+    helpQuitPanel.add(quitButton);
+    return helpQuitPanel;
+  }
+
+  private void confirmQuit() {
+    int choice = JOptionPane.showConfirmDialog(mainFrame,
+            "Are you sure you want to quit?",
+            "Confirmation",
+            JOptionPane.YES_NO_OPTION);
+
+    if (choice == JOptionPane.YES_OPTION && numberOfPlayers == 2) {
+      showGameFinishedDialog(1 - game.getPlayingPawnIndex());
+    } else if (choice == JOptionPane.YES_OPTION) {
+      System.exit(0);
+    }
+  }
+
+
+  private void showHelpDialog() {
+    JPanel helpPanel = new JPanel();
+    helpPanel.setLayout(new BoxLayout(helpPanel, BoxLayout.Y_AXIS));
+
+    JLabel instructionsLabel = getInstructionsLabel();
+    helpPanel.add(instructionsLabel);
+
+    helpPanel.add(Box.createVerticalStrut(10));
+    helpPanel.add(new JSeparator());
+    helpPanel.add(Box.createVerticalStrut(10));
+
+    JLabel wallExplanationTitle = new JLabel("Wall Placement Convention:");
+    wallExplanationTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+    wallExplanationTitle.setFont(new Font("Arial", Font.PLAIN, 14));
+    helpPanel.add(wallExplanationTitle);
+    helpPanel.add(Box.createVerticalStrut(10));
+
+    JPanel visualPanel = getVisualPanel();
+
+    JPanel visualWrapperPanel = new JPanel();
+    visualWrapperPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    visualWrapperPanel.add(visualPanel);
+    helpPanel.add(visualWrapperPanel);
+
+    JLabel explanationLabel = getWallConventionLabel();
+    helpPanel.add(Box.createVerticalStrut(10));
+    helpPanel.add(explanationLabel);
+
+    JOptionPane.showMessageDialog(
+            mainFrame,
+            helpPanel,
+            "Quoridor Help",
+            JOptionPane.INFORMATION_MESSAGE
+    );
+  }
+
+  private static JPanel getVisualPanel() {
+    JPanel visualPanel = new JPanel(new GridLayout(2, 2, 0, 0));
+    visualPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    visualPanel.setMaximumSize(new Dimension(200, 200));
+
+    JButton topLeft = new JButton();
+    JButton topRight = new JButton();
+    JButton bottomLeft = new JButton();
+    JButton bottomRight = new JButton();
+
+    bottomLeft.setBackground(Color.GREEN);
+
+    Dimension buttonSize = new Dimension(60, 60);
+    topLeft.setPreferredSize(buttonSize);
+    topRight.setPreferredSize(buttonSize);
+    bottomLeft.setPreferredSize(buttonSize);
+    bottomRight.setPreferredSize(buttonSize);
+
+    Map<JButton, BorderManager> borderManagers = new HashMap<>();
+
+    BorderManager blBorder = borderManagers.computeIfAbsent(bottomLeft, k -> new BorderManager());
+    blBorder.setBorderSide(BorderManager.LEFT, Color.BLACK, 5);
+    blBorder.applyTo(bottomLeft);
+
+    BorderManager tlBorder = borderManagers.computeIfAbsent(topLeft, k -> new BorderManager());
+    tlBorder.setBorderSide(BorderManager.LEFT, Color.BLACK, 5);
+    tlBorder.applyTo(topLeft);
+
+    BorderManager brBorder = borderManagers.computeIfAbsent(bottomRight, k -> new BorderManager());
+    brBorder.setBorderSide(BorderManager.BOTTOM, Color.BLACK, 5);
+    brBorder.applyTo(bottomRight);
+
+    BorderManager blBottomBorder = borderManagers.computeIfAbsent(bottomLeft, k -> new BorderManager());
+    blBottomBorder.setBorderSide(BorderManager.BOTTOM, Color.BLACK, 5);
+    blBottomBorder.applyTo(bottomLeft);
+
+    visualPanel.add(topLeft);
+    visualPanel.add(topRight);
+    visualPanel.add(bottomLeft);
+    visualPanel.add(bottomRight);
+    return visualPanel;
+  }
+
+
+  private static JLabel getWallConventionLabel() {
+    JLabel explanationLabel = new JLabel(
+            "<html><div style='width: 300px; text-align: left;'>" +
+                    "The chosen tile is in the bottom-left.<br>" +
+                    "Walls are represented with black lines and they occupy two tiles:<br>" +
+                    "<ul>" +
+                    "<li>Vertical walls appear on the left side of tiles<br>" +
+                    "<li>Horizontal walls appear on the bottom side of tiles" +
+                    "</ul>" +
+                    "You cannot place walls in the margins</div></html>"
+    );
+    explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    return explanationLabel;
+  }
+
+  private static JLabel getInstructionsLabel() {
+    JLabel instructionsLabel = new JLabel(
+            "<html><div style='width: 300px; text-align: left;'>" +
+                    "<h3>How to play Quoridor:</h3>" +
+                    "<ul>" +
+                    "<li>On your turn you can move your pawn or place a wall</li>" +
+                    "<li>You win by reaching the opposite side of the board</li>" +
+                    "<li>Walls can be placed vertically or horizontally</li>" +
+                    "<li>You cannot completely block a path to the goal</li>" +
+                    "</ul></div></html>"
+    );
+    instructionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    return instructionsLabel;
+  }
+
 
 
   private void showErrorDialog(String message) {
