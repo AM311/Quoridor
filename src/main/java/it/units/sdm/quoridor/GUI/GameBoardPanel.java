@@ -1,11 +1,6 @@
 package it.units.sdm.quoridor.GUI;
 
-import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractTile;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -15,9 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
-
-import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
-import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class GameBoardPanel extends JPanel {
 
@@ -31,20 +23,17 @@ public class GameBoardPanel extends JPanel {
 
   private final String[] PAWN_COLORS;
   private final JButton[][] tiles;
-  private final AbstractGame game;
+  private final GameController controller;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
-  private final GameEventListener eventListener;
   private final ImageIcon[] pawnIcons;
 
   protected Action currentAction = Action.DO_NOTHING;
 
-
-  public GameBoardPanel(AbstractGame game, GameEventListener eventListener, Position... pawnPositions) {
-    this.game = game;
+  public GameBoardPanel(GameController controller, Position... pawnPositions) {
+    this.controller = controller;
     this.PAWN_COLORS = getPawnColors();
-    this.eventListener = eventListener;
     this.pawnIcons = loadPawnIcons(pawnPositions.length);
-    int gameBoardSize = game.getGameBoard().getSideLength();
+    int gameBoardSize = controller.getGame().getGameBoard().getSideLength();
     this.tiles = new JButton[gameBoardSize][gameBoardSize];
 
     setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
@@ -52,13 +41,12 @@ public class GameBoardPanel extends JPanel {
   }
 
   protected String[] getPawnColors() {
-    String[] pawnColors = new String[game.getPawns().size()];
+    String[] pawnColors = new String[controller.getGame().getPawns().size()];
     for (int i = 0; i < pawnColors.length; i++) {
-      pawnColors[i] = game.getPawns().get(i).getPawnAppearance().color().toString();
+      pawnColors[i] = controller.getGame().getPawns().get(i).getPawnAppearance().color().toString();
     }
     return pawnColors;
   }
-
 
   private ImageIcon[] loadPawnIcons(int numPawns) {
     ImageIcon[] icons = new ImageIcon[numPawns];
@@ -100,20 +88,17 @@ public class GameBoardPanel extends JPanel {
     }
   }
 
-
   public void setCurrentAction(Action currentAction) {
     this.currentAction = currentAction;
   }
 
-
   public void highlightValidMoves() throws InvalidParameterException {
     clearHighlights();
-    List<Position> validPositions = getValidMovePositions();
+    List<Position> validPositions = controller.getValidMovePositions();
     for (Position position : validPositions) {
       tiles[position.row()][position.column()].setBackground(HIGHLIGHT_COLOR);
     }
   }
-
 
   public void clearHighlights() {
     for (JButton[] row : tiles) {
@@ -123,9 +108,8 @@ public class GameBoardPanel extends JPanel {
     }
   }
 
-
   public void updateWallVisualization(Position position, WallOrientation orientation) {
-    if (orientation.equals(HORIZONTAL)) {
+    if (orientation.equals(WallOrientation.HORIZONTAL)) {
       updateButtonBorder(tiles[position.row()][position.column()], BorderManager.BOTTOM);
       updateButtonBorder(tiles[position.row()][position.column() + 1], BorderManager.BOTTOM);
       updateButtonBorder(tiles[position.row() + 1][position.column()], BorderManager.TOP);
@@ -138,83 +122,24 @@ public class GameBoardPanel extends JPanel {
     }
   }
 
-
   public void updatePawnPosition(Position oldPosition, Position newPosition, int pawnIndex) {
     tiles[oldPosition.row()][oldPosition.column()].setIcon(null);
     tiles[newPosition.row()][newPosition.column()].setIcon(pawnIcons[pawnIndex]);
   }
 
-
   private void handleTileClick(Position targetPosition) {
     switch (currentAction) {
-      case MOVE -> attemptPawnMove(targetPosition);
-      case PLACE_HORIZONTAL_WALL -> attemptPlaceWall(targetPosition, HORIZONTAL);
-      case PLACE_VERTICAL_WALL -> attemptPlaceWall(targetPosition, VERTICAL);
+      case MOVE -> controller.attemptPawnMove(targetPosition);
+      case PLACE_HORIZONTAL_WALL -> controller.attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
+      case PLACE_VERTICAL_WALL -> controller.attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
       case DO_NOTHING -> {}
     }
   }
-
-
-  private void attemptPawnMove(Position targetPosition) {
-    try {
-      Position oldPosition = new Position(
-              game.getPlayingPawn().getCurrentTile().getRow(),
-              game.getPlayingPawn().getCurrentTile().getColumn()
-      );
-      int playerIndex = game.getPlayingPawnIndex();
-
-      game.movePlayingPawn(targetPosition);
-
-      updatePawnPosition(oldPosition, targetPosition, playerIndex);
-      clearHighlights();
-      setCurrentAction(Action.DO_NOTHING);
-
-      if (game.isGameFinished()) {
-        eventListener.onGameFinished(playerIndex);
-      } else {
-        eventListener.onTurnComplete();
-      }
-    } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.onInvalidMove(targetPosition);
-    }
-  }
-
-  private void attemptPlaceWall(Position position, WallOrientation orientation) {
-    try {
-      game.placeWall(position, orientation);
-
-      updateWallVisualization(position, orientation);
-      setCurrentAction(Action.DO_NOTHING);
-
-      eventListener.onWallPlaced(game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
-      eventListener.onTurnComplete();
-    } catch (InvalidActionException | InvalidParameterException e) {
-      eventListener.onInvalidWallPlacement(position, orientation);
-    }
-  }
-
 
   private void updateButtonBorder(JButton button, int side) {
     BorderManager manager = borderManagers.computeIfAbsent(button, k -> new BorderManager());
     manager.setBorderSide(side, WALL_COLOR, 3);
     manager.applyTo(button);
-  }
-
-
-  private List<Position> getValidMovePositions() throws InvalidParameterException {
-    List<Position> validPositions = new ArrayList<>();
-    ActionChecker<AbstractTile> checker = new PawnMovementChecker();
-
-    for (int i = 0; i < tiles.length; i++) {
-      for (int j = 0; j < tiles.length; j++) {
-        Position position = new Position(i, j);
-        if (checker.isValidAction(game, game.getGameBoard().getTile(position))) {
-          validPositions.add(position);
-        }
-      }
-    }
-
-    return validPositions;
   }
 
   @Override
