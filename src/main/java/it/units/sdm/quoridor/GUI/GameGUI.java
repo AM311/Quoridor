@@ -352,31 +352,13 @@ public class GameGUI implements GameEventListener {
   }
 
   private JLabel getWallConventionLabel() {
-    JLabel explanationLabel = new JLabel(
-            "<html><div style='width: 300px; text-align: left;'>" +
-                    "The chosen tile is in the bottom-left.<br>" +
-                    "Walls are represented with black lines and they occupy two tiles:<br>" +
-                    "<ul>" +
-                    "<li>Vertical walls appear on the left side of tiles<br>" +
-                    "<li>Horizontal walls appear on the bottom side of tiles" +
-                    "</ul>" +
-                    "You cannot place walls in the margins</div></html>"
-    );
+    JLabel explanationLabel = new JLabel(GUIConstants.WALL_CONVENTION);
     explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     return explanationLabel;
   }
 
   private JLabel getInstructionsLabel() {
-    JLabel instructionsLabel = new JLabel(
-            "<html><div style='width: 300px; text-align: left;'>" +
-                    "<h3>How to play Quoridor:</h3>" +
-                    "<ul>" +
-                    "<li>On your turn you can move your pawn or place a wall</li>" +
-                    "<li>You win by reaching the opposite side of the board</li>" +
-                    "<li>Walls can be placed vertically or horizontally</li>" +
-                    "<li>You cannot completely block a path to the goal</li>" +
-                    "</ul></div></html>"
-    );
+    JLabel instructionsLabel = new JLabel(GUIConstants.INSTRUCTION);
     instructionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     return instructionsLabel;
   }
