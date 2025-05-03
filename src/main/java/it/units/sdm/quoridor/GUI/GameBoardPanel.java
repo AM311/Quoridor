@@ -40,7 +40,7 @@ public class GameBoardPanel extends JPanel {
     initializeTiles(pawnPositions);
   }
 
-  protected String[] getPawnColors() {
+  public String[] getPawnColors() {
     String[] pawnColors = new String[controller.getGame().getPawns().size()];
     for (int i = 0; i < pawnColors.length; i++) {
       pawnColors[i] = controller.getGame().getPawns().get(i).getPawnAppearance().color().toString();

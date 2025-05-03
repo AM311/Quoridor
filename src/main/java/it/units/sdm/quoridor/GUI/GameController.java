@@ -15,8 +15,8 @@ import java.util.List;
 
 public class GameController {
   private final AbstractGame game;
-  private GameBoardPanel boardPanel;
-  private GameGUI mainGUI;
+  private GameBoardPanel gameBoardPanel;
+  private GameGUI gameGUI;
   private DialogManager dialogManager;
 
   public GameController(AbstractGame game) {
@@ -24,8 +24,8 @@ public class GameController {
   }
 
   public void connectComponents(GameGUI mainGUI, GameBoardPanel boardPanel, DialogManager dialogManager) {
-    this.mainGUI = mainGUI;
-    this.boardPanel = boardPanel;
+    this.gameGUI = mainGUI;
+    this.gameBoardPanel = boardPanel;
     this.dialogManager = dialogManager;
   }
 
@@ -51,14 +51,14 @@ public class GameController {
 
       game.movePlayingPawn(targetPosition);
 
-      boardPanel.updatePawnPosition(oldPosition, targetPosition, playerIndex);
-      boardPanel.clearHighlights();
-      boardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
+      gameBoardPanel.updatePawnPosition(oldPosition, targetPosition, playerIndex);
+      gameBoardPanel.clearHighlights();
+      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
 
       if (game.isGameFinished()) {
         dialogManager.showGameFinishedDialog(playerIndex);
       } else {
-        mainGUI.onTurnComplete();
+        gameGUI.onTurnComplete();
       }
     } catch (InvalidParameterException | InvalidActionException e) {
       dialogManager.showNotificationDialog("Can't move to " + (targetPosition.row() + 1) + ","
@@ -70,11 +70,11 @@ public class GameController {
     try {
       game.placeWall(position, orientation);
 
-      boardPanel.updateWallVisualization(position, orientation);
-      boardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
+      gameBoardPanel.updateWallVisualization(position, orientation);
+      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
 
-      mainGUI.onWallPlaced(game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
-      mainGUI.onTurnComplete();
+      gameGUI.onWallPlaced(game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
+      gameGUI.onTurnComplete();
     } catch (InvalidActionException | InvalidParameterException e) {
       String orientationStr = orientation.toString().toLowerCase();
       String article = orientation.equals(WallOrientation.HORIZONTAL) ? "an " : "a ";
