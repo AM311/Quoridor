@@ -9,7 +9,7 @@ import java.awt.*;
 public class PanelManager {
   private final GameController controller;
   private final int numberOfPlayers;
-  private final GameBoardPanel gameBoardPanel;
+  private final GameBoardGUI gameBoardGUI;
   private final DialogManager dialogManager;
 
   private final JPanel[] playerPanels;
@@ -24,7 +24,7 @@ public class PanelManager {
     this.wallLabels = new JLabel[numberOfPlayers];
 
     Position[] pawnPositions = createInitialPawnPositions();
-    this.gameBoardPanel = new GameBoardPanel(controller, pawnPositions);
+    this.gameBoardGUI = new GameBoardGUI(controller, pawnPositions);
   }
 
   public JPanel createRootPanel() {
@@ -45,7 +45,7 @@ public class PanelManager {
     gbc.gridx = 1;
     gbc.weightx = 9;
     rootPanel.add(centerWrapper, gbc);
-    centerWrapper.add(gameBoardPanel);
+    centerWrapper.add(gameBoardGUI);
 
     JPanel rightPanel = new JPanel(new GridBagLayout());
     rightPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
@@ -61,8 +61,8 @@ public class PanelManager {
   }
 
 
-  public GameBoardPanel getGameBoardPanel() {
-    return gameBoardPanel;
+  public GameBoardGUI getGameBoardPanel() {
+    return gameBoardGUI;
   }
 
 
@@ -87,7 +87,7 @@ public class PanelManager {
     gbc.anchor = GridBagConstraints.NORTH;
 
     AbstractPawn[] pawns = controller.getGame().getPawns().toArray(new AbstractPawn[0]);
-    String[] pawnColors = gameBoardPanel.getPawnColors();
+    String[] pawnColors = gameBoardGUI.getPawnColors();
 
     gbc.gridy = 0;
     gbc.weighty = 0.2;
@@ -171,10 +171,10 @@ public class PanelManager {
 
     JButton moveButton = new JButton("Move");
     moveButton.addActionListener(e -> {
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.MOVE);
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.MOVE);
       moveButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       try {
-        gameBoardPanel.highlightValidMoves();
+        gameBoardGUI.highlightValidMoves();
       } catch (Exception ex) {
         dialogManager.showErrorDialog("Error highlighting moves: " + ex.getMessage());
       }
@@ -191,9 +191,9 @@ public class PanelManager {
   private JButton getPlaceWallButton(int playerIndex, JButton moveButton) {
     JButton placeWallButton = new JButton("Place Wall");
     placeWallButton.addActionListener(e -> {
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
       moveButton.setBackground(UIManager.getColor("Button.background"));
-      gameBoardPanel.clearHighlights();
+      gameBoardGUI.clearHighlights();
       if (controller.getGame().getPlayingPawn().getNumberOfWalls() > 0) {
         showWallDirectionButtons(playerIndex);
       } else {
@@ -224,21 +224,21 @@ public class PanelManager {
     JButton verticalButton = new JButton("Vertical");
     verticalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.PLACE_VERTICAL_WALL);
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.PLACE_VERTICAL_WALL);
     });
 
     JButton horizontalButton = new JButton("Horizontal");
     horizontalButton.addActionListener(e -> {
       verticalButton.setBackground(UIManager.getColor("Button.background"));
       horizontalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.PLACE_HORIZONTAL_WALL);
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.PLACE_HORIZONTAL_WALL);
     });
 
     JButton cancelButton = new JButton("X");
     cancelButton.addActionListener(e -> {
       verticalButton.setBackground(UIManager.getColor("Button.background"));
       horizontalButton.setBackground(UIManager.getColor("Button.background"));
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
       showActionButtonsForPlayer(playerIndex);
     });
 

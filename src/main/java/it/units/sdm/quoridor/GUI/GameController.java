@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GameController {
   private final AbstractGame game;
-  private GameBoardPanel gameBoardPanel;
+  private GameBoardGUI gameBoardGUI;
   private GameGUI gameGUI;
   private DialogManager dialogManager;
 
@@ -23,9 +23,9 @@ public class GameController {
     this.game = game;
   }
 
-  public void connectComponents(GameGUI mainGUI, GameBoardPanel boardPanel, DialogManager dialogManager) {
+  public void connectComponents(GameGUI mainGUI, GameBoardGUI boardPanel, DialogManager dialogManager) {
     this.gameGUI = mainGUI;
-    this.gameBoardPanel = boardPanel;
+    this.gameBoardGUI = boardPanel;
     this.dialogManager = dialogManager;
   }
 
@@ -51,9 +51,9 @@ public class GameController {
 
       game.movePlayingPawn(targetPosition);
 
-      gameBoardPanel.updatePawnPosition(oldPosition, targetPosition, playerIndex);
-      gameBoardPanel.clearHighlights();
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
+      gameBoardGUI.updatePawnPosition(oldPosition, targetPosition, playerIndex);
+      gameBoardGUI.clearHighlights();
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
 
       if (game.isGameFinished()) {
         dialogManager.showGameFinishedDialog(playerIndex);
@@ -70,8 +70,8 @@ public class GameController {
     try {
       game.placeWall(position, orientation);
 
-      gameBoardPanel.updateWallVisualization(position, orientation);
-      gameBoardPanel.setCurrentAction(GameBoardPanel.Action.DO_NOTHING);
+      gameBoardGUI.updateWallVisualization(position, orientation);
+      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
 
       gameGUI.onWallPlaced(game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
       gameGUI.onTurnComplete();

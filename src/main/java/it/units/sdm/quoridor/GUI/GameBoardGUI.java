@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class GameBoardPanel extends JPanel {
+public class GameBoardGUI extends JPanel {
 
   public enum Action {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
@@ -29,7 +29,7 @@ public class GameBoardPanel extends JPanel {
 
   protected Action currentAction = Action.DO_NOTHING;
 
-  public GameBoardPanel(GameController controller, Position... pawnPositions) {
+  public GameBoardGUI(GameController controller, Position... pawnPositions) {
     this.controller = controller;
     this.PAWN_COLORS = getPawnColors();
     this.pawnIcons = loadPawnIcons(pawnPositions.length);
@@ -54,7 +54,7 @@ public class GameBoardPanel extends JPanel {
     for (int i = 0; i < numPawns; i++) {
       String resourcePath = "/" + PAWN_COLORS[i] + "-pawn.png";
       ImageIcon icon = new ImageIcon(Objects.requireNonNull(
-              GameBoardPanel.class.getResource(resourcePath)));
+              GameBoardGUI.class.getResource(resourcePath)));
 
       Image img = icon.getImage();
       Image scaledImg = img.getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);
