@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.GUI.button;
 
+import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;
 import it.units.sdm.quoridor.GUI.GameController;
 import it.units.sdm.quoridor.GUI.panel.PanelsManager;
@@ -26,8 +27,8 @@ public class CancelButton extends JButton {
 
   public void setActionListener() {
     this.addActionListener(e -> {
-      verticalButton.setBackground(UIManager.getColor("Button.background"));
-      horizontalButton.setBackground(UIManager.getColor("Button.background"));
+      verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
+      horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
       panelsManager.showActionButtonsForPlayer(controller.getPlayingPawnIndex());
     });

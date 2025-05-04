@@ -2,13 +2,12 @@ package it.units.sdm.quoridor.GUI;
 
 import it.units.sdm.quoridor.GUI.panel.PanelsManager;
 
-
 import javax.swing.*;
 
 public class GameGUI {
   private final int numberOfPlayers;
   private final GameController controller;
-  private PanelsManager panelManager;
+  private PanelsManager panelsManager;
 
   public GameGUI(int numberOfPlayers, GameController controller) {
     this.numberOfPlayers = numberOfPlayers;
@@ -23,12 +22,12 @@ public class GameGUI {
 
     DialogManager dialogManager = new DialogManager(mainFrame, numberOfPlayers, controller);
 
-    panelManager = new PanelsManager(controller, numberOfPlayers, dialogManager);
+    panelsManager = new PanelsManager(controller, numberOfPlayers, dialogManager);
 
-    JPanel rootPanel = panelManager.createRootPanel();
+    JPanel rootPanel = panelsManager.createRootPanel();
     mainFrame.setContentPane(rootPanel);
 
-    controller.connectComponents(this, panelManager.getGameBoardPanel(), dialogManager);
+    controller.connectComponents(this, panelsManager.getGameBoardPanel(), dialogManager);
 
     mainFrame.setVisible(true);
 
@@ -36,12 +35,12 @@ public class GameGUI {
   }
 
   public void onWallPlaced(int playerIndex, int remainingWalls) {
-    panelManager.updateWallLabel(playerIndex, remainingWalls);
+    panelsManager.updateWallLabel(playerIndex, remainingWalls);
   }
 
   public void onTurnComplete() {
-    panelManager.removeCurrentActionPanel(controller.getPlayingPawnIndex());
+    panelsManager.removeCurrentActionPanel(controller.getPlayingPawnIndex());
     controller.changeRound();
-    panelManager.showActionButtonsForPlayer(controller.getPlayingPawnIndex());
+    panelsManager.showActionButtonsForPlayer(controller.getPlayingPawnIndex());
   }
 }

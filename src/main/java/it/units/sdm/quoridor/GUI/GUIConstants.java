@@ -2,12 +2,13 @@ package it.units.sdm.quoridor.GUI;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.BorderFactory;
 
 
 public final class GUIConstants {
-
+  
+  public static final Color BUTTON_BACKGROUND_COLOR = UIManager.getColor("Button.background");
   public static final Color BACKGROUND_COLOR = Color.DARK_GRAY;
   public static final Color TEXT_COLOR = Color.ORANGE;
   public static final Color HIGHLIGHT_COLOR = Color.LIGHT_GRAY;

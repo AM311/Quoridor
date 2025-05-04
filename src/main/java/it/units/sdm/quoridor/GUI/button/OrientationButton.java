@@ -19,7 +19,7 @@ public class OrientationButton extends JButton {
   public void setActionListener(JButton oppositeButton) {
     this.addActionListener(e -> {
       this.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      oppositeButton.setBackground(UIManager.getColor("Button.background"));
+      oppositeButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       gameBoardGUI.setCurrentAction(
               wallOrientation.equals(WallOrientation.VERTICAL) ? GameBoardGUI.Action.PLACE_VERTICAL_WALL : GameBoardGUI.Action.PLACE_HORIZONTAL_WALL
       );

@@ -103,7 +103,7 @@ public class GameBoardGUI extends JPanel {
   public void clearHighlights() {
     for (JButton[] row : tiles) {
       for (JButton tile : row) {
-        tile.setBackground(UIManager.getColor("Button.background"));
+        tile.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       }
     }
   }
