@@ -4,6 +4,8 @@ import it.units.sdm.quoridor.GUI.DialogManager;
 import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;
 import it.units.sdm.quoridor.GUI.GameController;
+import it.units.sdm.quoridor.GUI.button.MoveButton;
+import it.units.sdm.quoridor.GUI.button.PlaceWallButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,39 +26,15 @@ public class ActionsPanelComponent implements PanelComponent {
 
   @Override
   public JPanel createPanel() {
-    JPanel actionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    actionButtonsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
+    JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    actionsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
-    JButton moveButton = new JButton("Move");
-    moveButton.addActionListener(e -> {
-      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.MOVE);
-      moveButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      try {
-        gameBoardGUI.highlightValidMoves();
-      } catch (Exception ex) {
-        dialogManager.showErrorDialog("Error highlighting moves: " + ex.getMessage());
-      }
-    });
+    JButton moveButton = new MoveButton(gameBoardGUI, dialogManager);
+    JButton placeWallButton = new PlaceWallButton(gameBoardGUI, moveButton, controller, dialogManager, panelManager);
 
-    JButton placeWallButton = getPlaceWallButton(controller.getPlayingPawnIndex(), moveButton);
-
-    actionButtonsPanel.add(moveButton);
-    actionButtonsPanel.add(placeWallButton);
-    return actionButtonsPanel;
+    actionsPanel.add(moveButton);
+    actionsPanel.add(placeWallButton);
+    return actionsPanel;
   }
 
-  private JButton getPlaceWallButton(int playerIndex, JButton moveButton) {
-    JButton placeWallButton = new JButton("Place Wall");
-    placeWallButton.addActionListener(e -> {
-      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
-      moveButton.setBackground(UIManager.getColor("Button.background"));
-      gameBoardGUI.clearHighlights();
-      if (controller.getGame().getPlayingPawn().getNumberOfWalls() > 0) {
-        panelManager.showWallDirectionButtons(playerIndex);
-      } else {
-        dialogManager.showNotificationDialog("No walls available!", playerIndex);
-      }
-    });
-    return placeWallButton;
-  }
 }

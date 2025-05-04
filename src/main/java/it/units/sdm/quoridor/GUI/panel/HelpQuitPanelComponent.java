@@ -2,6 +2,8 @@ package it.units.sdm.quoridor.GUI.panel;
 
 import it.units.sdm.quoridor.GUI.DialogManager;
 import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.GUI.button.HelpButton;
+import it.units.sdm.quoridor.GUI.button.QuitButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,11 +20,8 @@ public class HelpQuitPanelComponent implements PanelComponent {
     JPanel helpQuitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     helpQuitPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
-    JButton helpButton = new JButton("Help");
-    helpButton.addActionListener(e -> dialogManager.showHelpDialog());
-
-    JButton quitButton = new JButton("Quit");
-    quitButton.addActionListener(e -> dialogManager.confirmQuitDialog());
+    JButton helpButton = new HelpButton(dialogManager);
+    JButton quitButton = new QuitButton(dialogManager);
 
     helpQuitPanel.add(helpButton);
     helpQuitPanel.add(quitButton);
