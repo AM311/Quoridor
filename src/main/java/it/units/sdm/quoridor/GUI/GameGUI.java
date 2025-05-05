@@ -40,6 +40,7 @@ public class GameGUI {
   public void onTurnComplete() {
     panelsManager.removeCurrentActionPanel(controller.getPlayingPawnIndex());
     controller.changeRound();
+    panelsManager.updatePlayerPanel(controller.getPlayingPawnIndex());
     panelsManager.showActionButtonsForPlayer(controller.getPlayingPawnIndex());
   }
 }

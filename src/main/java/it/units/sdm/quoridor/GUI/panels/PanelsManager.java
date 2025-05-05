@@ -38,6 +38,7 @@ public class PanelsManager {
 
   public JPanel createRootPanel() {
     JPanel rootPanel = rootPanelComponent.createPanel();
+    updatePlayerPanel(controller.getPlayingPawnIndex());
     showActionButtonsForPlayer(controller.getPlayingPawnIndex());
     return rootPanel;
   }
@@ -98,5 +99,9 @@ public class PanelsManager {
     }
 
     return positions;
+  }
+
+  public void updatePlayerPanel(int playerIndex) {
+    playerPanelsComponent.updatePlayerPanel(playerIndex);
   }
 }

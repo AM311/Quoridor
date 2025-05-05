@@ -14,12 +14,15 @@ public class PlayerPanelsComponent implements PanelComponent {
 
   private final JPanel[] playerPanels;
   private final JLabel[] wallLabels;
+  private final JLabel[] nameLabels;
+
 
   public PlayerPanelsComponent(int numberOfPlayers, GameBoardGUI gameBoardGUI) {
     this.numberOfPlayers = numberOfPlayers;
     this.gameBoardGUI = gameBoardGUI;
     this.playerPanels = new JPanel[numberOfPlayers];
     this.wallLabels = new JLabel[numberOfPlayers];
+    this.nameLabels = new JLabel[numberOfPlayers]; // Array per le etichette dei nomi
   }
 
   @Override
@@ -38,8 +41,8 @@ public class PlayerPanelsComponent implements PanelComponent {
 
     gbc.gridy = 0;
     gbc.weighty = 0.2;
-    leftPanel.add(createPlayerPanel("Player 1 (" + pawnColors[0] + ")", pawns[0].getNumberOfWalls(), 0, controller), gbc);
-    rightPanel.add(createPlayerPanel("Player 2 (" + pawnColors[1] + ")", pawns[1].getNumberOfWalls(), 1, controller), gbc);
+    leftPanel.add(createPlayerPanel("Player 1 (" + pawnColors[0] + ")", pawns[0].getNumberOfWalls(), 0), gbc);
+    rightPanel.add(createPlayerPanel("Player 2 (" + pawnColors[1] + ")", pawns[1].getNumberOfWalls(), 1), gbc);
 
     if (numberOfPlayers == 4) {
       gbc.gridy = 1;
@@ -50,22 +53,22 @@ public class PlayerPanelsComponent implements PanelComponent {
       gbc.gridy = 2;
       gbc.weighty = 0.4;
       gbc.anchor = GridBagConstraints.CENTER;
-      leftPanel.add(createPlayerPanel("Player 3 (" + pawnColors[2] + ")", pawns[2].getNumberOfWalls(), 2, controller), gbc);
-      rightPanel.add(createPlayerPanel("Player 4 (" + pawnColors[3] + ")", pawns[3].getNumberOfWalls(), 3, controller), gbc);
+      leftPanel.add(createPlayerPanel("Player 3 (" + pawnColors[2] + ")", pawns[2].getNumberOfWalls(), 2), gbc);
+      rightPanel.add(createPlayerPanel("Player 4 (" + pawnColors[3] + ")", pawns[3].getNumberOfWalls(), 3), gbc);
     }
   }
 
-  private JPanel createPlayerPanel(String playerName, int wallCount, int playerIndex, GameController controller) {
+  private JPanel createPlayerPanel(String playerName, int wallCount, int playerIndex) {
     JPanel playerPanel = new JPanel();
     playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
     playerPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JLabel nameLabel = new JLabel(playerName, SwingConstants.CENTER);
-
-    nameLabel.setForeground(controller.getPlayingPawnIndex() ==  playerIndex ? Color.YELLOW : GUIConstants.TEXT_COLOR);
-
+    nameLabel.setForeground(GUIConstants.TEXT_COLOR);
     nameLabel.setFont(GUIConstants.HEADER_FONT);
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    nameLabels[playerIndex] = nameLabel;
 
     JLabel wallsLabel = new JLabel("Remaining walls: " + wallCount, SwingConstants.CENTER);
     wallsLabel.setForeground(GUIConstants.TEXT_COLOR);
@@ -96,5 +99,26 @@ public class PlayerPanelsComponent implements PanelComponent {
     playerPanels[playerIndex].add(actionPanel);
     playerPanels[playerIndex].revalidate();
     playerPanels[playerIndex].repaint();
+  }
+
+  public void updatePlayerPanel(int activePlayerIndex) {
+    for (int i = 0; i < numberOfPlayers; i++) {
+      if (nameLabels[i] != null) {
+        nameLabels[i].setForeground(GUIConstants.TEXT_COLOR);
+        wallLabels[i].setForeground(GUIConstants.TEXT_COLOR);
+      }
+    }
+
+    if (activePlayerIndex >= 0 && activePlayerIndex < numberOfPlayers && nameLabels[activePlayerIndex] != null) {
+      nameLabels[activePlayerIndex].setForeground(Color.GREEN);
+      wallLabels[activePlayerIndex].setForeground(Color.GREEN);
+    }
+
+    for (JPanel panel : playerPanels) {
+      if (panel != null) {
+        panel.revalidate();
+        panel.repaint();
+      }
+    }
   }
 }
