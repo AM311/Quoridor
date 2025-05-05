@@ -1,5 +1,7 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.managers;
 
+import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.GUI.GameBoardGUI;
 import it.units.sdm.quoridor.GUI.panels.*;
 import it.units.sdm.quoridor.utils.Position;
 
@@ -7,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PanelsManager {
-  private final GameController controller;
+  private final GameGUIManager gameManager;
   private final int numberOfPlayers;
   private final GameBoardGUI gameBoardGUI;
 
@@ -19,24 +21,24 @@ public class PanelsManager {
 
   private JPanel currentActionPanel;
 
-  public PanelsManager(GameController controller, int numberOfPlayers, DialogManager dialogManager, JFrame mainFrame) {
-    this.controller = controller;
+  public PanelsManager(GameGUIManager gameManager, int numberOfPlayers, DialogManager dialogManager, JFrame mainFrame) {
+    this.gameManager = gameManager;
     this.numberOfPlayers = numberOfPlayers;
 
     Position[] pawnPositions = createInitialPawnPositions();
-    this.gameBoardGUI = new GameBoardGUI(controller, pawnPositions);
+    this.gameBoardGUI = new GameBoardGUI(gameManager, pawnPositions);
 
     this.playerPanelsComponent = new PlayerPanelsComponent(numberOfPlayers, gameBoardGUI);
-    this.actionsPanelComponent = new ActionsPanelComponent(controller, gameBoardGUI, dialogManager, this, mainFrame);
-    this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(controller, gameBoardGUI, this);
+    this.actionsPanelComponent = new ActionsPanelComponent(gameManager, gameBoardGUI, dialogManager, this, mainFrame);
+    this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameManager, gameBoardGUI, this);
     this.helpQuitPanelComponent = new HelpQuitPanelComponent(dialogManager);
-    this.rootPanelComponent = new RootPanelComponent(controller, gameBoardGUI, playerPanelsComponent);
+    this.rootPanelComponent = new RootPanelComponent(gameManager, gameBoardGUI, playerPanelsComponent);
   }
 
   public JPanel createRootPanel() {
     JPanel rootPanel = rootPanelComponent.createPanel();
-    updatePlayerPanel(controller.getPlayingPawnIndex());
-    showActionButtonsForPlayer(controller.getPlayingPawnIndex());
+    updatePlayerPanel(gameManager.getPlayingPawnIndex());
+    showActionButtonsForPlayer(gameManager.getPlayingPawnIndex());
     return rootPanel;
   }
 

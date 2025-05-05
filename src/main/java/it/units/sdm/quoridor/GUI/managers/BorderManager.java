@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.managers;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;

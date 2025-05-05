@@ -2,7 +2,7 @@ package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;
-import it.units.sdm.quoridor.GUI.GameController;
+import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
 import it.units.sdm.quoridor.model.AbstractPawn;
 
 import javax.swing.*;
@@ -30,13 +30,13 @@ public class PlayerPanelsComponent implements PanelComponent {
     return new JPanel();
   }
 
-  public void configureSidePanels(JPanel leftPanel, JPanel rightPanel, GameController controller) {
+  public void configureSidePanels(JPanel leftPanel, JPanel rightPanel, GameGUIManager gameManager) {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
     gbc.anchor = GridBagConstraints.NORTH;
 
-    AbstractPawn[] pawns = controller.getGame().getPawns().toArray(new AbstractPawn[0]);
+    AbstractPawn[] pawns = gameManager.getGame().getPawns().toArray(new AbstractPawn[0]);
     String[] pawnColors = gameBoardGUI.getPawnColors();
 
     gbc.gridy = 0;

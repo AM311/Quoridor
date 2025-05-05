@@ -1,20 +1,23 @@
 package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.*;
+import it.units.sdm.quoridor.GUI.managers.DialogManager;
+import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
+import it.units.sdm.quoridor.GUI.managers.PanelsManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ActionsPanelComponent implements PanelComponent {
-  private final GameController controller;
+  private final GameGUIManager gameManager;
   private final GameBoardGUI gameBoardGUI;
   private final DialogManager dialogManager;
   private final PanelsManager panelsManager;
   private final JFrame mainFrame;
 
-  public ActionsPanelComponent(GameController controller, GameBoardGUI gameBoardGUI,
+  public ActionsPanelComponent(GameGUIManager gameManager, GameBoardGUI gameBoardGUI,
                                DialogManager dialogManager, PanelsManager panelsManager, JFrame mainFrame) {
-    this.controller = controller;
+    this.gameManager = gameManager;
     this.gameBoardGUI = gameBoardGUI;
     this.dialogManager = dialogManager;
     this.panelsManager = panelsManager;
@@ -50,10 +53,10 @@ public class ActionsPanelComponent implements PanelComponent {
       gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
       moveButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       gameBoardGUI.clearHighlights();
-      if (controller.getGame().getPlayingPawn().getNumberOfWalls() > 0) {
-        panelsManager.showWallDirectionButtons(controller.getPlayingPawnIndex());
+      if (gameManager.getGame().getPlayingPawn().getNumberOfWalls() > 0) {
+        panelsManager.showWallDirectionButtons(gameManager.getPlayingPawnIndex());
       } else {
-        dialogManager.showNotificationDialog("No walls available!", controller.getPlayingPawnIndex(), 3000);
+        dialogManager.showNotificationDialog("No walls available!", gameManager.getPlayingPawnIndex(), 3000);
       }
     });
     return placeWallButton;

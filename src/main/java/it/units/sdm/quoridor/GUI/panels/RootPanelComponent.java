@@ -2,21 +2,21 @@ package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;
-import it.units.sdm.quoridor.GUI.GameBoardGUILayoutManager;
-import it.units.sdm.quoridor.GUI.GameController;
+import it.units.sdm.quoridor.GUI.managers.GameBoardGUILayoutManager;
+import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RootPanelComponent implements PanelComponent {
-  private final GameController controller;
+  private final GameGUIManager gameManager;
   private final GameBoardGUI gameBoardGUI;
   private final PlayerPanelsComponent playerPanelsComponent;
 
-  public RootPanelComponent(GameController controller, GameBoardGUI gameBoardGUI, PlayerPanelsComponent playerPanelsComponent) {
+  public RootPanelComponent(GameGUIManager gameManager, GameBoardGUI gameBoardGUI, PlayerPanelsComponent playerPanelsComponent) {
     this.gameBoardGUI = gameBoardGUI;
     this.playerPanelsComponent = playerPanelsComponent;
-    this.controller = controller;
+    this.gameManager = gameManager;
   }
 
   @Override
@@ -46,7 +46,7 @@ public class RootPanelComponent implements PanelComponent {
     gbc.weightx = 3.5;
     rootPanel.add(rightPanel, gbc);
 
-    playerPanelsComponent.configureSidePanels(leftPanel, rightPanel, controller);
+    playerPanelsComponent.configureSidePanels(leftPanel, rightPanel, gameManager);
 
     return rootPanel;
   }

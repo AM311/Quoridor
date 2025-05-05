@@ -1,5 +1,7 @@
 package it.units.sdm.quoridor.GUI;
 
+import it.units.sdm.quoridor.GUI.managers.BorderManager;
+import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
@@ -23,17 +25,17 @@ public class GameBoardGUI extends JPanel {
 
   private final String[] PAWN_COLORS;
   private final JButton[][] tiles;
-  private final GameController controller;
+  private final GameGUIManager gameManager;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
   private final ImageIcon[] pawnIcons;
 
   protected Action currentAction = Action.DO_NOTHING;
 
-  public GameBoardGUI(GameController controller, Position... pawnPositions) {
-    this.controller = controller;
+  public GameBoardGUI(GameGUIManager gameManager, Position... pawnPositions) {
+    this.gameManager = gameManager;
     this.PAWN_COLORS = getPawnColors();
     this.pawnIcons = loadPawnIcons(pawnPositions.length);
-    int gameBoardSize = controller.getGame().getGameBoard().getSideLength();
+    int gameBoardSize = gameManager.getGame().getGameBoard().getSideLength();
     this.tiles = new JButton[gameBoardSize][gameBoardSize];
 
     setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
@@ -41,9 +43,9 @@ public class GameBoardGUI extends JPanel {
   }
 
   public String[] getPawnColors() {
-    String[] pawnColors = new String[controller.getGame().getPawns().size()];
+    String[] pawnColors = new String[gameManager.getGame().getPawns().size()];
     for (int i = 0; i < pawnColors.length; i++) {
-      pawnColors[i] = controller.getGame().getPawns().get(i).getPawnAppearance().color().toString();
+      pawnColors[i] = gameManager.getGame().getPawns().get(i).getPawnAppearance().color().toString();
     }
     return pawnColors;
   }
@@ -94,7 +96,7 @@ public class GameBoardGUI extends JPanel {
 
   public void highlightValidMoves() throws InvalidParameterException {
     clearHighlights();
-    List<Position> validPositions = controller.getValidMovePositions();
+    List<Position> validPositions = gameManager.getValidMovePositions();
     for (Position position : validPositions) {
       tiles[position.row()][position.column()].setBackground(HIGHLIGHT_COLOR);
     }
@@ -129,9 +131,9 @@ public class GameBoardGUI extends JPanel {
 
   private void handleTileClick(Position targetPosition) {
     switch (currentAction) {
-      case MOVE -> controller.attemptPawnMove(targetPosition);
-      case PLACE_HORIZONTAL_WALL -> controller.attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
-      case PLACE_VERTICAL_WALL -> controller.attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
+      case MOVE -> gameManager.attemptPawnMove(targetPosition);
+      case PLACE_HORIZONTAL_WALL -> gameManager.attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
+      case PLACE_VERTICAL_WALL -> gameManager.attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
       case DO_NOTHING -> {}
     }
   }

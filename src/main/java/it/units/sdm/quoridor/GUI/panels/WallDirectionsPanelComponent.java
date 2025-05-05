@@ -2,20 +2,20 @@ package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;
-import it.units.sdm.quoridor.GUI.GameController;
-import it.units.sdm.quoridor.GUI.PanelsManager;
+import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
+import it.units.sdm.quoridor.GUI.managers.PanelsManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class WallDirectionsPanelComponent implements PanelComponent {
-  private final GameController controller;
+  private final GameGUIManager gameManager;
   private final GameBoardGUI gameBoardGUI;
   private final PanelsManager panelsManager;
 
-  public WallDirectionsPanelComponent(GameController controller, GameBoardGUI gameBoardGUI,
+  public WallDirectionsPanelComponent(GameGUIManager gameManager, GameBoardGUI gameBoardGUI,
                                       PanelsManager panelsManager) {
-    this.controller = controller;
+    this.gameManager = gameManager;
     this.gameBoardGUI = gameBoardGUI;
     this.panelsManager = panelsManager;
   }
@@ -46,7 +46,7 @@ public class WallDirectionsPanelComponent implements PanelComponent {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
-      panelsManager.showActionButtonsForPlayer(controller.getPlayingPawnIndex());
+      panelsManager.showActionButtonsForPlayer(gameManager.getPlayingPawnIndex());
     });
 
     directionsPanel.add(verticalButton);

@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.GUI.dialogs;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.GameController;
+import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
 import it.units.sdm.quoridor.GUI.GameGUI;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
@@ -12,12 +12,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameFinishedDialogComponent implements DialogComponent {
-  private final GameController controller;
+  private final GameGUIManager gameManager;
   private final JFrame mainFrame;
   private final JDialog gameFinishedDialog;
 
-  public GameFinishedDialogComponent(GameController controller, JFrame mainFrame, JDialog gameFinishedDialog) {
-    this.controller = controller;
+  public GameFinishedDialogComponent(GameGUIManager gameManager, JFrame mainFrame, JDialog gameFinishedDialog) {
+    this.gameManager = gameManager;
     this.mainFrame = mainFrame;
     this.gameFinishedDialog = gameFinishedDialog;
   }
@@ -57,8 +57,8 @@ public class GameFinishedDialogComponent implements DialogComponent {
   }
 
   private JLabel getMessageLabel() {
-    int numberOfPlayers = controller.getGame().getPawns().size();
-    boolean isGameFinished = controller.isGameFinished();
+    int numberOfPlayers = gameManager.getGame().getPawns().size();
+    boolean isGameFinished = gameManager.isGameFinished();
     JLabel messageLabel = getMessageLabel(numberOfPlayers, isGameFinished);
 
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -68,7 +68,7 @@ public class GameFinishedDialogComponent implements DialogComponent {
   }
 
   private JLabel getMessageLabel(int numberOfPlayers, boolean isGameFinished) {
-    int playingPawnIndex = controller.getPlayingPawnIndex();
+    int playingPawnIndex = gameManager.getPlayingPawnIndex();
 
     JLabel messageLabel;
     if (numberOfPlayers == 2) {
@@ -85,10 +85,10 @@ public class GameFinishedDialogComponent implements DialogComponent {
     }
 
     try {
-      BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(controller.getGame().getPawns().size()));
+      BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(gameManager.getGame().getPawns().size()));
       var game = builderDirector.makeGame();
-      GameController newController = new GameController(game);
-      GameGUI gameGUI = new GameGUI(controller.getGame().getPawns().size(), newController);
+      GameGUIManager newgameManager = new GameGUIManager(game);
+      GameGUI gameGUI = new GameGUI(gameManager.getGame().getPawns().size(), newgameManager);
       gameGUI.showGUI();
     } catch (InvalidParameterException | BuilderException e) {
       JOptionPane.showMessageDialog(mainFrame,

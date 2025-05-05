@@ -1,5 +1,7 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.managers;
 
+import it.units.sdm.quoridor.GUI.GameBoardGUI;
+import it.units.sdm.quoridor.GUI.GameGUI;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
@@ -13,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameController {
+public class GameGUIManager {
   private final AbstractGame game;
   private GameBoardGUI gameBoardGUI;
   private GameGUI gameGUI;
   private DialogManager dialogManager;
 
-  public GameController(AbstractGame game) {
+  public GameGUIManager(AbstractGame game) {
     this.game = game;
   }
 

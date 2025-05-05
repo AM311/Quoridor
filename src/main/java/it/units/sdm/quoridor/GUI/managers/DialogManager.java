@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.managers;
 
 import it.units.sdm.quoridor.GUI.dialogs.HelpDialogComponent;
 import it.units.sdm.quoridor.GUI.dialogs.NotificationDialogComponent;
@@ -9,11 +9,11 @@ import javax.swing.*;
 
 public class DialogManager {
   private final JFrame mainFrame;
-  private final GameController controller;
+  private final GameGUIManager gameManager;
 
-  public DialogManager(JFrame mainFrame, GameController controller) {
+  public DialogManager(JFrame mainFrame, GameGUIManager gameManager) {
     this.mainFrame = mainFrame;
-    this.controller = controller;
+    this.gameManager = gameManager;
   }
 
   public void showHelpDialog() {
@@ -48,7 +48,7 @@ public class DialogManager {
     gameFinishedDialog.setLocationRelativeTo(mainFrame);
     gameFinishedDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-    JPanel panel = new GameFinishedDialogComponent(controller, mainFrame, gameFinishedDialog).createDialog();
+    JPanel panel = new GameFinishedDialogComponent(gameManager, mainFrame, gameFinishedDialog).createDialog();
 
     gameFinishedDialog.add(panel);
     gameFinishedDialog.setVisible(true);
