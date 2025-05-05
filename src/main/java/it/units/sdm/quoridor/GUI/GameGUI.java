@@ -1,6 +1,6 @@
-package it.units.sdm.quoridor.gui;
+package it.units.sdm.quoridor.GUI;
 
-import it.units.sdm.quoridor.gui.panels.PanelsManager;
+import it.units.sdm.quoridor.GUI.panels.PanelsManager;
 
 import javax.swing.*;
 
@@ -13,7 +13,6 @@ public class GameGUI {
     this.numberOfPlayers = numberOfPlayers;
     this.controller = controller;
   }
-
 
   public void showGUI() {
     JFrame mainFrame = new JFrame("Quoridor");

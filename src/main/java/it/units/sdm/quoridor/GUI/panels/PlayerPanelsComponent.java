@@ -1,23 +1,21 @@
-package it.units.sdm.quoridor.gui.panels;
+package it.units.sdm.quoridor.GUI.panels;
 
-import it.units.sdm.quoridor.gui.GUIConstants;
-import it.units.sdm.quoridor.gui.GameBoardGUI;
-import it.units.sdm.quoridor.gui.GameController;
+import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.GUI.GameBoardGUI;
+import it.units.sdm.quoridor.GUI.GameController;
 import it.units.sdm.quoridor.model.AbstractPawn;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PlayerPanelsComponent implements PanelComponent {
-  private final GameController controller;
   private final int numberOfPlayers;
   private final GameBoardGUI gameBoardGUI;
 
   private final JPanel[] playerPanels;
   private final JLabel[] wallLabels;
 
-  public PlayerPanelsComponent(GameController controller, int numberOfPlayers, GameBoardGUI gameBoardGUI) {
-    this.controller = controller;
+  public PlayerPanelsComponent(int numberOfPlayers, GameBoardGUI gameBoardGUI) {
     this.numberOfPlayers = numberOfPlayers;
     this.gameBoardGUI = gameBoardGUI;
     this.playerPanels = new JPanel[numberOfPlayers];
@@ -29,7 +27,7 @@ public class PlayerPanelsComponent implements PanelComponent {
     return new JPanel();
   }
 
-  public void configureSidePanels(JPanel leftPanel, JPanel rightPanel) {
+  public void configureSidePanels(JPanel leftPanel, JPanel rightPanel, GameController controller) {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
@@ -40,8 +38,8 @@ public class PlayerPanelsComponent implements PanelComponent {
 
     gbc.gridy = 0;
     gbc.weighty = 0.2;
-    leftPanel.add(createPlayerPanel("Player 1 (" + pawnColors[0] + ")", pawns[0].getNumberOfWalls(), 0), gbc);
-    rightPanel.add(createPlayerPanel("Player 2 (" + pawnColors[1] + ")", pawns[1].getNumberOfWalls(), 1), gbc);
+    leftPanel.add(createPlayerPanel("Player 1 (" + pawnColors[0] + ")", pawns[0].getNumberOfWalls(), 0, controller), gbc);
+    rightPanel.add(createPlayerPanel("Player 2 (" + pawnColors[1] + ")", pawns[1].getNumberOfWalls(), 1, controller), gbc);
 
     if (numberOfPlayers == 4) {
       gbc.gridy = 1;
@@ -52,18 +50,20 @@ public class PlayerPanelsComponent implements PanelComponent {
       gbc.gridy = 2;
       gbc.weighty = 0.4;
       gbc.anchor = GridBagConstraints.CENTER;
-      leftPanel.add(createPlayerPanel("Player 3 (" + pawnColors[2] + ")", pawns[2].getNumberOfWalls(), 2), gbc);
-      rightPanel.add(createPlayerPanel("Player 4 (" + pawnColors[3] + ")", pawns[3].getNumberOfWalls(), 3), gbc);
+      leftPanel.add(createPlayerPanel("Player 3 (" + pawnColors[2] + ")", pawns[2].getNumberOfWalls(), 2, controller), gbc);
+      rightPanel.add(createPlayerPanel("Player 4 (" + pawnColors[3] + ")", pawns[3].getNumberOfWalls(), 3, controller), gbc);
     }
   }
 
-  private JPanel createPlayerPanel(String playerName, int wallCount, int playerIndex) {
+  private JPanel createPlayerPanel(String playerName, int wallCount, int playerIndex, GameController controller) {
     JPanel playerPanel = new JPanel();
     playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
     playerPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JLabel nameLabel = new JLabel(playerName, SwingConstants.CENTER);
-    nameLabel.setForeground(GUIConstants.TEXT_COLOR);
+
+    nameLabel.setForeground(controller.getPlayingPawnIndex() ==  playerIndex ? Color.YELLOW : GUIConstants.TEXT_COLOR);
+
     nameLabel.setFont(GUIConstants.HEADER_FONT);
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 

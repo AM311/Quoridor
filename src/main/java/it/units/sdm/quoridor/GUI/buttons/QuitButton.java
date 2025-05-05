@@ -1,6 +1,6 @@
-package it.units.sdm.quoridor.gui.buttons;
+package it.units.sdm.quoridor.GUI.buttons;
 
-import it.units.sdm.quoridor.gui.DialogManager;
+import it.units.sdm.quoridor.GUI.DialogManager;
 
 import javax.swing.*;
 

@@ -1,9 +1,9 @@
-package it.units.sdm.quoridor.gui.panels;
+package it.units.sdm.quoridor.GUI.panels;
 
-import it.units.sdm.quoridor.gui.DialogManager;
-import it.units.sdm.quoridor.gui.GameBoardGUI;
-import it.units.sdm.quoridor.gui.GameController;
-import it.units.sdm.quoridor.gui.GUIConstants;
+import it.units.sdm.quoridor.GUI.DialogManager;
+import it.units.sdm.quoridor.GUI.GameBoardGUI;
+import it.units.sdm.quoridor.GUI.GameController;
+import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.utils.Position;
 
 import javax.swing.*;
@@ -29,11 +29,11 @@ public class PanelsManager {
     Position[] pawnPositions = createInitialPawnPositions();
     this.gameBoardGUI = new GameBoardGUI(controller, pawnPositions);
 
-    this.playerPanelsComponent = new PlayerPanelsComponent(controller, numberOfPlayers, gameBoardGUI);
+    this.playerPanelsComponent = new PlayerPanelsComponent(numberOfPlayers, gameBoardGUI);
     this.actionsPanelComponent = new ActionsPanelComponent(controller, gameBoardGUI, dialogManager, this);
     this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(controller, gameBoardGUI, this);
     this.helpQuitPanelComponent = new HelpQuitPanelComponent(dialogManager);
-    this.rootPanelComponent = new RootPanelComponent(gameBoardGUI, playerPanelsComponent);
+    this.rootPanelComponent = new RootPanelComponent(controller, gameBoardGUI, playerPanelsComponent);
   }
 
   public JPanel createRootPanel() {

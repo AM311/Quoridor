@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.gui;
+package it.units.sdm.quoridor.GUI;
 
 import java.awt.Color;
 import java.awt.Font;
