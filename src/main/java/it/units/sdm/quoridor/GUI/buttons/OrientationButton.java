@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI.button;
+package it.units.sdm.quoridor.GUI.buttons;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;

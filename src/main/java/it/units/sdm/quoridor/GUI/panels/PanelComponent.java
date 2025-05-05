@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI.panel;
+package it.units.sdm.quoridor.GUI.panels;
 
 import javax.swing.JPanel;
 

@@ -1,9 +1,9 @@
-package it.units.sdm.quoridor.GUI.panel;
+package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.DialogManager;
 import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.button.HelpButton;
-import it.units.sdm.quoridor.GUI.button.QuitButton;
+import it.units.sdm.quoridor.GUI.buttons.HelpButton;
+import it.units.sdm.quoridor.GUI.buttons.QuitButton;
 
 import javax.swing.*;
 import java.awt.*;

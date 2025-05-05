@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI.panel;
+package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
 import it.units.sdm.quoridor.GUI.GameBoardGUI;
