@@ -1,8 +1,8 @@
-package it.units.sdm.quoridor.GUI.panels;
+package it.units.sdm.quoridor.gui.panels;
 
-import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.GameBoardGUI;
-import it.units.sdm.quoridor.GUI.GameBoardGUILayoutManager;
+import it.units.sdm.quoridor.gui.GUIConstants;
+import it.units.sdm.quoridor.gui.GameBoardGUI;
+import it.units.sdm.quoridor.gui.GameBoardGUILayoutManager;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.gui;
 
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
