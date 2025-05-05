@@ -1,9 +1,6 @@
-package it.units.sdm.quoridor.GUI.panels;
+package it.units.sdm.quoridor.GUI;
 
-import it.units.sdm.quoridor.GUI.DialogManager;
-import it.units.sdm.quoridor.GUI.GameBoardGUI;
-import it.units.sdm.quoridor.GUI.GameController;
-import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.GUI.panels.*;
 import it.units.sdm.quoridor.utils.Position;
 
 import javax.swing.*;
@@ -22,7 +19,7 @@ public class PanelsManager {
 
   private JPanel currentActionPanel;
 
-  public PanelsManager(GameController controller, int numberOfPlayers, DialogManager dialogManager) {
+  public PanelsManager(GameController controller, int numberOfPlayers, DialogManager dialogManager, JFrame mainFrame) {
     this.controller = controller;
     this.numberOfPlayers = numberOfPlayers;
 
@@ -30,7 +27,7 @@ public class PanelsManager {
     this.gameBoardGUI = new GameBoardGUI(controller, pawnPositions);
 
     this.playerPanelsComponent = new PlayerPanelsComponent(numberOfPlayers, gameBoardGUI);
-    this.actionsPanelComponent = new ActionsPanelComponent(controller, gameBoardGUI, dialogManager, this);
+    this.actionsPanelComponent = new ActionsPanelComponent(controller, gameBoardGUI, dialogManager, this, mainFrame);
     this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(controller, gameBoardGUI, this);
     this.helpQuitPanelComponent = new HelpQuitPanelComponent(dialogManager);
     this.rootPanelComponent = new RootPanelComponent(controller, gameBoardGUI, playerPanelsComponent);

@@ -28,7 +28,6 @@ public final class GUIConstants {
   public static final int VERTICAL_SPACING = 10;
   public static final int BUTTON_WIDTH = 120;
   public static final int BUTTON_HEIGHT = 40;
-  public static final int POPUP_DURATION = 3000;
 
   public static final String INSTRUCTION = "<html><div style='width: 300px; text-align: left;'>" +
           "<h3>How to play Quoridor:</h3>" +
