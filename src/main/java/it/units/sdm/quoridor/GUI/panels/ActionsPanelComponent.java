@@ -14,14 +14,14 @@ public class ActionsPanelComponent implements PanelComponent {
   private final GameController controller;
   private final GameBoardGUI gameBoardGUI;
   private final DialogManager dialogManager;
-  private final PanelsManager panelManager;
+  private final PanelsManager panelsManager;
 
   public ActionsPanelComponent(GameController controller, GameBoardGUI gameBoardGUI,
-                               DialogManager dialogManager, PanelsManager panelManager) {
+                               DialogManager dialogManager, PanelsManager panelsManager) {
     this.controller = controller;
     this.gameBoardGUI = gameBoardGUI;
     this.dialogManager = dialogManager;
-    this.panelManager = panelManager;
+    this.panelsManager = panelsManager;
   }
 
   @Override
@@ -30,7 +30,7 @@ public class ActionsPanelComponent implements PanelComponent {
     actionsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JButton moveButton = new MoveButton(gameBoardGUI, dialogManager);
-    JButton placeWallButton = new PlaceWallButton(gameBoardGUI, moveButton, controller, dialogManager, panelManager);
+    JButton placeWallButton = new PlaceWallButton(gameBoardGUI, moveButton, controller, dialogManager, panelsManager);
 
     actionsPanel.add(moveButton);
     actionsPanel.add(placeWallButton);
