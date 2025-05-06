@@ -20,12 +20,12 @@ public class PathExistenceChecker implements ActionChecker<Wall> {
     try {
       dummyGame.placeWall(new Position(wall.startingTile().getRow(), wall.startingTile().getColumn()), wall.orientation());
     } catch (InvalidActionException | InvalidParameterException e) {
-      return CheckResult.INVALID_WALL_POSITION;
+      return QuoridorCheckResult.INVALID_WALL_POSITION;
     }
     if (executeDijkstraAlgorithm(dummyGame)) {
-      return CheckResult.OKAY;
+      return QuoridorCheckResult.OKAY;
     }
-    return CheckResult.BLOCKING_WALL;
+    return QuoridorCheckResult.BLOCKING_WALL;
   }
 
   private AbstractGame buildDummyGame(AbstractGame game) {
@@ -79,7 +79,7 @@ public class PathExistenceChecker implements ActionChecker<Wall> {
     boolean existsPath = false;
 
     for (AbstractTile tile : potentials.keySet()) {
-      if (destinationTiles.contains(tile)) {              // todo check
+      if (destinationTiles.contains(tile)) {
         if (potentials.get(tile) == 0)
           existsPath = true;
       }

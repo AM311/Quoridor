@@ -12,11 +12,11 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
         case HORIZONTAL -> checkHorizontalWallPosition(game.getGameBoard(), target.startingTile());
         case VERTICAL -> checkVerticalWallPosition(game.getGameBoard(), target.startingTile());
       }) {
-        return CheckResult.OKAY;
+        return QuoridorCheckResult.OKAY;
       }
-      return CheckResult.INVALID_WALL_POSITION;
+      return QuoridorCheckResult.INVALID_WALL_POSITION;
     }
-    return CheckResult.END_OF_AVAIABLE_WALLS;
+    return QuoridorCheckResult.END_OF_AVAILABLE_WALLS;
   }
 
   private boolean checkNumberOfWalls(AbstractPawn pawn) {

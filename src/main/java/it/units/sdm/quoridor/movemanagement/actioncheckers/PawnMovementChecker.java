@@ -19,14 +19,14 @@ public class PawnMovementChecker implements ActionChecker<AbstractTile> {
     AbstractTile currentTile = playingPawn.getCurrentTile();
 
     if (destinationTile.isOccupiedBy().isPresent()) {
-      return CheckResult.OCCUPIED_TILE;
+      return QuoridorCheckResult.OCCUPIED_TILE;
     }
     if(isValidStraightMove(gameBoard, destinationTile, currentTile)
             || isValidDiagonalMove(gameBoard, destinationTile, currentTile)
             || isValidJumpingMove(gameBoard, destinationTile, currentTile)){
-      return CheckResult.OKAY;
+      return QuoridorCheckResult.OKAY;
     }
-    return CheckResult.INVALID_MOVEMENT;
+    return QuoridorCheckResult.INVALID_MOVEMENT;
 
   }
 
