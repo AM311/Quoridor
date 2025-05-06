@@ -1,13 +1,17 @@
 package testDoubles;
 
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.CheckResult;
 
 public class StubActionChecker {
-  public static ActionChecker<Object> returnAlwaysTrueActionChecker () {
-    return (game, target) -> true;
+  public enum StubCheckResult implements CheckResult{
+    OKAY, KO;
+  }
+  public static ActionChecker<Object> returnAlwaysOKAYActionChecker () {
+    return (game, target) -> StubCheckResult.OKAY;
   }
 
-  public static ActionChecker<Object> returnAlwaysFalseActionChecker () {
-    return (game, target) -> false;
+  public static ActionChecker<Object> returnAlwaysKOActionChecker () {
+    return (game, target) -> StubCheckResult.KO;
   }
 }

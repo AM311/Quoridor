@@ -8,6 +8,8 @@ import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.CheckResult;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.PathExistenceChecker;
 import it.units.sdm.quoridor.movemanagement.actions.PawnMover;
 import it.units.sdm.quoridor.movemanagement.actions.WallPlacer;
@@ -64,7 +66,9 @@ public class PathExistenceCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(3, 4));
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertTrue(pathExistenceChecker.isValidAction(game, wall));
+    //Assertions.assertTrue(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @ParameterizedTest
@@ -81,7 +85,8 @@ public class PathExistenceCheckerTest {
 
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+     CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath); //NON SONO SICURA DI BLOCKING_WALLS
   }
 
 
@@ -110,7 +115,8 @@ public class PathExistenceCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(row - 2, 7));
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertTrue(pathExistenceChecker.isValidAction(game, wall));
+     CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
 
@@ -123,7 +129,9 @@ public class PathExistenceCheckerTest {
     game.changeRound();
     Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(1, 8)));
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+    //Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+     CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
 
   }
 
@@ -138,7 +146,8 @@ public class PathExistenceCheckerTest {
 
     Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(8, 8)));
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+     CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
   }
 
   @Test
@@ -158,7 +167,8 @@ public class PathExistenceCheckerTest {
     game.changeRound();
     Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(1, 8)));
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
 
   }
 
@@ -179,7 +189,8 @@ public class PathExistenceCheckerTest {
     game.changeRound();
     Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(8, 8)));
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
 
   }
 
@@ -190,14 +201,15 @@ public class PathExistenceCheckerTest {
     AbstractGameBoard gameBoard = game.getGameBoard();
 
     fillColumnWithWalls(game, gameBoard, column);
-
-    wallPlacer.execute(game, new Wall(VERTICAL, gameBoard.getTile(new Position(column, 8))));
+    game.changeRound();
+    wallPlacer.execute(game, new Wall(VERTICAL, gameBoard.getTile(new Position(8, column - 2))));
 
     AbstractTile startingTile = gameBoard.getTile(new Position(7, column - 2));
 
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
   }
 
   @ParameterizedTest
@@ -228,7 +240,8 @@ public class PathExistenceCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(8, column + 2));
     Wall wall = new Wall(VERTICAL, startingTile);
 
-    Assertions.assertTrue(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
 
@@ -242,7 +255,8 @@ public class PathExistenceCheckerTest {
 
     Wall wall = new Wall(HORIZONTAL, gameBoard.getTile(new Position(1, 3)));
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
   }
 
   @Test
@@ -263,7 +277,8 @@ public class PathExistenceCheckerTest {
 
     Wall wall = new Wall(HORIZONTAL, gameBoard.getTile(new Position(1, 5)));
 
-    Assertions.assertTrue(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @Test
@@ -285,7 +300,8 @@ public class PathExistenceCheckerTest {
 
     Wall wall = new Wall(VERTICAL, gameBoard.getTile(new Position(4, 7)));
 
-    Assertions.assertFalse(pathExistenceChecker.isValidAction(game, wall));
+    CheckResult checkPath = pathExistenceChecker.isValidAction(game, wall);
+    Assertions.assertEquals(QuoridorCheckResult.BLOCKING_WALL, checkPath);
 
   }
 
