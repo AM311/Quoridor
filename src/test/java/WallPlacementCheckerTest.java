@@ -9,6 +9,7 @@ import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.CheckResult;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.WallPlacementChecker;
 import it.units.sdm.quoridor.movemanagement.actions.WallPlacer;
 import it.units.sdm.quoridor.utils.Position;
@@ -39,9 +40,8 @@ public class WallPlacementCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    //Assertions.assertTrue(.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.OKAY, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
 
 
   }
@@ -56,9 +56,8 @@ public class WallPlacementCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-   // Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -75,9 +74,8 @@ public class WallPlacementCheckerTest {
 
     wallPlacer.execute(game, verticalWall);
 
-    //Assertions.assertFalse(wallPlacementChecker.isValidAction(game, horizontalWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, horizontalWall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -93,9 +91,8 @@ public class WallPlacementCheckerTest {
 
     wallPlacer.execute(game, verticalWall);
 
-    //Assertions.assertTrue(wallPlacementChecker.isValidAction(game, horizontalWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, horizontalWall);
-    Assertions.assertEquals(CheckResult.OKAY, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @ParameterizedTest
@@ -108,9 +105,8 @@ public class WallPlacementCheckerTest {
     Wall wall = new Wall(HORIZONTAL, startingTile);
     wallPlacer.execute(game, wall);
 
-    //Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -125,9 +121,8 @@ public class WallPlacementCheckerTest {
     Wall secondWall = new Wall(HORIZONTAL, startingTileSecond);
     wallPlacer.execute(game, firstWall);
 
-    //Assertions.assertFalse(wallPlacementChecker.isValidAction(game, secondWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, secondWall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -146,9 +141,8 @@ public class WallPlacementCheckerTest {
     wallPlacer.execute(game, firstWall);
     wallPlacer.execute(game, secondWall);
 
-    //Assertions.assertTrue(wallPlacementChecker.isValidAction(game, thirdWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, thirdWall);
-    Assertions.assertEquals(CheckResult.OKAY, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @ParameterizedTest
@@ -160,9 +154,8 @@ public class WallPlacementCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
     Wall wall = new Wall(VERTICAL, startingTile);
 
-    //Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -173,9 +166,8 @@ public class WallPlacementCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
     Wall wall = new Wall(VERTICAL, startingTile);
 
-   // Assertions.assertTrue(wallPlacementChecker.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.OKAY, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @ParameterizedTest
@@ -192,9 +184,8 @@ public class WallPlacementCheckerTest {
 
     wallPlacer.execute(game, horizontalWall);
 
-   // Assertions.assertFalse(wallPlacementChecker.isValidAction(game, verticalWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, verticalWall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -211,9 +202,8 @@ public class WallPlacementCheckerTest {
 
     wallPlacer.execute(game, horizontalWall);
 
-   // Assertions.assertTrue(wallPlacementChecker.isValidAction(game, verticalWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, verticalWall);
-    Assertions.assertEquals(CheckResult.OKAY, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @ParameterizedTest
@@ -227,9 +217,8 @@ public class WallPlacementCheckerTest {
     Wall wall = new Wall(VERTICAL, startingTile);
     wallPlacer.execute(game, wall);
 
-   // Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -245,9 +234,8 @@ public class WallPlacementCheckerTest {
     Wall secondWall = new Wall(VERTICAL, startingTileSecond);
     wallPlacer.execute(game, firstWall);
 
-    //Assertions.assertFalse(wallPlacementChecker.isValidAction(game, secondWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, secondWall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_WALL_POSITION, checkPath);
   }
 
   @ParameterizedTest
@@ -266,9 +254,8 @@ public class WallPlacementCheckerTest {
     wallPlacer.execute(game, firstWall);
     wallPlacer.execute(game, secondWall);
 
-    //Assertions.assertTrue(wallPlacementChecker.isValidAction(game, thirdWall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, thirdWall);
-    Assertions.assertEquals(CheckResult.OKAY, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkPath);
   }
 
   @ParameterizedTest
@@ -283,8 +270,7 @@ public class WallPlacementCheckerTest {
     AbstractTile startingTile = gameBoard.getTile(new Position(row, column));
     Wall wall = new Wall(HORIZONTAL, startingTile);
 
-    //Assertions.assertFalse(wallPlacementChecker.isValidAction(game, wall));
     CheckResult checkPath = wallPlacementChecker.isValidAction(game, wall);
-    Assertions.assertEquals(CheckResult.INVALID_WALL_POSITION, checkPath);
+    Assertions.assertEquals(QuoridorCheckResult.END_OF_AVAILABLE_WALLS, checkPath);
   }
 }

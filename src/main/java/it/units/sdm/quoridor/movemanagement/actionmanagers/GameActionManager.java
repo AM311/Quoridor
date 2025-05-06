@@ -45,11 +45,11 @@ public class GameActionManager implements ActionManager {
 
   private void explainInvalidMove(CheckResult result) throws InvalidActionException {
     throw new InvalidActionException(switch (result) {
-      case END_OF_AVAILABLE_WALLS -> "You have end the walls that you can place";
-      case INVALID_WALL_POSITION -> "The required wall position is invalid";
-      case BLOCKING_WALL -> "The required wall position is invalid because it blocks the pawn";
-      case INVALID_MOVEMENT -> "You are requiring an invalid movement";
-      case OCCUPIED_TILE -> "Your target tile is already occupied so you cannot place there your pawn";
+      case END_OF_AVAILABLE_WALLS -> "You have ended your walls!";
+      case INVALID_WALL_POSITION -> "You cannot place a wall in the required position!";
+      case BLOCKING_WALL -> "You cannot completely block a pawn!";
+      case INVALID_MOVEMENT -> "You cannot place your pawn in the required tile!";
+      case OCCUPIED_TILE -> "Your target tile is already occupied!";
       default -> "Invalid case";
     });
   }
