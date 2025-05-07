@@ -35,8 +35,8 @@ public class WallDirectionsPanelComponent implements PanelComponent {
     });
 
     horizontalButton.addActionListener(e -> {
-      verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
+      verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
+      horizontalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       gameBoardGUI.setCurrentAction(GameBoardGUI.Action.PLACE_HORIZONTAL_WALL);
     });
 

@@ -10,19 +10,19 @@ import java.awt.*;
 
 public class PlayerPanelsComponent implements PanelComponent {
   private final int numberOfPlayers;
-  private final GameBoardGUI gameBoardGUI;
 
   private final JPanel[] playerPanels;
   private final JLabel[] wallLabels;
   private final JLabel[] nameLabels;
+  private final String[] pawnColors;
 
 
   public PlayerPanelsComponent(int numberOfPlayers, GameBoardGUI gameBoardGUI) {
     this.numberOfPlayers = numberOfPlayers;
-    this.gameBoardGUI = gameBoardGUI;
     this.playerPanels = new JPanel[numberOfPlayers];
     this.wallLabels = new JLabel[numberOfPlayers];
-    this.nameLabels = new JLabel[numberOfPlayers]; // Array per le etichette dei nomi
+    this.nameLabels = new JLabel[numberOfPlayers];
+    this.pawnColors = gameBoardGUI.getPawnColors();
   }
 
   @Override
@@ -37,7 +37,6 @@ public class PlayerPanelsComponent implements PanelComponent {
     gbc.anchor = GridBagConstraints.NORTH;
 
     AbstractPawn[] pawns = gameManager.getGame().getPawns().toArray(new AbstractPawn[0]);
-    String[] pawnColors = gameBoardGUI.getPawnColors();
 
     gbc.gridy = 0;
     gbc.weighty = 0.2;
@@ -110,8 +109,8 @@ public class PlayerPanelsComponent implements PanelComponent {
     }
 
     if (activePlayerIndex >= 0 && activePlayerIndex < numberOfPlayers && nameLabels[activePlayerIndex] != null) {
-      nameLabels[activePlayerIndex].setForeground(Color.GREEN);
-      wallLabels[activePlayerIndex].setForeground(Color.GREEN);
+      nameLabels[activePlayerIndex].setForeground(getColorFromString(pawnColors[activePlayerIndex]));
+      wallLabels[activePlayerIndex].setForeground(getColorFromString(pawnColors[activePlayerIndex]));
     }
 
     for (JPanel panel : playerPanels) {
@@ -119,6 +118,14 @@ public class PlayerPanelsComponent implements PanelComponent {
         panel.revalidate();
         panel.repaint();
       }
+    }
+  }
+
+  public Color getColorFromString(String colorStr) {
+    try {
+      return (Color) Color.class.getField(colorStr.toUpperCase()).get(null);
+    } catch (Exception e) {
+      return GUIConstants.TEXT_COLOR;
     }
   }
 }

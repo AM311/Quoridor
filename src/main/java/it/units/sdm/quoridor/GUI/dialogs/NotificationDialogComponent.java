@@ -9,18 +9,18 @@ public class NotificationDialogComponent implements DialogComponent {
   private final String message;
 
   public NotificationDialogComponent(String message) {
-    this.message = message;
+    this.message = "<html><div style='width: 200px; text-align: center;'>" + message + "</div></html>";
   }
 
   @Override
   public JPanel createDialog() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
-    panel.setBackground(GUIConstants.POPUP_BACKGROUND);
+    panel.setBackground(Color.GREEN);
 
     JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    messageLabel.setFont(GUIConstants.SMALL_FONT);
+    messageLabel.setFont(GUIConstants.NORMAL_FONT);
     messageLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     panel.add(messageLabel, BorderLayout.CENTER);
     return panel;
