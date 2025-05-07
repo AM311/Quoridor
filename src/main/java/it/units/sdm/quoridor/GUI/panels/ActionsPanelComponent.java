@@ -56,7 +56,7 @@ public class ActionsPanelComponent implements PanelComponent {
       if (gameManager.getGame().getPlayingPawn().getNumberOfWalls() > 0) {
         panelsManager.showWallDirectionButtons(gameManager.getPlayingPawnIndex());
       } else {
-        dialogManager.showNotificationDialog("No walls available!", gameManager.getPlayingPawnIndex(), 3000);
+        dialogManager.showNotificationDialog("No walls available!", true);
       }
     });
     return placeWallButton;

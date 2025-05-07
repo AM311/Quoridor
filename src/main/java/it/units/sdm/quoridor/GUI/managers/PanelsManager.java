@@ -26,7 +26,7 @@ public class PanelsManager {
     this.numberOfPlayers = numberOfPlayers;
 
     Position[] pawnPositions = createInitialPawnPositions();
-    this.gameBoardGUI = new GameBoardGUI(gameManager, pawnPositions);
+    this.gameBoardGUI = new GameBoardGUI(gameManager, dialogManager, pawnPositions);
 
     this.playerPanelsComponent = new PlayerPanelsComponent(numberOfPlayers, gameBoardGUI);
     this.actionsPanelComponent = new ActionsPanelComponent(gameManager, gameBoardGUI, dialogManager, this, mainFrame);

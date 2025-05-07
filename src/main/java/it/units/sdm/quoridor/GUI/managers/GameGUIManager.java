@@ -65,8 +65,7 @@ public class GameGUIManager {
     } catch (InvalidParameterException | InvalidActionException e) {
       dialogManager.showNotificationDialog(
               "Can't move to " + (targetPosition.row() + 1) + ","  + (targetPosition.column() + 1),
-              game.getPlayingPawnIndex(),
-              3000
+              true
       );
     }
   }
@@ -85,7 +84,7 @@ public class GameGUIManager {
       String article = orientation.equals(WallOrientation.HORIZONTAL) ? "an " : "a ";
       String message = "Can't place " + article + orientationStr + " wall at "
               + (position.row() + 1) + "," + (position.column() + 1);
-      dialogManager.showNotificationDialog(message, game.getPlayingPawnIndex(), 3000);
+      dialogManager.showNotificationDialog(message, true);
     }
   }
 

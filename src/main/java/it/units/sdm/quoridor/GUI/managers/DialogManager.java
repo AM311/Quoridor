@@ -54,15 +54,15 @@ public class DialogManager {
     gameFinishedDialog.setVisible(true);
   }
 
-  public void showNotificationDialog(String message, int playerIndex, int ms) {
+  public void showNotificationDialog(String message, boolean invalidActionFlag) {
     JDialog notificationDialog = new JDialog(mainFrame);
     notificationDialog.setUndecorated(true);
-    notificationDialog.setSize(310, 150);
+    notificationDialog.setSize(250, 80);
 
-    if (playerIndex == 0 || playerIndex == 2) {
-      notificationDialog.setLocation(30, 350);
+    if (!invalidActionFlag) {
+      notificationDialog.setLocation(45, 350);
     } else {
-      notificationDialog.setLocation(1180, 350);
+      notificationDialog.setLocation(1210, 350);
     }
 
     JPanel notificationPanel = new NotificationDialogComponent(message).createDialog();
@@ -70,9 +70,12 @@ public class DialogManager {
     notificationDialog.add(notificationPanel);
     notificationDialog.setVisible(true);
 
-    Timer timer = new Timer(ms, e -> notificationDialog.dispose());
-    timer.setRepeats(false);
-    timer.start();
+    if (invalidActionFlag) {
+      Timer timer = new Timer(3000, e -> notificationDialog.dispose());
+      timer.setRepeats(false);
+      timer.start();
+    }
+
   }
 
 }

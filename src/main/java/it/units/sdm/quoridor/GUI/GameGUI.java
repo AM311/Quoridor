@@ -33,7 +33,7 @@ public class GameGUI {
     mainFrame.setVisible(true);
 
     dialogManager.showHelpDialog();
-    dialogManager.showNotificationDialog("Player " + (gameManager.getPlayingPawnIndex() + 1) + "'s turn", gameManager.getPlayingPawnIndex(), 1500);
+    dialogManager.showNotificationDialog("Player " + (gameManager.getPlayingPawnIndex() + 1) + "'s turn", false);
   }
 
   public void onWallPlaced(int playerIndex, int remainingWalls) {
@@ -45,7 +45,7 @@ public class GameGUI {
     gameManager.changeRound();
     panelsManager.updatePlayerPanel(gameManager.getPlayingPawnIndex());
     panelsManager.showActionButtonsForPlayer(gameManager.getPlayingPawnIndex());
-    dialogManager.showNotificationDialog("Player " + (gameManager.getPlayingPawnIndex() + 1) + "'s turn", gameManager.getPlayingPawnIndex(), 1500);
+    dialogManager.showNotificationDialog("Player " + (gameManager.getPlayingPawnIndex() + 1) + "'s turn", false);
 
   }
 }

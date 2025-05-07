@@ -10,7 +10,7 @@ public final class GUIConstants {
   
   public static final Color BUTTON_BACKGROUND_COLOR = UIManager.getColor("Button.background");
   public static final Color BACKGROUND_COLOR = Color.DARK_GRAY;
-  public static final Color TEXT_COLOR = Color.ORANGE;
+  public static final Color TEXT_COLOR = Color.LIGHT_GRAY;
   public static final Color HIGHLIGHT_COLOR = Color.LIGHT_GRAY;
   public static final Color BUTTON_SELECTED_COLOR = Color.GREEN;
   public static final Color WALL_COLOR = Color.BLACK;

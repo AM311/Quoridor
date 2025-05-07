@@ -1,6 +1,7 @@
 package it.units.sdm.quoridor.GUI;
 
 import it.units.sdm.quoridor.GUI.managers.BorderManager;
+import it.units.sdm.quoridor.GUI.managers.DialogManager;
 import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.utils.Position;
@@ -19,10 +20,7 @@ public class GameBoardGUI extends JPanel {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
   }
 
-  private static final int ICON_SIZE = GUIConstants.ICON_SIZE;
-  private static final Color HIGHLIGHT_COLOR = GUIConstants.HIGHLIGHT_COLOR;
-  private static final Color WALL_COLOR = GUIConstants.WALL_COLOR;
-
+  private final DialogManager dialogManager;
   private final String[] PAWN_COLORS;
   private final JButton[][] tiles;
   private final GameGUIManager gameManager;
@@ -31,12 +29,13 @@ public class GameBoardGUI extends JPanel {
 
   protected Action currentAction = Action.DO_NOTHING;
 
-  public GameBoardGUI(GameGUIManager gameManager, Position... pawnPositions) {
+  public GameBoardGUI(GameGUIManager gameManager, DialogManager dialogManager, Position... pawnPositions) {
     this.gameManager = gameManager;
     this.PAWN_COLORS = getPawnColors();
     this.pawnIcons = loadPawnIcons(pawnPositions.length);
     int gameBoardSize = gameManager.getGame().getGameBoard().getSideLength();
     this.tiles = new JButton[gameBoardSize][gameBoardSize];
+    this.dialogManager = dialogManager;
 
     setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
     initializeTiles(pawnPositions);
@@ -59,7 +58,7 @@ public class GameBoardGUI extends JPanel {
               GameBoardGUI.class.getResource(resourcePath)));
 
       Image img = icon.getImage();
-      Image scaledImg = img.getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);
+      Image scaledImg = img.getScaledInstance(GUIConstants.ICON_SIZE, GUIConstants.ICON_SIZE, Image.SCALE_SMOOTH);
       icons[i] = new ImageIcon(scaledImg);
     }
 
@@ -98,7 +97,7 @@ public class GameBoardGUI extends JPanel {
     clearHighlights();
     List<Position> validPositions = gameManager.getValidMovePositions();
     for (Position position : validPositions) {
-      tiles[position.row()][position.column()].setBackground(HIGHLIGHT_COLOR);
+      tiles[position.row()][position.column()].setBackground(GUIConstants.HIGHLIGHT_COLOR);
     }
   }
 
@@ -134,13 +133,13 @@ public class GameBoardGUI extends JPanel {
       case MOVE -> gameManager.attemptPawnMove(targetPosition);
       case PLACE_HORIZONTAL_WALL -> gameManager.attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
       case PLACE_VERTICAL_WALL -> gameManager.attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
-      case DO_NOTHING -> {}
+      case DO_NOTHING -> dialogManager.showNotificationDialog("Choose an action!", true);
     }
   }
 
   private void updateButtonBorder(JButton button, int side) {
     BorderManager manager = borderManagers.computeIfAbsent(button, k -> new BorderManager());
-    manager.setBorderSide(side, WALL_COLOR, 3);
+    manager.setBorderSide(side, GUIConstants.WALL_COLOR, 3);
     manager.applyTo(button);
   }
 
