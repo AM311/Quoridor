@@ -6,18 +6,34 @@ import it.units.sdm.quoridor.GUI.GUIConstants;
 import javax.swing.*;
 import java.awt.*;
 
-public class QuitDialogComponent implements DialogComponent {
+public class QuitDialogView implements DialogView {
   private final JDialog confirmQuitDialog;
   private final DialogManager dialogManager;
+  private final JFrame mainFrame;
 
-  public QuitDialogComponent(JDialog confirmQuitDialog, DialogManager dialogManager) {
-    this.confirmQuitDialog = confirmQuitDialog;
+  // TODO BISOGNERA METTERE IL CONTROLLER AL POSTO DEL DIALOGMANAGER
+  public QuitDialogView(DialogManager dialogManager, JFrame mainFrame) {
     this.dialogManager = dialogManager;
+    this.mainFrame = mainFrame;
+    this.confirmQuitDialog = new JDialog(mainFrame, true);
   }
 
 
   @Override
-  public JPanel createDialog() {
+  public void displayDialog() {
+    confirmQuitDialog.setUndecorated(true);
+    confirmQuitDialog.setSize(400, 200);
+    confirmQuitDialog.setLocationRelativeTo(mainFrame);
+    confirmQuitDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+    JPanel panel = createDialog();
+
+    confirmQuitDialog.add(panel);
+    confirmQuitDialog.setVisible(true);
+  }
+
+
+  private JPanel createDialog() {
     JPanel quitPanel = new JPanel(new BorderLayout());
     quitPanel.setBorder(GUIConstants.POPUP_BORDER);
     quitPanel.setBackground(GUIConstants.BACKGROUND_COLOR);

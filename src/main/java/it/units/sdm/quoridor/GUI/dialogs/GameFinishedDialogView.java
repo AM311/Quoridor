@@ -11,19 +11,32 @@ import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import javax.swing.*;
 import java.awt.*;
 
-public class GameFinishedDialogComponent implements DialogComponent {
+public class GameFinishedDialogView implements DialogView {
   private final GameGUIManager gameManager;
   private final JFrame mainFrame;
   private final JDialog gameFinishedDialog;
 
-  public GameFinishedDialogComponent(GameGUIManager gameManager, JFrame mainFrame, JDialog gameFinishedDialog) {
+  public GameFinishedDialogView(GameGUIManager gameManager, JFrame mainFrame) {
     this.gameManager = gameManager;
     this.mainFrame = mainFrame;
-    this.gameFinishedDialog = gameFinishedDialog;
+    this.gameFinishedDialog = new JDialog(mainFrame, true);
   }
 
+
   @Override
-  public JPanel createDialog() {
+  public void displayDialog() {
+    gameFinishedDialog.setUndecorated(true);
+    gameFinishedDialog.setSize(400, 200);
+    gameFinishedDialog.setLocationRelativeTo(mainFrame);
+    gameFinishedDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+    JPanel panel = createDialog();
+
+    gameFinishedDialog.add(panel);
+    gameFinishedDialog.setVisible(true);
+  }
+
+  private JPanel createDialog() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
     panel.setBackground(GUIConstants.WIN_SCREEN_BACKGROUND);
@@ -79,6 +92,8 @@ public class GameFinishedDialogComponent implements DialogComponent {
     return messageLabel;
   }
 
+
+  // TODO DA SPOSTARE NEL CONTROLLORE
   private void restartGame() {
     if (mainFrame != null) {
       mainFrame.dispose();

@@ -8,13 +8,28 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HelpDialogComponent implements DialogComponent {
+public class HelpDialogView implements DialogView {
+  private final JFrame mainFrame;
 
-  public HelpDialogComponent() {
+
+  public HelpDialogView(JFrame mainFrame) {
+    this.mainFrame = mainFrame;
   }
 
   @Override
-  public JPanel createDialog() {
+  public void displayDialog() {
+    JPanel helpPanel = createDialog();
+
+    JOptionPane.showMessageDialog(
+            mainFrame,
+            helpPanel,
+            "Quoridor Help",
+            JOptionPane.INFORMATION_MESSAGE
+    );
+  }
+
+
+  private JPanel createDialog() {
     JPanel helpPanel = new JPanel();
     helpPanel.setLayout(new BoxLayout(helpPanel, BoxLayout.Y_AXIS));
 
