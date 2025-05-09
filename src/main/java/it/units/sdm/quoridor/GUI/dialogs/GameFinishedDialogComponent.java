@@ -87,8 +87,8 @@ public class GameFinishedDialogComponent implements DialogComponent {
     try {
       BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(gameManager.getGame().getPawns().size()));
       var game = builderDirector.makeGame();
-      GameGUIManager newgameManager = new GameGUIManager(game);
-      GameGUI gameGUI = new GameGUI(gameManager.getGame().getPawns().size(), newgameManager);
+      GameGUIManager newGameManager = new GameGUIManager(game);
+      GameGUI gameGUI = new GameGUI(gameManager.getGame().getPawns().size(), newGameManager);
       gameGUI.showGUI();
     } catch (InvalidParameterException | BuilderException e) {
       JOptionPane.showMessageDialog(mainFrame,
