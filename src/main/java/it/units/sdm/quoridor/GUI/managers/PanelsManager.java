@@ -13,13 +13,14 @@ public class PanelsManager {
   private final int numberOfPlayers;
   private final GameBoardGUI gameBoardGUI;
 
-  private final PlayerPanelsComponent playerPanelsComponent;
+  private final PlayersManager playersManager;
   private final ActionsPanelComponent actionsPanelComponent;
   private final WallDirectionsPanelComponent wallDirectionsPanelComponent;
   private final HelpQuitPanelComponent helpQuitPanelComponent;
   private final RootPanelComponent rootPanelComponent;
 
   private JPanel currentActionPanel;
+  private int currentPlayerIndex;
 
   public PanelsManager(GameGUIManager gameManager, int numberOfPlayers, DialogManager dialogManager, JFrame mainFrame) {
     this.gameManager = gameManager;
@@ -28,11 +29,12 @@ public class PanelsManager {
     Position[] pawnPositions = createInitialPawnPositions();
     this.gameBoardGUI = new GameBoardGUI(gameManager, dialogManager, pawnPositions);
 
-    this.playerPanelsComponent = new PlayerPanelsComponent(numberOfPlayers, gameBoardGUI);
+    this.playersManager = new PlayersManager(numberOfPlayers, gameBoardGUI);
     this.actionsPanelComponent = new ActionsPanelComponent(gameManager, gameBoardGUI, dialogManager, this, mainFrame);
     this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameManager, gameBoardGUI, this);
     this.helpQuitPanelComponent = new HelpQuitPanelComponent(dialogManager);
-    this.rootPanelComponent = new RootPanelComponent(gameManager, gameBoardGUI, playerPanelsComponent);
+
+    this.rootPanelComponent = new RootPanelComponent(gameManager, gameBoardGUI, playersManager);
   }
 
   public JPanel createRootPanel() {
@@ -48,9 +50,10 @@ public class PanelsManager {
 
   public void showActionButtonsForPlayer(int playerIndex) {
     if (currentActionPanel != null) {
-      playerPanelsComponent.removeActionPanel(playerIndex, currentActionPanel);
+      removeCurrentActionPanel(currentPlayerIndex);
     }
 
+    currentPlayerIndex = playerIndex;
     currentActionPanel = new JPanel();
     currentActionPanel.setLayout(new BoxLayout(currentActionPanel, BoxLayout.Y_AXIS));
     currentActionPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
@@ -65,7 +68,9 @@ public class PanelsManager {
   }
 
   public void removeCurrentActionPanelForPlayer(int playerIndex) {
-    playerPanelsComponent.removeActionPanel(playerIndex, currentActionPanel);
+    if (currentActionPanel != null) {
+      playersManager.removeActionPanel(playerIndex, currentActionPanel);
+    }
   }
 
   public void addActionButtonsPanel(int playerIndex, JPanel actionButtonsPanel, JPanel containerPanel) {
@@ -75,16 +80,20 @@ public class PanelsManager {
     JPanel helpQuitPanel = helpQuitPanelComponent.createPanel();
     containerPanel.add(helpQuitPanel);
 
-    playerPanelsComponent.addActionPanel(playerIndex, containerPanel);
+    playersManager.addActionPanel(playerIndex, containerPanel);
     currentActionPanel = containerPanel;
+    currentPlayerIndex = playerIndex;
   }
 
   public void updateWallLabel(int playerIndex, int remainingWalls) {
-    playerPanelsComponent.updateWallLabel(playerIndex, remainingWalls);
+    playersManager.updateWallLabel(playerIndex, remainingWalls);
   }
 
   public void removeCurrentActionPanel(int playerIndex) {
-    playerPanelsComponent.removeActionPanel(playerIndex, currentActionPanel);
+    if (currentActionPanel != null) {
+      playersManager.removeActionPanel(playerIndex, currentActionPanel);
+      currentActionPanel = null;
+    }
   }
 
   private Position[] createInitialPawnPositions() {
@@ -101,6 +110,7 @@ public class PanelsManager {
   }
 
   public void updatePlayerPanel(int playerIndex) {
-    playerPanelsComponent.updatePlayerPanel(playerIndex);
+    playersManager.updateActivePlayer(playerIndex);
+    currentPlayerIndex = playerIndex;
   }
 }

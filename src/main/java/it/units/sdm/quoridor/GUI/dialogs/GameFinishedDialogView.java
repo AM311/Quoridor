@@ -104,7 +104,7 @@ public class GameFinishedDialogView implements DialogView {
       var game = builderDirector.makeGame();
       GameGUIManager newGameManager = new GameGUIManager(game);
       GameGUI gameGUI = new GameGUI(gameManager.getGame().getPawns().size(), newGameManager);
-      gameGUI.showGUI();
+      gameGUI.displayGUI();
     } catch (InvalidParameterException | BuilderException e) {
       JOptionPane.showMessageDialog(mainFrame,
               e.getMessage(),

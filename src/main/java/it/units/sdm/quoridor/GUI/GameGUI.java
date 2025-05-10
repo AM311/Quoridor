@@ -17,7 +17,8 @@ public class GameGUI {
     this.gameManager = gameManager;
   }
 
-  public void showGUI() {
+
+  public void displayGUI() {
     JFrame mainFrame = new JFrame("Quoridor");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -27,10 +28,9 @@ public class GameGUI {
 
     JPanel rootPanel = panelsManager.createRootPanel();
     mainFrame.setContentPane(rootPanel);
+    mainFrame.setVisible(true);
 
     gameManager.connectComponents(this, panelsManager.getGameBoardPanel(), dialogManager);
-
-    mainFrame.setVisible(true);
 
     dialogManager.showHelpDialog();
     dialogManager.showNotificationDialog("Player " + (gameManager.getPlayingPawnIndex() + 1) + "'s turn", false);
