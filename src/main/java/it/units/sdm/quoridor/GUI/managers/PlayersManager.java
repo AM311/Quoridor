@@ -28,7 +28,6 @@ public class PlayersManager {
 
     AbstractPawn[] pawns = gameManager.getGame().getPawns().toArray(new AbstractPawn[0]);
 
-    // Player 1 (left panel)
     PlayerPanelComponent player1 = new PlayerPanelComponent(
             "Player 1",
             pawns[0].getNumberOfWalls(),
@@ -36,7 +35,6 @@ public class PlayersManager {
             0);
     playerComponents.add(player1);
 
-    // Player 2 (right panel)
     PlayerPanelComponent player2 = new PlayerPanelComponent(
             "Player 2",
             pawns[1].getNumberOfWalls(),
@@ -50,13 +48,11 @@ public class PlayersManager {
     rightPanel.add(player2.createPanel(), gbc);
 
     if (numberOfPlayers == 4) {
-      // Add spacing
       gbc.gridy = 1;
       gbc.weighty = 0.4;
       leftPanel.add(Box.createVerticalStrut(1), gbc);
       rightPanel.add(Box.createVerticalStrut(1), gbc);
 
-      // Player 3 (left panel)
       PlayerPanelComponent player3 = new PlayerPanelComponent(
               "Player 3",
               pawns[2].getNumberOfWalls(),
@@ -64,7 +60,6 @@ public class PlayersManager {
               2);
       playerComponents.add(player3);
 
-      // Player 4 (right panel)
       PlayerPanelComponent player4 = new PlayerPanelComponent(
               "Player 4",
               pawns[3].getNumberOfWalls(),

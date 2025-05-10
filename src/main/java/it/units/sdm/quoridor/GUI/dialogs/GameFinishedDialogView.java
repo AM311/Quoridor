@@ -39,13 +39,13 @@ public class GameFinishedDialogView implements DialogView {
   private JPanel createDialog() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
-    panel.setBackground(GUIConstants.WIN_SCREEN_BACKGROUND);
+    panel.setBackground(gameManager.isGameFinished() ? GUIConstants.WIN_SCREEN_BACKGROUND : GUIConstants.QUIT_SCREEN_BACKGROUND);
 
     JLabel messageLabel = getMessageLabel();
     panel.add(messageLabel, BorderLayout.NORTH);
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-    buttonPanel.setBackground(GUIConstants.WIN_SCREEN_BACKGROUND);
+    buttonPanel.setBackground(gameManager.isGameFinished() ? GUIConstants.WIN_SCREEN_BACKGROUND : GUIConstants.QUIT_SCREEN_BACKGROUND);
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
     JButton restartButton = new JButton("RESTART");
@@ -87,8 +87,9 @@ public class GameFinishedDialogView implements DialogView {
     if (numberOfPlayers == 2) {
       messageLabel = new JLabel("<html>Player " + (isGameFinished ? (playingPawnIndex + 1) : (2 - playingPawnIndex)) + " WINS!<br><br></html>", SwingConstants.CENTER);
     } else {
-      messageLabel = new JLabel("<html>Player " + (isGameFinished ? (playingPawnIndex + 1) + " WINS!</html>" : (playingPawnIndex + 1) + " QUIT!</html>") + "<br><br></html>", SwingConstants.CENTER);
+      messageLabel = new JLabel("<html>Player " + (isGameFinished ? (playingPawnIndex + 1) + " WINS!" : (playingPawnIndex + 1) + " QUIT!") + "<br><br></html>", SwingConstants.CENTER);
     }
+    messageLabel.setForeground(GUIConstants.TEXT_COLOR);
     return messageLabel;
   }
 
