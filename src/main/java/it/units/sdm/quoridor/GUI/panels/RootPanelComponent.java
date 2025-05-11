@@ -46,7 +46,7 @@ public class RootPanelComponent implements PanelComponent {
     gbc.weightx = 3.5;
     rootPanel.add(rightPanel, gbc);
 
-    playerPanelsManager.configureSidePanels(leftPanel, rightPanel, gameManager);
+    playerPanelsManager.displayPlayerPanels(leftPanel, rightPanel, gameManager);
 
     return rootPanel;
   }

@@ -2,6 +2,11 @@ package it.units.sdm.quoridor.GUI;
 
 import it.units.sdm.quoridor.GUI.managers.DialogManager;
 import it.units.sdm.quoridor.GUI.managers.PanelsManager;
+import it.units.sdm.quoridor.exceptions.BuilderException;
+import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.builder.BuilderDirector;
+import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -20,6 +25,23 @@ public class GameView implements GameEventListener {
     }
   }
 
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+      try {
+        BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+        AbstractGame game = builderDirector.makeGame();
+        GameController gameController = new GameController(game);
+        GameView gameView = new GameView(gameController);
+        gameView.displayGUI();
+      } catch (BuilderException | InvalidParameterException e) {
+        JOptionPane.showMessageDialog(null,
+                "Error starting game: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+      }
+    });
+  }
+
   public void displayGUI() {
     JFrame mainFrame = new JFrame("Quoridor");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,7 +54,7 @@ public class GameView implements GameEventListener {
     mainFrame.setContentPane(rootPanel);
     mainFrame.setVisible(true);
 
-    dialogManager.showHelpDialog();
+    dialogManager.displayHelpDialog();
     displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s turn", false);
   }
 
@@ -54,7 +76,7 @@ public class GameView implements GameEventListener {
 
   @Override
   public void displayNotification(String message, boolean isError) {
-    dialogManager.showNotificationDialog(message, isError);
+    dialogManager.displayNotificationDialog(message, isError);
   }
 
   @Override
@@ -84,6 +106,6 @@ public class GameView implements GameEventListener {
 
   @Override
   public void showGameFinishedDialog() {
-    dialogManager.showGameFinishedDialog();
+    dialogManager.displayGameFinishedDialog();
   }
 }

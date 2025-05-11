@@ -19,10 +19,10 @@ public class HelpQuitPanelComponent implements PanelComponent {
     helpQuitPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JButton helpButton = new JButton("Help");
-    helpButton.addActionListener(e -> dialogManager.showHelpDialog());
+    helpButton.addActionListener(e -> dialogManager.displayHelpDialog());
 
     JButton quitButton = new JButton("Quit");
-    quitButton.addActionListener(e -> dialogManager.showConfirmQuitDialog());
+    quitButton.addActionListener(e -> dialogManager.displayConfirmQuitDialog());
 
     helpQuitPanel.add(helpButton);
     helpQuitPanel.add(quitButton);

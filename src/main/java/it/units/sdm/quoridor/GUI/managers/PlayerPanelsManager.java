@@ -31,7 +31,7 @@ public class PlayerPanelsManager {
     this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameController, actionsPanelComponent);
   }
 
-  public void configureSidePanels(JPanel leftPanel, JPanel rightPanel, GameController gameManager) {
+  public void displayPlayerPanels(JPanel leftPanel, JPanel rightPanel, GameController gameManager) {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
