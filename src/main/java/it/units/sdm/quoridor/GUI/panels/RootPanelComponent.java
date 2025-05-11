@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.managers.GameBoardGUILayoutManager;
+import it.units.sdm.quoridor.GUI.managers.GameBoardPanelLayoutManager;
 import it.units.sdm.quoridor.GUI.GameController;
 import it.units.sdm.quoridor.GUI.managers.PlayerPanelsManager;
 
@@ -33,7 +33,7 @@ public class RootPanelComponent implements PanelComponent {
     gbc.weightx = 3.5;
     rootPanel.add(leftPanel, gbc);
 
-    JPanel centerWrapper = new JPanel(new GameBoardGUILayoutManager());
+    JPanel centerWrapper = new JPanel(new GameBoardPanelLayoutManager());
     centerWrapper.setBackground(GUIConstants.BACKGROUND_COLOR);
     gbc.gridx = 1;
     gbc.weightx = 9;

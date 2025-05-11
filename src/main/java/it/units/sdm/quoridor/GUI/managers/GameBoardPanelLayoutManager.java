@@ -2,7 +2,7 @@ package it.units.sdm.quoridor.GUI.managers;
 
 import java.awt.*;
 
-public class GameBoardGUILayoutManager implements LayoutManager {
+public class GameBoardPanelLayoutManager implements LayoutManager {
 
   @Override
   public void addLayoutComponent(String name, Component comp) {
