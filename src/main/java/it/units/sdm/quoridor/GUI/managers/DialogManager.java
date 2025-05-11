@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.GUI.managers;
 
+import it.units.sdm.quoridor.GUI.GameController;
 import it.units.sdm.quoridor.GUI.dialogs.HelpDialogView;
 import it.units.sdm.quoridor.GUI.dialogs.NotificationDialogView;
 import it.units.sdm.quoridor.GUI.dialogs.GameFinishedDialogView;
@@ -9,9 +10,9 @@ import javax.swing.*;
 
 public class DialogManager {
   private final JFrame mainFrame;
-  private final GameGUIManager gameManager;
+  private final GameController gameManager;
 
-  public DialogManager(JFrame mainFrame, GameGUIManager gameManager) {
+  public DialogManager(JFrame mainFrame, GameController gameManager) {
     this.mainFrame = mainFrame;
     this.gameManager = gameManager;
   }

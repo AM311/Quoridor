@@ -1,23 +1,18 @@
 package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.GameBoardGUI;
-import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
-import it.units.sdm.quoridor.GUI.managers.PanelsManager;
+import it.units.sdm.quoridor.GUI.GameController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class WallDirectionsPanelComponent implements PanelComponent {
-  private final GameGUIManager gameManager;
-  private final GameBoardGUI gameBoardGUI;
-  private final PanelsManager panelsManager;
+  private final GameController gameController;
+  private final ActionsPanelComponent actionsPanelComponent;
 
-  public WallDirectionsPanelComponent(GameGUIManager gameManager, GameBoardGUI gameBoardGUI,
-                                      PanelsManager panelsManager) {
-    this.gameManager = gameManager;
-    this.gameBoardGUI = gameBoardGUI;
-    this.panelsManager = panelsManager;
+  public WallDirectionsPanelComponent(GameController gameController, ActionsPanelComponent actionsPanelComponent) {
+    this.gameController = gameController;
+    this.actionsPanelComponent = actionsPanelComponent;
   }
 
   @Override
@@ -31,13 +26,13 @@ public class WallDirectionsPanelComponent implements PanelComponent {
     verticalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.PLACE_VERTICAL_WALL);
+      gameController.setCurrentAction(GameController.Action.PLACE_VERTICAL_WALL);
     });
 
     horizontalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.PLACE_HORIZONTAL_WALL);
+      gameController.setCurrentAction(GameController.Action.PLACE_HORIZONTAL_WALL);
     });
 
 
@@ -45,8 +40,8 @@ public class WallDirectionsPanelComponent implements PanelComponent {
     cancelButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameBoardGUI.setCurrentAction(GameBoardGUI.Action.DO_NOTHING);
-      panelsManager.showActionButtonsForPlayer(gameManager.getPlayingPawnIndex());
+      gameController.setCurrentAction(GameController.Action.DO_NOTHING);
+      actionsPanelComponent.displayActionsPanelForPlayingPlayer(gameController.getPlayingPawnIndex());
     });
 
     directionsPanel.add(verticalButton);
@@ -57,8 +52,8 @@ public class WallDirectionsPanelComponent implements PanelComponent {
   }
 
 
-  public void showWallDirectionButtons(int playerIndex) {
-    panelsManager.removeCurrentActionPanelForPlayer(playerIndex);
+  public void displayWallDirectionButtons(int playerIndex) {
+    actionsPanelComponent.removeCurrentActionPanel(playerIndex);
 
     JPanel wallDirectionPanel = new JPanel();
     wallDirectionPanel.setLayout(new BoxLayout(wallDirectionPanel, BoxLayout.Y_AXIS));
@@ -67,6 +62,6 @@ public class WallDirectionsPanelComponent implements PanelComponent {
 
     JPanel directionButtonsPanel = createPanel();
 
-    panelsManager.addActionButtonsPanel(playerIndex, directionButtonsPanel, wallDirectionPanel);
+    actionsPanelComponent.addActionButtonsPanelForPlayingPlayer(playerIndex, directionButtonsPanel, wallDirectionPanel);
   }
 }

@@ -1,23 +1,18 @@
 package it.units.sdm.quoridor.GUI.dialogs;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
-import it.units.sdm.quoridor.GUI.GameGUI;
-import it.units.sdm.quoridor.exceptions.BuilderException;
-import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.GUI.GameController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GameFinishedDialogView implements DialogView {
-  private final GameGUIManager gameManager;
+  private final GameController gameController;
   private final JFrame mainFrame;
   private final JDialog gameFinishedDialog;
 
-  public GameFinishedDialogView(GameGUIManager gameManager, JFrame mainFrame) {
-    this.gameManager = gameManager;
+  public GameFinishedDialogView(GameController gameController, JFrame mainFrame) {
+    this.gameController = gameController;
     this.mainFrame = mainFrame;
     this.gameFinishedDialog = new JDialog(mainFrame, true);
   }
@@ -39,13 +34,13 @@ public class GameFinishedDialogView implements DialogView {
   private JPanel createDialog() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
-    panel.setBackground(gameManager.isGameFinished() ? GUIConstants.WIN_SCREEN_BACKGROUND : GUIConstants.QUIT_SCREEN_BACKGROUND);
+    panel.setBackground(gameController.isGameFinished() ? GUIConstants.WIN_SCREEN_BACKGROUND : GUIConstants.QUIT_SCREEN_BACKGROUND);
 
     JLabel messageLabel = getMessageLabel();
     panel.add(messageLabel, BorderLayout.NORTH);
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-    buttonPanel.setBackground(gameManager.isGameFinished() ? GUIConstants.WIN_SCREEN_BACKGROUND : GUIConstants.QUIT_SCREEN_BACKGROUND);
+    buttonPanel.setBackground(gameController.isGameFinished() ? GUIConstants.WIN_SCREEN_BACKGROUND : GUIConstants.QUIT_SCREEN_BACKGROUND);
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
     JButton restartButton = new JButton("RESTART");
@@ -53,7 +48,10 @@ public class GameFinishedDialogView implements DialogView {
     restartButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     restartButton.addActionListener(e -> {
       gameFinishedDialog.dispose();
-      restartGame();
+      if (mainFrame != null) {
+        mainFrame.dispose();
+      }
+      gameController.restartGame();
     });
 
 
@@ -70,8 +68,8 @@ public class GameFinishedDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel() {
-    int numberOfPlayers = gameManager.getGame().getPawns().size();
-    boolean isGameFinished = gameManager.isGameFinished();
+    int numberOfPlayers = gameController.getNumberOfPlayers();
+    boolean isGameFinished = gameController.isGameFinished();
     JLabel messageLabel = getMessageLabel(numberOfPlayers, isGameFinished);
 
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -81,7 +79,7 @@ public class GameFinishedDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel(int numberOfPlayers, boolean isGameFinished) {
-    int playingPawnIndex = gameManager.getPlayingPawnIndex();
+    int playingPawnIndex = gameController.getPlayingPawnIndex();
 
     JLabel messageLabel;
     if (numberOfPlayers == 2) {
@@ -89,29 +87,7 @@ public class GameFinishedDialogView implements DialogView {
     } else {
       messageLabel = new JLabel("<html>Player " + (isGameFinished ? (playingPawnIndex + 1) + " WINS!" : (playingPawnIndex + 1) + " QUIT!") + "<br><br></html>", SwingConstants.CENTER);
     }
-    messageLabel.setForeground(GUIConstants.TEXT_COLOR);
+    messageLabel.setForeground(isGameFinished ? Color.BLACK : GUIConstants.TEXT_COLOR);
     return messageLabel;
   }
-
-
-  // TODO DA SPOSTARE NEL CONTROLLORE
-  private void restartGame() {
-    if (mainFrame != null) {
-      mainFrame.dispose();
-    }
-
-    try {
-      BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(gameManager.getGame().getPawns().size()));
-      var game = builderDirector.makeGame();
-      GameGUIManager newGameManager = new GameGUIManager(game);
-      GameGUI gameGUI = new GameGUI(gameManager.getGame().getPawns().size(), newGameManager);
-      gameGUI.displayGUI();
-    } catch (InvalidParameterException | BuilderException e) {
-      JOptionPane.showMessageDialog(mainFrame,
-              e.getMessage(),
-              "Error",
-              JOptionPane.ERROR_MESSAGE);
-    }
-  }
-
 }

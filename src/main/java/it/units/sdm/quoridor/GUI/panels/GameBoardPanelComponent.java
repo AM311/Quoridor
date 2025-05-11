@@ -1,9 +1,9 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.panels;
 
+import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.GUI.GameController;
 import it.units.sdm.quoridor.GUI.managers.BorderManager;
-import it.units.sdm.quoridor.GUI.managers.DialogManager;
-import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
-import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -14,39 +14,34 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class GameBoardGUI extends JPanel {
+public class GameBoardPanelComponent implements PanelComponent {
 
-  public enum Action {
-    MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
-  }
-
-  private final DialogManager dialogManager;
   private final String[] PAWN_COLORS;
-  private final JButton[][] tiles;
-  private final GameGUIManager gameManager;
+  private JButton[][] tiles;
+  private final GameController gameController;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
-  private final ImageIcon[] pawnIcons;
+  private ImageIcon[] pawnIcons;
+  private JPanel gameBoardPanel;
 
-  protected Action currentAction = Action.DO_NOTHING;
 
-  public GameBoardGUI(GameGUIManager gameManager, DialogManager dialogManager, Position... pawnPositions) {
-    this.gameManager = gameManager;
-    this.PAWN_COLORS = getPawnColors();
-    this.pawnIcons = loadPawnIcons(pawnPositions.length);
-    int gameBoardSize = gameManager.getGame().getGameBoard().getSideLength();
-    this.tiles = new JButton[gameBoardSize][gameBoardSize];
-    this.dialogManager = dialogManager;
-
-    setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
-    initializeTiles(pawnPositions);
+  public GameBoardPanelComponent(GameController gameController) {
+    this.gameController = gameController;
+    this.PAWN_COLORS = gameController.getPawns().stream()
+            .map(pawn -> pawn.getPawnAppearance().color().toString())
+            .toArray(String[]::new);
   }
 
-  public String[] getPawnColors() {
-    String[] pawnColors = new String[gameManager.getGame().getPawns().size()];
-    for (int i = 0; i < pawnColors.length; i++) {
-      pawnColors[i] = gameManager.getGame().getPawns().get(i).getPawnAppearance().color().toString();
-    }
-    return pawnColors;
+  @Override
+  public JPanel createPanel() {
+    this.pawnIcons = loadPawnIcons(gameController.getPawns().size());
+    int gameBoardSize = gameController.getSideLength();
+    this.tiles = new JButton[gameBoardSize][gameBoardSize];
+
+    gameBoardPanel = new JPanel();
+    gameBoardPanel.setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
+    initializeTiles();
+
+    return gameBoardPanel;
   }
 
   private ImageIcon[] loadPawnIcons(int numPawns) {
@@ -55,7 +50,7 @@ public class GameBoardGUI extends JPanel {
     for (int i = 0; i < numPawns; i++) {
       String resourcePath = "/" + PAWN_COLORS[i] + "-pawn.png";
       ImageIcon icon = new ImageIcon(Objects.requireNonNull(
-              GameBoardGUI.class.getResource(resourcePath)));
+              GameBoardPanelComponent.class.getResource(resourcePath)));
 
       Image img = icon.getImage();
       Image scaledImg = img.getScaledInstance(GUIConstants.ICON_SIZE, GUIConstants.ICON_SIZE, Image.SCALE_SMOOTH);
@@ -65,7 +60,7 @@ public class GameBoardGUI extends JPanel {
     return icons;
   }
 
-  private void initializeTiles(Position... pawnPositions) {
+  private void initializeTiles() {
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles.length; j++) {
         final int row = i;
@@ -75,27 +70,28 @@ public class GameBoardGUI extends JPanel {
         tile.setMargin(new Insets(0, 0, 0, 0));
         tile.setBorder(new LineBorder(Color.GRAY, 1));
 
-        ActionListener tileClickListener = e -> handleTileClick(new Position(row, col));
+        ActionListener tileClickListener = e -> gameController.handleTileClick(new Position(row, col));
         tile.addActionListener(tileClickListener);
 
         tiles[i][j] = tile;
-        add(tile);
+        gameBoardPanel.add(tile);
       }
     }
 
-    for (int i = 0; i < pawnPositions.length; i++) {
-      Position pos = pawnPositions[i];
-      tiles[pos.row()][pos.column()].setIcon(pawnIcons[i]);
+    List<AbstractPawn> pawns = gameController.getPawns();
+
+    for (int i = 0; i < pawns.size(); i++) {
+      int row = pawns.get(i).getCurrentTile().getRow();
+      int column = pawns.get(i).getCurrentTile().getColumn();
+
+      tiles[row][column].setIcon(pawnIcons[i]);
     }
   }
 
-  public void setCurrentAction(Action currentAction) {
-    this.currentAction = currentAction;
-  }
 
-  public void highlightValidMoves() throws InvalidParameterException {
+  public void highlightValidMoves() {
     clearHighlights();
-    List<Position> validPositions = gameManager.getValidMovePositions();
+    List<Position> validPositions = gameController.getValidMovePositions();
     for (Position position : validPositions) {
       tiles[position.row()][position.column()].setBackground(GUIConstants.HIGHLIGHT_COLOR);
     }
@@ -128,14 +124,6 @@ public class GameBoardGUI extends JPanel {
     tiles[newPosition.row()][newPosition.column()].setIcon(pawnIcons[pawnIndex]);
   }
 
-  private void handleTileClick(Position targetPosition) {
-    switch (currentAction) {
-      case MOVE -> gameManager.attemptPawnMove(targetPosition);
-      case PLACE_HORIZONTAL_WALL -> gameManager.attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
-      case PLACE_VERTICAL_WALL -> gameManager.attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
-      case DO_NOTHING -> dialogManager.showNotificationDialog("Choose an action!", true);
-    }
-  }
 
   private void updateButtonBorder(JButton button, int side) {
     BorderManager manager = borderManagers.computeIfAbsent(button, k -> new BorderManager());
@@ -143,13 +131,4 @@ public class GameBoardGUI extends JPanel {
     manager.applyTo(button);
   }
 
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(400, 400);
-  }
-
-  @Override
-  public Dimension getMinimumSize() {
-    return new Dimension(100, 100);
-  }
 }

@@ -1,22 +1,21 @@
 package it.units.sdm.quoridor.GUI.panels;
 
 import it.units.sdm.quoridor.GUI.GUIConstants;
-import it.units.sdm.quoridor.GUI.GameBoardGUI;
 import it.units.sdm.quoridor.GUI.managers.GameBoardGUILayoutManager;
-import it.units.sdm.quoridor.GUI.managers.GameGUIManager;
-import it.units.sdm.quoridor.GUI.managers.PlayersManager;
+import it.units.sdm.quoridor.GUI.GameController;
+import it.units.sdm.quoridor.GUI.managers.PlayerPanelsManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RootPanelComponent implements PanelComponent {
-  private final GameGUIManager gameManager;
-  private final GameBoardGUI gameBoardGUI;
-  private final PlayersManager playersManager;
+  private final GameController gameManager;
+  private final GameBoardPanelComponent gameBoardPanelComponent;
+  private final PlayerPanelsManager playerPanelsManager;
 
-  public RootPanelComponent(GameGUIManager gameManager, GameBoardGUI gameBoardGUI, PlayersManager playersManager) {
-    this.gameBoardGUI = gameBoardGUI;
-    this.playersManager = playersManager;
+  public RootPanelComponent(GameController gameManager, GameBoardPanelComponent gameBoardPanelComponent, PlayerPanelsManager playerPanelsManager) {
+    this.gameBoardPanelComponent = gameBoardPanelComponent;
+    this.playerPanelsManager = playerPanelsManager;
     this.gameManager = gameManager;
   }
 
@@ -39,7 +38,7 @@ public class RootPanelComponent implements PanelComponent {
     gbc.gridx = 1;
     gbc.weightx = 9;
     rootPanel.add(centerWrapper, gbc);
-    centerWrapper.add(gameBoardGUI);
+    centerWrapper.add(gameBoardPanelComponent.createPanel());
 
     JPanel rightPanel = new JPanel(new GridBagLayout());
     rightPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
@@ -47,7 +46,7 @@ public class RootPanelComponent implements PanelComponent {
     gbc.weightx = 3.5;
     rootPanel.add(rightPanel, gbc);
 
-    playersManager.configureSidePanels(leftPanel, rightPanel, gameManager);
+    playerPanelsManager.configureSidePanels(leftPanel, rightPanel, gameManager);
 
     return rootPanel;
   }
