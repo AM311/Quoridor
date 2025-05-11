@@ -10,27 +10,27 @@ import javax.swing.*;
 
 public class DialogManager {
   private final JFrame mainFrame;
-  private final GameController gameManager;
+  private final GameController gameController;
 
-  public DialogManager(JFrame mainFrame, GameController gameManager) {
+  public DialogManager(JFrame mainFrame, GameController gameController) {
     this.mainFrame = mainFrame;
-    this.gameManager = gameManager;
+    this.gameController = gameController;
   }
 
-  public void showHelpDialog() {
+  public void displayHelpDialog() {
     new HelpDialogView(mainFrame).displayDialog();
   }
 
   // TODO DA RIMUOVERE IL THIS CON IL CONTROLLER
-  public void showConfirmQuitDialog() {
+  public void displayConfirmQuitDialog() {
     new QuitDialogView(this, mainFrame).displayDialog();
   }
 
-  public void showGameFinishedDialog() {
-    new GameFinishedDialogView(gameManager, mainFrame).displayDialog();
+  public void displayGameFinishedDialog() {
+    new GameFinishedDialogView(gameController, mainFrame).displayDialog();
   }
 
-  public void showNotificationDialog(String message, boolean invalidActionFlag) {
+  public void displayNotificationDialog(String message, boolean invalidActionFlag) {
     new NotificationDialogView(message, invalidActionFlag, mainFrame).displayDialog();
   }
 }
