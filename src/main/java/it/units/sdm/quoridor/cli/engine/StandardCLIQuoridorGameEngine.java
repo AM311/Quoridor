@@ -165,7 +165,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     };
   }
 
-  private String generateSeparator(){
+  private String generateSeparator() {
     return "\n" + "-".repeat(27) + "\n";
   }
 
