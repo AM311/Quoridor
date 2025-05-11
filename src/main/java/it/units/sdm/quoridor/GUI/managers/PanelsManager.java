@@ -31,10 +31,6 @@ public class PanelsManager {
     return rootPanel;
   }
 
-  public GameBoardPanelComponent getGameBoardPanel() {
-    return gameBoardPanelComponent;
-  }
-
   public void displayActionsPanelForPlayingPlayer(int playerIndex) {
     playerPanelsManager.getActionsPanelComponent().displayActionsPanelForPlayingPlayer(playerIndex);
   }
