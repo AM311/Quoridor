@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.GUI.dialogs;
 
-import it.units.sdm.quoridor.GUI.managers.DialogManager;
+import it.units.sdm.quoridor.GUI.GameController;
 import it.units.sdm.quoridor.GUI.GUIConstants;
 
 import javax.swing.*;
@@ -8,12 +8,11 @@ import java.awt.*;
 
 public class QuitDialogView implements DialogView {
   private final JDialog confirmQuitDialog;
-  private final DialogManager dialogManager;
+  private final GameController gameController;
   private final JFrame mainFrame;
 
-  // TODO BISOGNERA METTERE IL CONTROLLER AL POSTO DEL DIALOGMANAGER
-  public QuitDialogView(DialogManager dialogManager, JFrame mainFrame) {
-    this.dialogManager = dialogManager;
+  public QuitDialogView(GameController gameController, JFrame mainFrame) {
+    this.gameController = gameController;
     this.mainFrame = mainFrame;
     this.confirmQuitDialog = new JDialog(mainFrame, true);
   }
@@ -55,7 +54,7 @@ public class QuitDialogView implements DialogView {
     yesButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     yesButton.addActionListener(e -> {
       confirmQuitDialog.dispose();
-      dialogManager.displayGameFinishedDialog();
+      new GameFinishedDialogView(gameController, mainFrame).displayDialog();
     });
 
     JButton noButton = new JButton("NO");

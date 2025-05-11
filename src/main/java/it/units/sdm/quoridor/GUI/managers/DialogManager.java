@@ -21,9 +21,8 @@ public class DialogManager {
     new HelpDialogView(mainFrame).displayDialog();
   }
 
-  // TODO DA RIMUOVERE IL THIS CON IL CONTROLLER
   public void displayConfirmQuitDialog() {
-    new QuitDialogView(this, mainFrame).displayDialog();
+    new QuitDialogView(gameController, mainFrame).displayDialog();
   }
 
   public void displayGameFinishedDialog() {
