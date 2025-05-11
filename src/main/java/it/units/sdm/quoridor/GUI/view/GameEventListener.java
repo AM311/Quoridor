@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.view;
 
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;

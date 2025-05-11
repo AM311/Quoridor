@@ -1,8 +1,8 @@
-package it.units.sdm.quoridor.GUI.managers;
+package it.units.sdm.quoridor.GUI.view.managers;
 
-import it.units.sdm.quoridor.GUI.panels.GameBoardPanelComponent;
-import it.units.sdm.quoridor.GUI.GameController;
-import it.units.sdm.quoridor.GUI.panels.*;
+import it.units.sdm.quoridor.GUI.view.panels.GameBoardPanelComponent;
+import it.units.sdm.quoridor.GUI.controller.GameController;
+import it.units.sdm.quoridor.GUI.view.panels.RootPanelComponent;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 

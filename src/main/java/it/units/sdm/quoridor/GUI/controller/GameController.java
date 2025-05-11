@@ -1,5 +1,7 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.controller;
 
+import it.units.sdm.quoridor.GUI.view.GameEventListener;
+import it.units.sdm.quoridor.GUI.view.GameView;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;

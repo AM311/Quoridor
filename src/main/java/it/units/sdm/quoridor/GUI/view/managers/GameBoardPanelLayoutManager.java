@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI.managers;
+package it.units.sdm.quoridor.GUI.view.managers;
 
 import java.awt.*;
 

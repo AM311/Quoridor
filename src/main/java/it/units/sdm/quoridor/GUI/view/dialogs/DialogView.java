@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.GUI.dialogs;
+package it.units.sdm.quoridor.GUI.view.dialogs;
 
 public interface DialogView {
   void displayDialog();

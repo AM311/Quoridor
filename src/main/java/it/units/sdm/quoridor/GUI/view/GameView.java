@@ -1,7 +1,9 @@
-package it.units.sdm.quoridor.GUI;
+package it.units.sdm.quoridor.GUI.view;
 
-import it.units.sdm.quoridor.GUI.managers.DialogManager;
-import it.units.sdm.quoridor.GUI.managers.PanelsManager;
+import it.units.sdm.quoridor.GUI.controller.GameActionHandler;
+import it.units.sdm.quoridor.GUI.controller.GameController;
+import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
+import it.units.sdm.quoridor.GUI.view.managers.PanelsManager;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;

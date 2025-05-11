@@ -1,10 +1,10 @@
-package it.units.sdm.quoridor.GUI.managers;
+package it.units.sdm.quoridor.GUI.view.managers;
 
-import it.units.sdm.quoridor.GUI.GameController;
-import it.units.sdm.quoridor.GUI.dialogs.HelpDialogView;
-import it.units.sdm.quoridor.GUI.dialogs.NotificationDialogView;
-import it.units.sdm.quoridor.GUI.dialogs.GameFinishedDialogView;
-import it.units.sdm.quoridor.GUI.dialogs.QuitDialogView;
+import it.units.sdm.quoridor.GUI.controller.GameController;
+import it.units.sdm.quoridor.GUI.view.dialogs.HelpDialogView;
+import it.units.sdm.quoridor.GUI.view.dialogs.NotificationDialogView;
+import it.units.sdm.quoridor.GUI.view.dialogs.GameFinishedDialogView;
+import it.units.sdm.quoridor.GUI.view.dialogs.QuitDialogView;
 
 import javax.swing.*;
 

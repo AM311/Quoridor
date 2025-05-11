@@ -1,9 +1,9 @@
-package it.units.sdm.quoridor.GUI.managers;
+package it.units.sdm.quoridor.GUI.view.managers;
 
-import it.units.sdm.quoridor.GUI.GameController;
-import it.units.sdm.quoridor.GUI.panels.ActionsPanelComponent;
-import it.units.sdm.quoridor.GUI.panels.PlayerPanelComponent;
-import it.units.sdm.quoridor.GUI.panels.WallDirectionsPanelComponent;
+import it.units.sdm.quoridor.GUI.controller.GameController;
+import it.units.sdm.quoridor.GUI.view.panels.ActionsPanelComponent;
+import it.units.sdm.quoridor.GUI.view.panels.PlayerPanelComponent;
+import it.units.sdm.quoridor.GUI.view.panels.WallDirectionsPanelComponent;
 import it.units.sdm.quoridor.model.AbstractPawn;
 
 import javax.swing.*;
@@ -31,13 +31,13 @@ public class PlayerPanelsManager {
     this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameController, actionsPanelComponent);
   }
 
-  public void displayPlayerPanels(JPanel leftPanel, JPanel rightPanel, GameController gameManager) {
+  public void displayPlayerPanels(JPanel leftPanel, JPanel rightPanel, GameController gameController) {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
     gbc.anchor = GridBagConstraints.NORTH;
 
-    AbstractPawn[] pawns = gameManager.getPawns().toArray(new AbstractPawn[0]);
+    AbstractPawn[] pawns = gameController.getPawns().toArray(new AbstractPawn[0]);
 
     PlayerPanelComponent player1 = new PlayerPanelComponent(
             "Player 1",
