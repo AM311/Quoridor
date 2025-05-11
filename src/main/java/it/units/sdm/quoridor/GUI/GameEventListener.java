@@ -8,7 +8,7 @@ public interface GameEventListener {
   void onTurnComplete();
   void displayNotification(String message, boolean isError);
   void highlightValidMoves();
-  void updatePawnPosition(Position oldPosition, Position newPosition, int playerIndex);
+  void onPawnMoved(Position oldPosition, Position newPosition, int playerIndex);
   void updateWallVisualization(Position position, WallOrientation orientation);
   void clearHighlights();
   void displayWallDirectionButtons(int playerIndex);

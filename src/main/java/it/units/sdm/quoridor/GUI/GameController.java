@@ -79,7 +79,7 @@ public class GameController implements GameActionHandler {
               game.getPlayingPawn().getCurrentTile().getColumn()
       );
       game.movePlayingPawn(targetPosition);
-      eventListener.updatePawnPosition(oldPosition, targetPosition, getPlayingPawnIndex());
+      eventListener.onPawnMoved(oldPosition, targetPosition, getPlayingPawnIndex());
       setCurrentAction(Action.DO_NOTHING);
 
       if (isGameFinished()) {

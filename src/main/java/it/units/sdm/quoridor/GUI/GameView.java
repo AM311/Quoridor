@@ -85,7 +85,7 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void updatePawnPosition(Position oldPosition, Position newPosition, int playerIndex) {
+  public void onPawnMoved(Position oldPosition, Position newPosition, int playerIndex) {
     panelsManager.updatePawnPosition(oldPosition, newPosition, playerIndex);
   }
 
