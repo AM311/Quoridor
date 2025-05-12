@@ -17,10 +17,10 @@ import java.util.List;
 public class GameBoardPanelComponent implements PanelComponent {
 
   private final String[] PAWN_COLORS;
-  private JButton[][] tiles;
+  private final JButton[][] tiles;
   private final GameController gameController;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
-  private ImageIcon[] pawnIcons;
+  private final ImageIcon[] pawnIcons;
   private JPanel gameBoardPanel;
 
 
@@ -29,16 +29,14 @@ public class GameBoardPanelComponent implements PanelComponent {
     this.PAWN_COLORS = gameController.getPawns().stream()
             .map(pawn -> pawn.getPawnAppearance().color().toString())
             .toArray(String[]::new);
+    this.pawnIcons = loadPawnIcons(gameController.getPawns().size());
+    this.tiles = new JButton[gameController.getSideLength()][gameController.getSideLength()];
   }
 
   @Override
   public JPanel createPanel() {
-    this.pawnIcons = loadPawnIcons(gameController.getPawns().size());
-    int gameBoardSize = gameController.getSideLength();
-    this.tiles = new JButton[gameBoardSize][gameBoardSize];
-
     gameBoardPanel = new JPanel();
-    gameBoardPanel.setLayout(new GridLayout(gameBoardSize, gameBoardSize, 0, 0));
+    gameBoardPanel.setLayout(new GridLayout(gameController.getSideLength(), gameController.getSideLength(), 0, 0));
     initializeTiles();
 
     return gameBoardPanel;
