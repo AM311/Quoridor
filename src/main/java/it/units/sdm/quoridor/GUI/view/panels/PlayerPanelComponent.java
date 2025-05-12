@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.GUI.view.panels;
 
-import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
 import java.awt.*;

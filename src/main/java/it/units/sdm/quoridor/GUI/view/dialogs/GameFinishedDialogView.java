@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.GUI.view.dialogs;
 
-import it.units.sdm.quoridor.GUI.GUIConstants;
+import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.GUI.controller.GameController;
 
 import javax.swing.*;
