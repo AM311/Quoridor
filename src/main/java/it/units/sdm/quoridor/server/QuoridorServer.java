@@ -3,8 +3,9 @@ package it.units.sdm.quoridor.server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,9 +21,9 @@ public class QuoridorServer {
   private final int numOfPlayers;
   private final Lock lock = new ReentrantLock();
   private final Condition turnChanged = lock.newCondition();
-  private AtomicInteger currentPlayer = new AtomicInteger(1);
-  private Queue<Socket> clientQueue = new ConcurrentLinkedQueue<>();
-  //todo implementare la clientQueue per inviare un messaggio a ogni client quando si deve eseguire una mossa, usare la sua lunghezza invecere di currentClients
+  private final AtomicInteger currentPlayer = new AtomicInteger(1);
+  private final List<Socket> clientList = Collections.synchronizedList(new ArrayList<>());
+
   public QuoridorServer(int port, String quitCommand, ExecutorService executorService, int numOfPlayers) {
     this.port = port;
     this.quitCommand = quitCommand;
@@ -38,69 +39,69 @@ public class QuoridorServer {
     return quitCommand;
   }
 
-  public ExecutorService getExecutorService() {
-    return executorService;
-  }
-
   public int getNumOfPlayers() {
     return numOfPlayers;
   }
 
   public void start() throws IOException {
-    AtomicInteger currentClients = new AtomicInteger();
 
-    try (ServerSocket serverSocket = new ServerSocket(port)) {
+    try {
+      ServerSocket serverSocket = new ServerSocket(port);
       Logger.printLog(System.out, "Welcome to Quoridor! The server started!");
       Logger.printLog(System.out, "Waiting for " + numOfPlayers + " players");
       CountDownLatch latch = new CountDownLatch(1);
 
       while (true) {
-        if (currentClients.get() == numOfPlayers) {
+        if (clientList.size() == numOfPlayers) {
           latch.countDown();
         }
-        try {
-          Socket socket = serverSocket.accept();
-          if (currentClients.get() >= numOfPlayers) {
-            socket.close();
+        try (Socket client = serverSocket.accept()) {
+          if (clientList.size() >= numOfPlayers) {
+            client.close();
             throw new Exception("The game has already started!");
           }
 
           executorService.submit(() -> {
-            try (socket) {
-              int playerNumber = currentClients.incrementAndGet();
-              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            try (client) {
+              BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 
-              Logger.printLog(System.out, "New connection: " + socket.getInetAddress());
-              Logger.printLog(System.out, "Waiting for " + (numOfPlayers - currentClients.get()) + " more players");
-              writer.write("You are player " + playerNumber + System.lineSeparator());
+              clientList.add(client);
+              Logger.printLog(System.out, "New connection: " + client.getInetAddress());
+              Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
               latch.await();
+              int playerNumber = (clientList.indexOf(client) + 1);
+              writer.write("The game is ready!" + System.lineSeparator());
+              writer.flush();
+              writer.write("You are player " + playerNumber + System.lineSeparator());
+              writer.flush();
+              writer.write(String.valueOf(numOfPlayers));
+              writer.flush();
 
               while (true) {
                 waitForTurn(playerNumber);
                 String request = reader.readLine();
-
+                notifyClients(request);
                 if (request.equals(quitCommand)) {
                   break;
                 }
-
-                //writer.write(requestsProcessor.process(request) + System.lineSeparator());
-                writer.flush();
+                nextTurn();
               }
+
             } catch (InterruptedException ex) {
-              Logger.printLog(System.err, "Thread managing " + socket.getInetAddress() + " has been interrupted");
+              Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
             } catch (NullPointerException ex) {
-              Logger.printLog(System.err, "Client " + socket.getInetAddress() + " abruptly closed connection.");
+              Logger.printLog(System.err, "Client " + client.getInetAddress() + " abruptly closed connection.");
             } catch (IOException ex) {
               Logger.printLog(System.err, "Unhandled IO exception: " + ex.getMessage());
             } catch (RuntimeException ex) {
-              Logger.printLog(System.err, "Unhandled RuntimeException while managing " + socket.getInetAddress() + ": " + ex.getMessage());
+              Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client.getInetAddress() + ": " + ex.getMessage());
             } catch (Error er) {
-              Logger.printLog(System.err, "ERROR while managing " + socket.getInetAddress() + ": " + er.getMessage());
+              Logger.printLog(System.err, "ERROR while managing " + client.getInetAddress() + ": " + er.getMessage());
             }
 
-            currentClients.getAndDecrement();
-            Logger.printLog(System.out, "Closed connection: " + socket.getInetAddress());
+            clientList.remove(client);
+            Logger.printLog(System.out, "Closed connection: " + client.getInetAddress());
           });
         } catch (RuntimeException ex) {
           Logger.printLog(System.err, "RuntimeException trying managing new client connection: " + ex.getMessage());
@@ -117,7 +118,7 @@ public class QuoridorServer {
     }
   }
 
-  public void waitForTurn(int playerNumber) throws InterruptedException {
+  private void waitForTurn(int playerNumber) throws InterruptedException {
     lock.lock();
     try {
       while (currentPlayer.get() != playerNumber) {
@@ -128,13 +129,21 @@ public class QuoridorServer {
     }
   }
 
-  public void nextTurn() {
+  private void nextTurn() {
     lock.lock();
     try {
       currentPlayer.set((currentPlayer.get() % numOfPlayers) + 1);
       turnChanged.signalAll();
     } finally {
       lock.unlock();
+    }
+  }
+
+  private void notifyClients(String message) throws IOException {
+    for (Socket client : clientList) {
+      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+      writer.write(message);
+      writer.flush();
     }
   }
 }
