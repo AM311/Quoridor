@@ -70,46 +70,36 @@ public class GameController implements GameActionHandler {
       case MOVE -> attemptPawnMove(targetPosition);
       case PLACE_HORIZONTAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
       case PLACE_VERTICAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
-      case DO_NOTHING -> eventListener.displayNotification("Choose an action!", true);
+      case DO_NOTHING -> eventListener.onInvalidAction("Choose an action");
     }
   }
 
   private void attemptPawnMove(Position targetPosition) {
     try {
-      Position oldPosition = new Position(
+      Position currentPosition = new Position(
               game.getPlayingPawn().getCurrentTile().getRow(),
               game.getPlayingPawn().getCurrentTile().getColumn()
       );
       game.movePlayingPawn(targetPosition);
-      eventListener.onPawnMoved(oldPosition, targetPosition, getPlayingPawnIndex());
+      eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
       setCurrentAction(Action.DO_NOTHING);
-
-      if (isGameFinished()) {
-        eventListener.showGameFinishedDialog();
-      } else {
-        eventListener.onTurnComplete();
-      }
     } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.displayNotification("Can't move to " + (targetPosition.row() + 1) + ","  + (targetPosition.column() + 1), true);
+      eventListener.onInvalidAction(e.getMessage());
     }
   }
 
   private void attemptPlaceWall(Position position, WallOrientation orientation) {
     try {
       game.placeWall(position, orientation);
-      eventListener.updateWallVisualization(position, orientation);
       setCurrentAction(Action.DO_NOTHING);
-      eventListener.onWallPlaced(game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
-      eventListener.onTurnComplete();
+      eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
     } catch (InvalidActionException | InvalidParameterException e) {
-      String orientationStr = orientation.toString().toLowerCase();
-      String article = orientation.equals(WallOrientation.HORIZONTAL) ? "an " : "a ";
-      String message = "Can't place " + article + orientationStr + " wall at " + (position.row() + 1) + "," + (position.column() + 1);
-      eventListener.displayNotification(message, true);
+      eventListener.onInvalidAction(e.getMessage());
     }
   }
 
-  @Override
+
+  // TODO da chiamare game.getValidMovePositions()?
   public List<Position> getValidMovePositions() {
     List<Position> validPositions = new ArrayList<>();
     ActionChecker<AbstractTile> checker = new PawnMovementChecker();
@@ -124,7 +114,7 @@ public class GameController implements GameActionHandler {
         }
       }
     } catch (InvalidParameterException e) {
-      eventListener.displayNotification("Can't get valid move positions", true);
+      eventListener.onInvalidAction(e.getMessage());
     }
     return validPositions;
   }
@@ -139,8 +129,8 @@ public class GameController implements GameActionHandler {
     setCurrentAction(Action.MOVE);
     try {
       eventListener.highlightValidMoves();
-    } catch (Exception ex) {
-      eventListener.displayNotification("Can't highlight moves!", true);
+    } catch (Exception e) {
+      eventListener.onInvalidAction(e.getMessage());
     }
   }
 
@@ -155,19 +145,19 @@ public class GameController implements GameActionHandler {
     }
   }
 
-  @Override
+
+  // TODO da invocare game.restartGame()
   public void restartGame() {
     try {
       BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(game.getPawns().size()));
       AbstractGame newGame = builderDirector.makeGame();
       GameController newGameController = new GameController(newGame);
-      eventListener.displayNotification("Game restarted!", false);
       if (eventListener instanceof GameView) {
         GameView gameView = new GameView(newGameController);
         gameView.displayGUI();
       }
     } catch (InvalidParameterException | BuilderException e) {
-      eventListener.displayNotification("Error restarting game: " + e.getMessage(), true);
+      eventListener.onInvalidAction(e.getMessage());
     }
   }
 }

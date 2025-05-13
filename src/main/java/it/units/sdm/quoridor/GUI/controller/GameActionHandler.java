@@ -9,11 +9,9 @@ public interface GameActionHandler {
   void handleTileClick(Position position);
   void setMoveAction();
   void setPlaceWallAction();
-  void restartGame();
   int getNumberOfPlayers();
   int getPlayingPawnIndex();
   int getSideLength();
   List<AbstractPawn> getPawns();
-  java.util.List<Position> getValidMovePositions();
   boolean isGameFinished();
 }

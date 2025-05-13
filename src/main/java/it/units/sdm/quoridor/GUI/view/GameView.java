@@ -4,11 +4,6 @@ import it.units.sdm.quoridor.GUI.controller.GameActionHandler;
 import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
 import it.units.sdm.quoridor.GUI.view.managers.PanelsManager;
-import it.units.sdm.quoridor.exceptions.BuilderException;
-import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -27,22 +22,6 @@ public class GameView implements GameEventListener {
     }
   }
 
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> {
-      try {
-        BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
-        AbstractGame game = builderDirector.makeGame();
-        GameController gameController = new GameController(game);
-        GameView gameView = new GameView(gameController);
-        gameView.displayGUI();
-      } catch (BuilderException | InvalidParameterException e) {
-        JOptionPane.showMessageDialog(null,
-                "Error starting game: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-      }
-    });
-  }
 
   public void displayGUI() {
     JFrame mainFrame = new JFrame("Quoridor");
@@ -61,11 +40,12 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void onWallPlaced(int playerIndex, int remainingWalls) {
+  public void onWallPlaced(Position position, WallOrientation orientation, int playerIndex, int remainingWalls) {
+    panelsManager.updateWallVisualization(position, orientation);
     panelsManager.updateWallLabel(playerIndex, remainingWalls);
+    onTurnComplete();
   }
 
-  @Override
   public void onTurnComplete() {
     panelsManager.removeCurrentActionPanel(actionHandler.getPlayingPawnIndex());
     if (actionHandler instanceof GameController) {
@@ -89,11 +69,16 @@ public class GameView implements GameEventListener {
   @Override
   public void onPawnMoved(Position oldPosition, Position newPosition, int playerIndex) {
     panelsManager.updatePawnPosition(oldPosition, newPosition, playerIndex);
+    if (actionHandler.isGameFinished()) {
+      showGameFinishedDialog();
+    } else {
+      onTurnComplete();
+    }
   }
 
   @Override
-  public void updateWallVisualization(Position position, WallOrientation orientation) {
-    panelsManager.updateWallVisualization(position, orientation);
+  public void onInvalidAction(String message) {
+    dialogManager.displayNotificationDialog(message, true);
   }
 
   @Override
