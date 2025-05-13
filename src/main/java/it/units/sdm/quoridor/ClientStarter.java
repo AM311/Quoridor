@@ -10,7 +10,6 @@ import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ClientStarter {
   public static void main(String[] args) {
@@ -19,17 +18,16 @@ public class ClientStarter {
 
     try (Socket socket = new Socket(serverAddress, port);
          BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-         Scanner scanner = new Scanner(System.in)) {
+         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
       System.out.println("Connected to the server! Waiting for other players to join...");
-      if (reader.readLine().equals("The game is ready!")) {
+      if (reader.readLine().equals("Ready")) {
         System.out.println("The game is starting");
         System.out.println(reader.readLine());
       }
 
       int numOfPlayers = Integer.parseInt(reader.readLine());
-      QuoridorGameEngine engine = new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter());
+      QuoridorGameEngine engine = new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
       engine.runGame();
     } catch (IOException e) {
       System.err.println("Could not connect to server: " + e.getMessage());

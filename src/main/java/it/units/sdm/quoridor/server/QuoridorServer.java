@@ -71,7 +71,7 @@ public class QuoridorServer {
               Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
               latch.await();
               int playerNumber = (clientList.indexOf(client) + 1);
-              writer.write("The game is ready!" + System.lineSeparator());
+              writer.write("Ready" + System.lineSeparator());
               writer.flush();
               writer.write("You are player " + playerNumber + System.lineSeparator());
               writer.flush();
@@ -80,6 +80,8 @@ public class QuoridorServer {
 
               while (true) {
                 waitForTurn(playerNumber);
+                writer.write("Play");
+                writer.flush();
                 String request = reader.readLine();
                 notifyClients(request);
                 if (request.equals(quitCommand)) {

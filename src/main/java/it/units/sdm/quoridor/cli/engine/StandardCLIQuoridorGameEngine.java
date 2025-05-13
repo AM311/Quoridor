@@ -20,7 +20,7 @@ import java.util.Optional;
 public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   private final BufferedReader reader;
-  private final QuoridorParser parser;
+  protected final QuoridorParser parser;
   private final StatisticsCounter statisticsCounter;
 
   public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
@@ -76,7 +76,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.println(statisticsCounter.generateStatisticsReport(game));
   }
 
-  private void executeRound(AbstractGame game) {
+  protected void executeRound(AbstractGame game) {
     boolean commandExecuted = false;
 
     do {
@@ -129,11 +129,11 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.print(figure);
   }
 
-  private String askCommand() throws IOException {
+  protected String askCommand() throws IOException {
     return String.valueOf(reader.readLine());
   }
 
-  private boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+  protected boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 
