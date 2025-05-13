@@ -4,11 +4,13 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
-import static it.units.sdm.quoridor.cli.GameStringBuilder.createGameString;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
+import static it.units.sdm.quoridor.cli.GameStringBuilder.createGameString;
 
 public abstract class AbstractGame implements Cloneable {
   protected List<AbstractPawn> pawns;
@@ -64,15 +66,29 @@ public abstract class AbstractGame implements Cloneable {
     AbstractGame clonedGame = (AbstractGame) super.clone();
     clonedGame.gameBoard = gameBoard.clone();
     clonedGame.pawns = new ArrayList<>();
-    for(AbstractPawn pawn : pawns){
-      clonedGame.pawns.add(pawn.clone());
+
+    for (AbstractPawn pawn : pawns) {
+      Collection<AbstractTile> destinationTiles = new ArrayList<>();
+      AbstractTile currentTile = null;
+
+      try {
+        for (AbstractTile tile : pawn.getDestinationTiles()) {
+          destinationTiles.add(clonedGame.gameBoard.getTile(new Position(tile.getRow(), tile.getColumn())));
+        }
+
+        currentTile = clonedGame.gameBoard.getTile(new Position(pawn.getCurrentTile().getRow(), pawn.getCurrentTile().getColumn()));
+      } catch (InvalidParameterException ignored) {
+      }
+
+      clonedGame.pawns.add(new Pawn(currentTile, destinationTiles, pawn.getPawnAppearance(), pawn.getNumberOfWalls()));
     }
 
     return clonedGame;
   }
-  public String toString(){
+
+  public String toString() {
     return createGameString(this);
   }
 
-    
+
 }

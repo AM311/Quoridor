@@ -4,5 +4,5 @@ import it.units.sdm.quoridor.model.AbstractGame;
 
 @FunctionalInterface
 public interface ActionChecker<T> {
-	boolean isValidAction(AbstractGame game, T target);
+	CheckResult isValidAction(AbstractGame game, T target); //fai tornare enum + signature metodi che la implrmentani
 }

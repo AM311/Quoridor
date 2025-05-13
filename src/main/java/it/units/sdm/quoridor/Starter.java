@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor;
 
+import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.cli.engine.QuoridorGameEngine;
 import it.units.sdm.quoridor.cli.engine.StandardCLIQuoridorGameEngine;
 import it.units.sdm.quoridor.cli.parser.StandardQuoridorParser;
@@ -17,7 +18,7 @@ public class Starter {
     try {
       int numOfPlayers = Integer.parseInt(args[0]);
 
-      QuoridorGameEngine engine = new StandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers));
+      QuoridorGameEngine engine = new StandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter());
       engine.runGame();
     } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
       System.err.println("You must provide an integer number of players as parameter!");
