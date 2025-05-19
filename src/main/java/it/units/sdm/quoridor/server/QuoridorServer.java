@@ -31,18 +31,6 @@ public class QuoridorServer {
     this.numOfPlayers = numOfPlayers;
   }
 
-  public int getPort() {
-    return port;
-  }
-
-  public String getQuitCommand() {
-    return quitCommand;
-  }
-
-  public int getNumOfPlayers() {
-    return numOfPlayers;
-  }
-
   public void start() throws IOException {
 
     try {
@@ -52,10 +40,12 @@ public class QuoridorServer {
       CountDownLatch latch = new CountDownLatch(1);
 
       while (true) {
+        Thread.sleep(2000);
         if (clientList.size() == numOfPlayers) {
           latch.countDown();
         }
-        try (Socket client = serverSocket.accept()) {
+        try {
+          Socket client = serverSocket.accept();
           if (clientList.size() >= numOfPlayers) {
             client.close();
             throw new Exception("The game has already started!");
@@ -75,12 +65,12 @@ public class QuoridorServer {
               writer.flush();
               writer.write("You are player " + playerNumber + System.lineSeparator());
               writer.flush();
-              writer.write(String.valueOf(numOfPlayers));
+              writer.write(numOfPlayers + System.lineSeparator());
               writer.flush();
 
               while (true) {
                 waitForTurn(playerNumber);
-                writer.write("Play");
+                writer.write("Play" + System.lineSeparator());
                 writer.flush();
                 String request = reader.readLine();
                 notifyClients(request);
@@ -104,6 +94,13 @@ public class QuoridorServer {
 
             clientList.remove(client);
             Logger.printLog(System.out, "Closed connection: " + client.getInetAddress());
+            try {
+              if (latch.getCount() == 0) {
+                notifyClients("Quit");
+              }
+            } catch (IOException ex) {
+              Logger.printLog(System.err, "IOException: " + ex.getMessage());
+            }
           });
         } catch (RuntimeException ex) {
           Logger.printLog(System.err, "RuntimeException trying managing new client connection: " + ex.getMessage());
@@ -144,7 +141,7 @@ public class QuoridorServer {
   private void notifyClients(String message) throws IOException {
     for (Socket client : clientList) {
       BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-      writer.write(message);
+      writer.write(message + System.lineSeparator());
       writer.flush();
     }
   }

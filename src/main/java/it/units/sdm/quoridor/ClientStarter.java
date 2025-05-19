@@ -14,7 +14,7 @@ import java.net.Socket;
 public class ClientStarter {
   public static void main(String[] args) {
     String serverAddress = "localhost";
-    int port = 12345;
+    int port = 4444;
 
     try (Socket socket = new Socket(serverAddress, port);
          BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -24,6 +24,8 @@ public class ClientStarter {
       if (reader.readLine().equals("Ready")) {
         System.out.println("The game is starting");
         System.out.println(reader.readLine());
+      } else {
+        System.err.println("Server is not respecting protocol");
       }
 
       int numOfPlayers = Integer.parseInt(reader.readLine());

@@ -7,6 +7,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
+import it.units.sdm.quoridor.server.Logger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,18 +26,32 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
   @Override
   protected void executeRound(AbstractGame game) {
     boolean commandExecuted = false;
+    String serverMessage = null;
+    try {
+      serverMessage = socketReader.readLine();
+    } catch (IOException e) {
+      Logger.printLog(System.err, "Communication error");
+    }
 
     do {
       try {
-        String serverMessage = socketReader.readLine();
         if (serverMessage.equals("Play")) {
-          System.out.print("\nMake your move: ");
+          System.out.println("It's your turn!\n");
           String command = askCommand();
-          parser.parse(command);
-          socketWriter.write(command);
-          socketWriter.flush();
+          commandExecuted = performCommand(command, game);
+          if (commandExecuted) {
+            socketWriter.write(command + System.lineSeparator());
+            socketWriter.flush();
+            socketReader.readLine();
+          }
         } else {
-          commandExecuted = performCommand(serverMessage, game);
+          if (serverMessage.equals("Quit")) {
+            System.out.println("Another Player disconnected.");
+            socketWriter.close();
+            System.exit(0);
+          } else {
+            commandExecuted = performCommand(serverMessage, game);
+          }
         }
       } catch (IOException e) {
         System.err.println("Error reading input: " + e.getMessage());
