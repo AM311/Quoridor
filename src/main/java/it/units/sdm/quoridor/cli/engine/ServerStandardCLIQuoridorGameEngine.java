@@ -12,6 +12,7 @@ import it.units.sdm.quoridor.server.Logger;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGameEngine {
   private final BufferedReader socketReader;
@@ -23,6 +24,9 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
     this.socketReader = socketReader;
   }
 
+  //todo CORRISPONDENZA TRA COLORE E NUMERO DA GESTIRE
+  //todo AGGIUNGERE TESTO "ATTENDI MOSSE DEGLI ALTRI GIOCATORI"
+
   @Override
   protected void executeRound(AbstractGame game) {
     boolean commandExecuted = false;
@@ -30,13 +34,14 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
     try {
       serverMessage = socketReader.readLine();
     } catch (IOException e) {
-      Logger.printLog(System.err, "Communication error");
+      Logger.printLog(System.err, "Unable to communicate with server!");
+      System.exit(0);
     }
 
     do {
       try {
-        if (serverMessage.equals("Play")) {
-          System.out.println("It's your turn!\n");
+        if (Objects.equals(serverMessage, "PLAY")) {
+          System.out.println("It's your round!\n");
           String command = askCommand();
           commandExecuted = performCommand(command, game);
           if (commandExecuted) {
@@ -45,7 +50,7 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
             socketReader.readLine();
           }
         } else {
-          if (serverMessage.equals("Quit")) {
+          if (Objects.equals(serverMessage, "QUIT")) {
             System.out.println("Another Player disconnected.");
             socketWriter.close();
             System.exit(0);
@@ -54,8 +59,8 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
           }
         }
       } catch (IOException e) {
-        System.err.println("Error reading input: " + e.getMessage());
-        System.out.println("Please try entering your command again:");
+        Logger.printLog(System.err, "Unable to communicate with server!");
+        System.exit(0);
       } catch (InvalidActionException | InvalidParameterException | ParserException e) {
         System.err.println(e.getMessage());
       }

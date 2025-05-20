@@ -93,7 +93,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     } while (!commandExecuted);
   }
 
-  private void handleEndGame() {
+  private void handleEndGame() {        //todo TOGLIERE MENU DI SCELTA + DIVENTA PROTECTED + OVERRIDE CON SYSTEM EXIT E CHIUSURA SOCKET
     try {
       System.out.println(generateSeparator());
       System.out.println("Quit (q) or restart (r)?");
@@ -155,12 +155,12 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       }
       case HELP -> {
         printWallsConvention();
-        System.out.println(parser);
+        System.out.println(parser);       //TODO AGGIUNGERE RESTART
         yield false;
       }
       case RESTART -> {
-        System.out.println("Restart command is only available after quitting the current game.");
-        yield false;
+        System.out.println("Restart command is only available after quitting the current game.");   //TODO CAMBIARE E CREARE METODO PROTECTED restartHandle
+        yield false;        //todo RESTART DIVENTA TRUE!
       }
     };
   }

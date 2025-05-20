@@ -13,7 +13,7 @@ import java.net.Socket;
 
 public class ClientStarter {
   public static void main(String[] args) {
-    String serverAddress = "localhost";
+    String serverAddress = "localhost";           //todo passare come parametri di avvio (anche per server?)
     int port = 4444;
 
     try (Socket socket = new Socket(serverAddress, port);
@@ -21,14 +21,14 @@ public class ClientStarter {
          BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
       System.out.println("Connected to the server! Waiting for other players to join...");
-      if (reader.readLine().equals("Ready")) {
+      if (reader.readLine().equals("READY")) {
         System.out.println("The game is starting");
         System.out.println(reader.readLine());
       } else {
         System.err.println("Server is not respecting protocol");
       }
 
-      int numOfPlayers = Integer.parseInt(reader.readLine());
+      int numOfPlayers = Integer.parseInt(reader.readLine());       //todo INTERESSANTE
       QuoridorGameEngine engine = new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
       engine.runGame();
     } catch (IOException e) {
