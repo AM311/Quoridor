@@ -2,6 +2,7 @@ package it.units.sdm.quoridor.cli.engine;
 
 import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
+import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
@@ -28,7 +29,7 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
   //todo AGGIUNGERE TESTO "ATTENDI MOSSE DEGLI ALTRI GIOCATORI"
 
   @Override
-  protected void executeRound(AbstractGame game) {
+  protected void executeRound(AbstractGame game) throws BuilderException {
     boolean commandExecuted = false;
     String serverMessage = null;
     try {

@@ -6,23 +6,11 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.util.Optional;
 
-public class StandardQuoridorParser implements QuoridorParser {
-  private String[] commandTokens;
+public class StandardQuoridorParser extends QuoridorParser {
 
-  private CommandType commandType;
-  private Position position;
-  private WallOrientation wallOrientation;
-
-  public void parse(String command) throws ParserException {
-    this.commandTokens = command.toUpperCase().split("\\s+");
-    initializeFieldsToNull();
-
-    try {
-      this.commandType = switch (commandTokens[0]) {
-        case "Q" -> {
-          verifyNumberOfParameters(0);
-          yield CommandType.QUIT;
-        }
+  @Override
+  protected CommandType parseSpecific() throws ParserException {
+    return switch (commandTokens[0]) {
         case "M" -> {
           verifyNumberOfParameters(1);
           parseActionPosition(commandTokens[1].split(","));
@@ -38,27 +26,9 @@ public class StandardQuoridorParser implements QuoridorParser {
           verifyNumberOfParameters(0);
           yield CommandType.HELP;
         }
-        case "R" -> {
-          verifyNumberOfParameters(0);
-          yield CommandType.RESTART;
-        }
 
         default -> throw new ParserException("Unexpected value for Action Type: " + commandTokens[0]);
       };
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw new ParserException("No command found!");
-    }
-  }
-
-  private void initializeFieldsToNull() {
-    this.commandType = null;
-    this.position = null;
-    this.wallOrientation = null;
-  }
-
-  private void verifyNumberOfParameters(int num) throws ParserException {
-    if (commandTokens.length - 1 != num)
-      throw new ParserException("Wrong number of parameters provided for this command!");
   }
 
   @Override
@@ -108,6 +78,7 @@ public class StandardQuoridorParser implements QuoridorParser {
             3) "w r,c v" => place a vertical wall near the cell (r,c)
             4) "h" => obtain information about the commands' format
             5) "q" => quit the game
+            6) "r" => restart the game
             """;
   }
 }

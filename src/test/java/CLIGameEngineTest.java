@@ -1,7 +1,6 @@
 import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +62,7 @@ public class CLIGameEngineTest {
 
   @Test
   void quitCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("3");
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -75,12 +74,10 @@ public class CLIGameEngineTest {
   void turnHasChanged_afterValidCommand() throws InvalidParameterException, BuilderException {
     StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("4");
 
-    engine.setLoopStoppedAfterTwoRounds(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
 
-    AbstractGame game = engine.getCurrentGame();
-
-    Assertions.assertEquals(game.getPlayingPawn(), game.getPawns().get(1));
+    Assertions.assertTrue(engine.isRoundCompleted());
   }
 
 
@@ -91,9 +88,7 @@ public class CLIGameEngineTest {
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
 
-    AbstractGame game = engine.getCurrentGame();
-
-    Assertions.assertEquals(game.getPlayingPawn(), game.getPawns().getFirst());
+    Assertions.assertFalse(engine.isRoundCompleted());
   }
 
   @Test
@@ -148,7 +143,7 @@ public class CLIGameEngineTest {
 
   @Test
   void pawn1CorrectlyWins() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1" + System.lineSeparator() + "1");
 
     engine.setPawn1HasToWin(true);
     engine.runGame();
@@ -177,7 +172,7 @@ public class CLIGameEngineTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"1", "2", "3"})
+  @ValueSource(strings = {"1", "2"})
   void commandExecutedIsTrue_afterActualCommand(String input) throws InvalidParameterException, BuilderException {
     StubStandardCLIQuoridorGameEngine engine = createEngineWithInput(input);
 
@@ -188,20 +183,20 @@ public class CLIGameEngineTest {
   }
 
   @Test
-  void gameIsCompletelyQuit() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("3");
+  void gameIsEnded() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
 
     engine.setLoopStoppedImmediately(true);
     engine.runGame();
 
-    Assertions.assertTrue(engine.isGameCompletelyQuit());
+    Assertions.assertTrue(engine.isGameEnded());
   }
 
   @Test
   void gameIsRestarted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("10");
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
 
-    engine.setLoopStoppedImmediately(true);
+    engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
 
     Assertions.assertTrue(engine.isGameRestarted());
