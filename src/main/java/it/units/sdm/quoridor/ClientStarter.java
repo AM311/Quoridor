@@ -28,7 +28,7 @@ public class ClientStarter {
         System.err.println("Server is not respecting protocol");
       }
 
-      int numOfPlayers = Integer.parseInt(reader.readLine());       //todo INTERESSANTE
+      int numOfPlayers = Integer.parseInt(reader.readLine());
       QuoridorGameEngine engine = new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
       engine.runGame();
     } catch (IOException e) {

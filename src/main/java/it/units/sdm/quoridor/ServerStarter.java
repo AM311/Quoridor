@@ -9,11 +9,9 @@ public class ServerStarter {
 
     try {
       int numOfPlayers = Integer.parseInt(args[0]);         //todo VALIDARE DA QUALCHE PARTE, POSSIBILMENTE TRAMITE GAME?
-      String quitCommand = "q";
 
       QuoridorServer server = new QuoridorServer(
               port,
-              quitCommand,
               numOfPlayers
       );
 

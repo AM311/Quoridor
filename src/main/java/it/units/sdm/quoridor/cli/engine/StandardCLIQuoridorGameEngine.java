@@ -91,7 +91,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     } while (!commandExecuted);
   }
 
-  private void handleEndGame() {
+  protected void handleEndGame() {
     try {
       System.out.println("Do you want to Quit (q) or restart a new game (r)?");
       String command = askCommand();
@@ -171,7 +171,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     };
   }
 
-  private String generateSeparator() {
+  protected String generateSeparator() {
     return "\n" + "-".repeat(27) + "\n";
   }
 

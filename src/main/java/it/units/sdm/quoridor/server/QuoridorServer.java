@@ -17,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class QuoridorServer {
   private final int port;
-  private final String quitCommand;     //todo COME SI CHIUDE IL SERVER???
   private final ExecutorService executorService = Executors.newCachedThreadPool();
   private final int numOfPlayers;
   private final Lock lock = new ReentrantLock();
@@ -25,13 +24,12 @@ public class QuoridorServer {
   private final AtomicInteger currentPlayer = new AtomicInteger(1);
   private final List<Socket> clientList = Collections.synchronizedList(new ArrayList<>());
 
-  public QuoridorServer(int port, String quitCommand, int numOfPlayers) {
+  public QuoridorServer(int port, int numOfPlayers) {
     this.port = port;
-    this.quitCommand = quitCommand;
     this.numOfPlayers = numOfPlayers;
   }
 
-  public void start() throws IOException {
+  public void start() {
 
     try {
       ServerSocket serverSocket = new ServerSocket(port);
@@ -40,7 +38,7 @@ public class QuoridorServer {
       CountDownLatch latch = new CountDownLatch(1);
 
       while (true) {
-        Thread.sleep(2000);     //todo ???
+        Thread.sleep(2000);
 
         if (clientList.size() == numOfPlayers) {
           latch.countDown();
@@ -79,13 +77,19 @@ public class QuoridorServer {
                 //todo IF "R": NOTIFICA A TUTTI (CLASSICO) E RESETTA CONTATORE
 
                 notifyClients(request);
+                if (request.equals("Q")) {
+                  System.exit(0);
+                }
+                if (request.equals("R")) {
+                  currentPlayer.set(1);
+                }
 
                 nextRound();
               }
 
             } catch (InterruptedException ex) {
               Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
-            }  catch (IOException ex) {
+            } catch (IOException ex) {
               Logger.printLog(System.err, "Client " + client.getInetAddress() + " abruptly closed connection.");
             } catch (RuntimeException ex) {
               Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client.getInetAddress() + ": " + ex.getMessage());
@@ -93,7 +97,6 @@ public class QuoridorServer {
               Logger.printLog(System.err, "ERROR while managing " + client.getInetAddress() + ": " + er.getMessage());
             } finally {
               clientList.remove(client);
-
               Logger.printLog(System.out, "Closed connection: " + client.getInetAddress());
 
               if (latch.getCount() == 0) {
@@ -134,7 +137,6 @@ public class QuoridorServer {
     lock.unlock();
   }
 
-  //TODO check se efficiente
   private void notifyClients(String message) throws IOException {
     for (Socket client : clientList) {
       BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
