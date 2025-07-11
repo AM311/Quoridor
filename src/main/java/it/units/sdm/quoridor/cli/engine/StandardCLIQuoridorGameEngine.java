@@ -135,23 +135,27 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.print(figure);
   }
 
+  protected void forwardCommand(String command) throws IOException {
+  }
+
   protected String askCommand() throws IOException {
     return String.valueOf(reader.readLine());
   }
 
-  protected boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException, BuilderException {
+  protected boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException, BuilderException, IOException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 
     return switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
         game.movePlayingPawn(targetPosition.orElse(null));
-
+        forwardCommand(command);
         statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
       case WALL -> {
         game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        forwardCommand(command);
         statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
@@ -161,10 +165,12 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
         yield false;
       }
       case QUIT -> {
+        forwardCommand(command);
         handleQuitGame();
         yield true;
       }
       case RESTART -> {
+        forwardCommand(command);
         handleRestartGame();
         yield true;
       }

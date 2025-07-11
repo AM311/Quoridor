@@ -1,5 +1,7 @@
 package it.units.sdm.quoridor.server;
 
+import it.units.sdm.quoridor.exceptions.QuoridorServerException;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,22 +25,43 @@ public class QuoridorServer {
   private final Condition turnChanged = lock.newCondition();
   private final AtomicInteger currentPlayer = new AtomicInteger(1);
   private final List<Socket> clientList = Collections.synchronizedList(new ArrayList<>());
+  private final ServerSocket serverSocket;
 
-  public QuoridorServer(int port, int numOfPlayers) {
+  public QuoridorServer(int port, int numOfPlayers) throws QuoridorServerException {
     this.port = port;
     this.numOfPlayers = numOfPlayers;
+
+    try {
+      this.serverSocket = new ServerSocket(port);
+    } catch (IOException ex) {
+      throw new QuoridorServerException("Exception while opening ServerSocket: " + ex.getMessage());
+    }
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public int getNumOfPlayers() {
+    return numOfPlayers;
+  }
+
+  public List<Socket> getClientList() {
+    return clientList;
+  }
+
+  public int getCurrentPlayer() {
+    return currentPlayer.intValue();
   }
 
   public void start() {
-
     try {
-      ServerSocket serverSocket = new ServerSocket(port);
       Logger.printLog(System.out, "Welcome to Quoridor! The server started!");
       Logger.printLog(System.out, "Waiting for " + numOfPlayers + " players");
       CountDownLatch latch = new CountDownLatch(1);
 
       while (true) {
-        Thread.sleep(2000);
+        Thread.sleep(1000);      //todo ABBASSATO IL CONTATORE
 
         if (clientList.size() == numOfPlayers) {
           latch.countDown();
@@ -48,81 +71,75 @@ public class QuoridorServer {
           Socket client = serverSocket.accept();
           if (clientList.size() >= numOfPlayers) {
             client.close();
-            throw new Exception("The game has already started!");
-          }
+            Logger.printLog(System.err, "Unable to accept connection: the game has already started!");
+          } else {
+            executorService.submit(() -> {
+              try (client) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 
-          executorService.submit(() -> {
-            try (client) {
-              BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-
-              clientList.add(client);
-              Logger.printLog(System.out, "New connection: " + client.getInetAddress());
-              Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
-              latch.await();
-              int playerNumber = (clientList.indexOf(client) + 1);
-              writer.write("READY" + System.lineSeparator());
-              writer.write("You are player " + playerNumber + System.lineSeparator());
-              writer.write(numOfPlayers + System.lineSeparator());
-              writer.flush();     //todo CHECK
-
-              while (true) {
-                waitForRound(playerNumber);
-                writer.write("PLAY" + System.lineSeparator());
+                clientList.add(client);
+                Logger.printLog(System.out, "New connection: " + client.getInetAddress());
+                Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
+                latch.await();
+                int playerNumber = (clientList.indexOf(client) + 1);
+                writer.write("READY" + System.lineSeparator());
+                writer.write("You are player " + playerNumber + System.lineSeparator());
+                writer.write(numOfPlayers + System.lineSeparator());
                 writer.flush();
-                String request = reader.readLine();
 
-                //todo AGGIUNGERE IF "Q" / IF "R"
-                //todo IF "Q": NOTIFICA A TUTTI (CLASSICO) E TERMINA SERVER
-                //todo IF "R": NOTIFICA A TUTTI (CLASSICO) E RESETTA CONTATORE
+                while (true) {
+                  waitForRound(playerNumber);
+                  writer.write("PLAY" + System.lineSeparator());
+                  writer.flush();
+                  String request = reader.readLine();
 
-                notifyClients(request);
-                if (request.equals("Q")) {
-                  System.exit(0);
+                  notifyClients(request);
+
+                  if (request.equals("Q")) {
+                    Thread.sleep(1000);
+                    shutdown();
+                  }
+                  if (request.equals("R")) {
+                    currentPlayer.set(1);
+                  }
+
+                  nextRound();
                 }
-                if (request.equals("R")) {
-                  currentPlayer.set(1);
-                }
+              } catch (InterruptedException ex) {
+                Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
+              } catch (IOException ex) {
+                Logger.printLog(System.err, "Client " + client.getInetAddress() + " abruptly closed connection.");
+              } catch (RuntimeException ex) {
+                Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client.getInetAddress() + ": " + ex.getMessage());
+              } catch (Error er) {
+                Logger.printLog(System.err, "ERROR while managing " + client.getInetAddress() + ": " + er.getMessage());
+              } finally {
+                clientList.remove(client);
+                Logger.printLog(System.out, "Closed connection: " + client.getInetAddress());
 
-                nextRound();
+                if (latch.getCount() == 0) {
+                  try {
+                    notifyClients("Q" + System.lineSeparator());
+                    Thread.sleep(1000);
+                  } catch (IOException ex) {
+                    Logger.printLog(System.err, "IOException: " + ex.getMessage());
+                  } catch (InterruptedException ex) {
+                    Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
+                  }
+
+                  shutdown();
+                }
               }
-
-            } catch (InterruptedException ex) {
-              Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
-            } catch (IOException ex) {
-              Logger.printLog(System.err, "Client " + client.getInetAddress() + " abruptly closed connection.");
-            } catch (RuntimeException ex) {
-              Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client.getInetAddress() + ": " + ex.getMessage());
-            } catch (Error er) {
-              Logger.printLog(System.err, "ERROR while managing " + client.getInetAddress() + ": " + er.getMessage());
-            } finally {
-              clientList.remove(client);
-              Logger.printLog(System.out, "Closed connection: " + client.getInetAddress());
-
-              if (latch.getCount() == 0) {
-                try {
-                  notifyClients("Q");
-                } catch (IOException ex) {
-                  Logger.printLog(System.err, "IOException: " + ex.getMessage());
-                }
-
-                System.exit(0);
-              }
-            }
-          });
-        } catch (RuntimeException ex) {
-          Logger.printLog(System.err, "RuntimeException trying managing new client connection: " + ex.getMessage());
-        } catch (Exception ex) {
-          Logger.printLog(System.err, "Unable to accept connection: " + ex.getMessage());
+            });
+          }
+        } catch (IOException ex) {
+          Logger.printLog(System.err, "Exception while accepting a new client: " + ex.getMessage());
         }
       }
-    } catch (IOException ex) {
-      Logger.printLog(System.err, "Exception while creating server: " + ex);
     } catch (InterruptedException ex) {
-      Logger.printLog(System.err, "Exception while handling Sleep: " + ex);
-    } catch (Exception ex) {
-      Logger.printLog(System.err, "Exception trying closing resources: " + ex);
-    } finally {
+      Logger.printLog(System.err, "Exception while handling Sleep: " + ex.getMessage());
+    }  finally {
       executorService.shutdown();
     }
   }
@@ -143,6 +160,16 @@ public class QuoridorServer {
       writer.write(message + System.lineSeparator());
       writer.flush();
     }
+  }
+
+  public void shutdown() {
+    try {
+      serverSocket.close();
+    } catch (IOException ex) {
+      Logger.printLog(System.err, "Exception while closing ServerSocket: " + ex);
+    }
+
+    System.exit(0);
   }
 
   private void nextRound() {
