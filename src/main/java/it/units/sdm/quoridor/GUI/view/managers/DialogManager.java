@@ -5,6 +5,7 @@ import it.units.sdm.quoridor.GUI.view.dialogs.HelpDialogView;
 import it.units.sdm.quoridor.GUI.view.dialogs.NotificationDialogView;
 import it.units.sdm.quoridor.GUI.view.dialogs.GameFinishedDialogView;
 import it.units.sdm.quoridor.GUI.view.dialogs.QuitDialogView;
+import it.units.sdm.quoridor.cli.StatisticsCounter;
 
 import javax.swing.*;
 
@@ -25,8 +26,8 @@ public class DialogManager {
     new QuitDialogView(gameController, mainFrame).displayDialog();
   }
 
-  public void displayGameFinishedDialog() {
-    new GameFinishedDialogView(gameController, mainFrame).displayDialog();
+  public void displayGameFinishedDialog(StatisticsCounter statistics) {
+    new GameFinishedDialogView(gameController, mainFrame, statistics).displayDialog();
   }
 
   public void displayNotificationDialog(String message, boolean invalidActionFlag) {

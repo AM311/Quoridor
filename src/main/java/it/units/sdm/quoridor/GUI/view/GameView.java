@@ -4,6 +4,7 @@ import it.units.sdm.quoridor.GUI.controller.GameActionHandler;
 import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
 import it.units.sdm.quoridor.GUI.view.managers.PanelsManager;
+import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -43,14 +44,13 @@ public class GameView implements GameEventListener {
   public void onWallPlaced(Position position, WallOrientation orientation, int playerIndex, int remainingWalls) {
     panelsManager.updateWallVisualization(position, orientation);
     panelsManager.updateWallLabel(playerIndex, remainingWalls);
-    onTurnComplete();
+    onTurnFinished();
   }
 
-  public void onTurnComplete() {
+  @Override
+  public void onTurnFinished() {
     panelsManager.removeCurrentActionPanel(actionHandler.getPlayingPawnIndex());
-    if (actionHandler instanceof GameController) {
-      ((GameController) actionHandler).changeRound();
-    }
+    actionHandler.changeRound();
     panelsManager.updatePlayerPanel(actionHandler.getPlayingPawnIndex());
     panelsManager.displayActionsPanelForPlayingPlayer(actionHandler.getPlayingPawnIndex());
     displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s turn", false);
@@ -69,11 +69,6 @@ public class GameView implements GameEventListener {
   @Override
   public void onPawnMoved(Position oldPosition, Position newPosition, int playerIndex) {
     panelsManager.updatePawnPosition(oldPosition, newPosition, playerIndex);
-    if (actionHandler.isGameFinished()) {
-      showGameFinishedDialog();
-    } else {
-      onTurnComplete();
-    }
   }
 
   @Override
@@ -92,7 +87,7 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void showGameFinishedDialog() {
-    dialogManager.displayGameFinishedDialog();
+  public void onGameFinished(StatisticsCounter statistics) {
+    dialogManager.displayGameFinishedDialog(statistics);
   }
 }

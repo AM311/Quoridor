@@ -54,7 +54,8 @@ public class QuitDialogView implements DialogView {
     yesButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     yesButton.addActionListener(e -> {
       confirmQuitDialog.dispose();
-      new GameFinishedDialogView(gameController, mainFrame).displayDialog();
+      // TODO da togliere il null
+      new GameFinishedDialogView(gameController, mainFrame, null).displayDialog();
     });
 
     JButton noButton = new JButton("NO");

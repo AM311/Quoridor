@@ -14,8 +14,7 @@ public final class GUIConstants {
   public static final Color HIGHLIGHT_COLOR = Color.LIGHT_GRAY;
   public static final Color BUTTON_SELECTED_COLOR = Color.GREEN;
   public static final Color WALL_COLOR = Color.BLACK;
-  public static final Color WIN_SCREEN_BACKGROUND = Color.GREEN;
-  public static final Color QUIT_SCREEN_BACKGROUND = Color.DARK_GRAY;
+  public static final Color SCREEN_BACKGROUND = Color.DARK_GRAY;
 
   public static final Font HEADER_FONT = new Font("Arial", Font.BOLD, 24);
   public static final Font NORMAL_FONT = new Font("Arial", Font.PLAIN, 20);

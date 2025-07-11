@@ -12,6 +12,7 @@ public interface GameActionHandler {
   int getNumberOfPlayers();
   int getPlayingPawnIndex();
   int getSideLength();
+  void changeRound();
   List<AbstractPawn> getPawns();
   boolean isGameFinished();
 }

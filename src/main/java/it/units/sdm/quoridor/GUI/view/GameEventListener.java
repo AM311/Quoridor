@@ -1,5 +1,6 @@
 package it.units.sdm.quoridor.GUI.view;
 
+import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -11,5 +12,6 @@ public interface GameEventListener {
   void onInvalidAction(String message);
   void clearHighlights();
   void displayWallDirectionButtons(int playerIndex);
-  void showGameFinishedDialog();
+  void onGameFinished(StatisticsCounter statistics);
+  void onTurnFinished();
 }

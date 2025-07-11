@@ -9,7 +9,6 @@ import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.utils.Color;
 import it.units.sdm.quoridor.utils.Position;
 
@@ -21,13 +20,11 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   private final BufferedReader reader;
   private final QuoridorParser parser;
-  private final StatisticsCounter statisticsCounter;
 
   public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
-    super(builder);
+    super(builder, statisticsCounter);
     this.reader = reader;
     this.parser = parser;
-    this.statisticsCounter = statisticsCounter;
   }
 
   @Override
@@ -49,10 +46,6 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     handleEndGame();
   }
 
-  private AbstractGame createGame() throws BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(builder);
-    return builderDirector.makeGame();
-  }
 
   private void printInitialInformation() {
     System.out.println("\n--- Welcome to QUORIDOR! ---\n");

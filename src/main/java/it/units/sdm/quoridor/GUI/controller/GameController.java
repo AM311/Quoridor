@@ -1,17 +1,18 @@
 package it.units.sdm.quoridor.GUI.controller;
 
 import it.units.sdm.quoridor.GUI.view.GameEventListener;
-import it.units.sdm.quoridor.GUI.view.GameView;
+import it.units.sdm.quoridor.cli.StatisticsCounter;
+import it.units.sdm.quoridor.cli.engine.StandardGUIQuoridorGameEngine;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.AbstractTile;
-import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -27,9 +28,11 @@ public class GameController implements GameActionHandler {
   private final AbstractGame game;
   protected Action currentAction = Action.DO_NOTHING;
   private GameEventListener eventListener;
+  private final StatisticsCounter statisticsCounter;
 
-  public GameController(AbstractGame game) {
+  public GameController(AbstractGame game, StatisticsCounter statisticsCounter) {
     this.game = game;
+    this.statisticsCounter = statisticsCounter;
   }
 
   public void setEventListener(GameEventListener eventListener) {
@@ -56,6 +59,7 @@ public class GameController implements GameActionHandler {
     return game.getPlayingPawnIndex();
   }
 
+  @Override
   public void changeRound() {
     game.changeRound();
   }
@@ -81,7 +85,14 @@ public class GameController implements GameActionHandler {
               game.getPlayingPawn().getCurrentTile().getColumn()
       );
       game.movePlayingPawn(targetPosition);
+      statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
       eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
+      if (isGameFinished()) {
+        statisticsCounter.updateAllTotalStats(game);
+        eventListener.onGameFinished(statisticsCounter);
+      } else {
+        eventListener.onTurnFinished();
+      }
       setCurrentAction(Action.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
       eventListener.onInvalidAction(e.getMessage());
@@ -91,6 +102,7 @@ public class GameController implements GameActionHandler {
   private void attemptPlaceWall(Position position, WallOrientation orientation) {
     try {
       game.placeWall(position, orientation);
+      statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
       setCurrentAction(Action.DO_NOTHING);
       eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
     } catch (InvalidActionException | InvalidParameterException e) {
@@ -99,7 +111,7 @@ public class GameController implements GameActionHandler {
   }
 
 
-  // TODO da chiamare game.getValidMovePositions()?
+  // TODO da chiamare game.getValidMovePositions()
   public List<Position> getValidMovePositions() {
     List<Position> validPositions = new ArrayList<>();
     ActionChecker<AbstractTile> checker = new PawnMovementChecker();
@@ -108,7 +120,7 @@ public class GameController implements GameActionHandler {
       for (int i = 0; i < gameBoardSize; i++) {
         for (int j = 0; j < gameBoardSize; j++) {
           Position position = new Position(i, j);
-          if (checker.isValidAction(game, game.getGameBoard().getTile(position))) {
+          if (checker.isValidAction(game, game.getGameBoard().getTile(position)).equals(QuoridorCheckResult.OKAY)) {
             validPositions.add(position);
           }
         }
@@ -145,17 +157,10 @@ public class GameController implements GameActionHandler {
     }
   }
 
-
-  // TODO da invocare game.restartGame()
+// TODO capire se lasciare così o fare in altro modo
   public void restartGame() {
     try {
-      BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(game.getPawns().size()));
-      AbstractGame newGame = builderDirector.makeGame();
-      GameController newGameController = new GameController(newGame);
-      if (eventListener instanceof GameView) {
-        GameView gameView = new GameView(newGameController);
-        gameView.displayGUI();
-      }
+      new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(getNumberOfPlayers()), statisticsCounter).runGame();
     } catch (InvalidParameterException | BuilderException e) {
       eventListener.onInvalidAction(e.getMessage());
     }
