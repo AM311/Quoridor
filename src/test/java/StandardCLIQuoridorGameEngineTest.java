@@ -14,7 +14,7 @@ import testDoubles.StubStandardCLIQuoridorGameEngine;
 
 import java.io.*;
 
-public class CLIGameEngineTest {
+public class StandardCLIQuoridorGameEngineTest {
 
   QuoridorParser parser;
   AbstractQuoridorBuilder builder;

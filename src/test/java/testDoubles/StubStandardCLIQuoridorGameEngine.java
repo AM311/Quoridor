@@ -17,26 +17,26 @@ import java.util.Optional;
 
 public class StubStandardCLIQuoridorGameEngine {
 
-  private final BufferedReader reader;
-  private final QuoridorParser parser;
-  private final AbstractQuoridorBuilder builder;
-  private boolean isPawnMoved;
-  private boolean isWallPlaced;
-  private boolean isGameQuit;
-  private boolean isGameEnded;
-  private AbstractGame currentGame;
-  private boolean isLoopStoppedAfterOneRound;
-  private int loopCounter = 0;
-  private boolean isInvalidParameterExceptionCaught;
-  private boolean isParserExceptionCaught;
-  private boolean isInvalidActionExceptionCaught;
-  private boolean pawn0HasToWin;
-  private boolean pawn1HasToWin;
-  private boolean isHelpAsked;
-  private boolean isCommandExecuted;
-  private boolean isRoundCompleted;
-  private boolean isLoopStoppedImmediately;
-  private boolean isGameRestarted;
+  protected final BufferedReader reader;
+  protected final QuoridorParser parser;
+  protected final AbstractQuoridorBuilder builder;
+  protected boolean isPawnMoved;
+  protected boolean isWallPlaced;
+  protected boolean isGameQuit;
+  protected boolean isGameEnded;
+  protected AbstractGame currentGame;
+  protected boolean isLoopStoppedAfterOneRound;
+  protected int loopCounter = 0;
+  protected boolean isInvalidParameterExceptionCaught;
+  protected boolean isParserExceptionCaught;
+  protected boolean isInvalidActionExceptionCaught;
+  protected boolean pawn0HasToWin;
+  protected boolean pawn1HasToWin;
+  protected boolean isHelpAsked;
+  protected boolean isCommandExecuted;
+  protected boolean isRoundCompleted;
+  protected boolean isLoopStoppedImmediately;
+  protected boolean isGameRestarted;
 
   public StubStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
@@ -79,12 +79,12 @@ public class StubStandardCLIQuoridorGameEngine {
     isGameEnded = true;
   }
 
-  private AbstractGame createGame() throws BuilderException {
+  protected AbstractGame createGame() throws BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(builder);
     return builderDirector.makeGame();
   }
 
-  private void executeRound(AbstractGame game) {
+  protected void executeRound(AbstractGame game) {
     isRoundCompleted = false;
 
     String command;
@@ -115,11 +115,11 @@ public class StubStandardCLIQuoridorGameEngine {
     isRoundCompleted = true;
   }
 
-  private String askCommand() throws IOException {
+  protected String askCommand() throws IOException {
     return String.valueOf(reader.readLine());
   }
 
-  private boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+  protected boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
     return switch (parser.getCommandType().orElseThrow()) {
@@ -148,12 +148,12 @@ public class StubStandardCLIQuoridorGameEngine {
     };
   }
 
-  private void handleEndGame() {
+  protected void handleEndGame() {
     isGameQuit = true;
     isGameEnded = true;
   }
 
-  private void handleRestartGame() {
+  protected void handleRestartGame() {
     isGameRestarted = true;
     isGameEnded = true;
   }
