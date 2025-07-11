@@ -13,8 +13,8 @@ import java.net.Socket;
 
 public class ClientStarter {
   public static void main(String[] args) {
-    String serverAddress = "localhost";           //todo passare come parametri di avvio (anche per server?)
-    int port = 4444;
+    String serverAddress = args[0];
+    int port = Integer.parseInt(args[1]);
 
     try (Socket socket = new Socket(serverAddress, port);
          BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -31,6 +31,8 @@ public class ClientStarter {
       int numOfPlayers = Integer.parseInt(reader.readLine());
       QuoridorGameEngine engine = new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
       engine.runGame();
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      System.err.println("Missing parameter: " + ex.getMessage());
     } catch (IOException e) {
       System.err.println("Could not connect to server: " + e.getMessage());
     } catch (InvalidParameterException e) {
