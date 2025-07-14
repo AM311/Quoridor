@@ -37,23 +37,23 @@ public class GameView implements GameEventListener {
     mainFrame.setVisible(true);
 
     dialogManager.displayHelpDialog();
-    displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s turn", false);
+    displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 
   @Override
   public void onWallPlaced(Position position, WallOrientation orientation, int playerIndex, int remainingWalls) {
     panelsManager.updateWallVisualization(position, orientation);
     panelsManager.updateWallLabel(playerIndex, remainingWalls);
-    onTurnFinished();
+    onRoundFinished();
   }
 
   @Override
-  public void onTurnFinished() {
+  public void onRoundFinished() {
     panelsManager.removeCurrentActionPanel(actionHandler.getPlayingPawnIndex());
     actionHandler.changeRound();
     panelsManager.updatePlayerPanel(actionHandler.getPlayingPawnIndex());
     panelsManager.displayActionsPanelForPlayingPlayer(actionHandler.getPlayingPawnIndex());
-    displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s turn", false);
+    displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 
   @Override

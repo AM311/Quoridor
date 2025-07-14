@@ -13,5 +13,5 @@ public interface GameEventListener {
   void clearHighlights();
   void displayWallDirectionButtons(int playerIndex);
   void onGameFinished(StatisticsCounter statistics);
-  void onTurnFinished();
+  void onRoundFinished();
 }

@@ -91,7 +91,7 @@ public class GameController implements GameActionHandler {
         statisticsCounter.updateAllTotalStats(game);
         eventListener.onGameFinished(statisticsCounter);
       } else {
-        eventListener.onTurnFinished();
+        eventListener.onRoundFinished();
       }
       setCurrentAction(Action.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
