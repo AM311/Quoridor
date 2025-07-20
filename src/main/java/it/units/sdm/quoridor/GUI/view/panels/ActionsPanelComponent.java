@@ -2,6 +2,7 @@ package it.units.sdm.quoridor.GUI.view.panels;
 
 import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
@@ -9,15 +10,15 @@ import java.awt.*;
 import java.util.List;
 
 public class ActionsPanelComponent implements PanelComponent {
-  private final GameController gameController;
+  private final GUIQuoridorGameEngine gameEngine;
   private JPanel currentActionPanel;
   private int currentPlayerIndex;
   private final DialogManager dialogManager;
   private final List<PlayerPanelComponent> playerPanelComponents;
 
 
-  public ActionsPanelComponent(GameController gameController, DialogManager dialogManager, List<PlayerPanelComponent> playerPanelComponents) {
-    this.gameController = gameController;
+  public ActionsPanelComponent(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager, List<PlayerPanelComponent> playerPanelComponents) {
+    this.gameEngine = gameEngine;
     this.dialogManager = dialogManager;
     this.playerPanelComponents = playerPanelComponents;
   }
@@ -30,13 +31,13 @@ public class ActionsPanelComponent implements PanelComponent {
     JButton moveButton = new JButton("Move");
     moveButton.addActionListener(e -> {
       moveButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameController.setMoveAction();
+      gameEngine.setMoveAction();
     });
 
     JButton placeWallButton = new JButton("Place Wall");
     placeWallButton.addActionListener(e -> {
       moveButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameController.setPlaceWallAction();
+      gameEngine.setPlaceWallAction();
     });
 
     actionsPanel.add(moveButton);

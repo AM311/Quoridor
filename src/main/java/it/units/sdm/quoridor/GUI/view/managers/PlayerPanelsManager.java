@@ -4,6 +4,7 @@ import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.panels.ActionsPanelComponent;
 import it.units.sdm.quoridor.GUI.view.panels.PlayerPanelComponent;
 import it.units.sdm.quoridor.GUI.view.panels.WallDirectionsPanelComponent;
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.model.AbstractPawn;
 
 import javax.swing.*;
@@ -20,24 +21,24 @@ public class PlayerPanelsManager {
   private final WallDirectionsPanelComponent wallDirectionsPanelComponent;
 
 
-  public PlayerPanelsManager(GameController gameController, DialogManager dialogManager) {
-    this.numberOfPlayers = gameController.getNumberOfPlayers();
-    this.pawnColors = gameController.getPawns().stream()
+  public PlayerPanelsManager(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager) {
+    this.numberOfPlayers = gameEngine.getNumberOfPlayers();
+    this.pawnColors = gameEngine.getPawns().stream()
             .map(pawn -> pawn.getPawnAppearance().color().toString())
             .toArray(String[]::new);
     this.playerPanelComponents = new ArrayList<>(this.numberOfPlayers);
 
-    this.actionsPanelComponent = new ActionsPanelComponent(gameController, dialogManager, playerPanelComponents);
-    this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameController, actionsPanelComponent);
+    this.actionsPanelComponent = new ActionsPanelComponent(gameEngine, dialogManager, playerPanelComponents);
+    this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameEngine, actionsPanelComponent);
   }
 
-  public void displayPlayerPanels(JPanel leftPanel, JPanel rightPanel, GameController gameController) {
+  public void displayPlayerPanels(JPanel leftPanel, JPanel rightPanel, GUIQuoridorGameEngine gameEngine) {
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
     gbc.anchor = GridBagConstraints.NORTH;
 
-    AbstractPawn[] pawns = gameController.getPawns().toArray(new AbstractPawn[0]);
+    AbstractPawn[] pawns = gameEngine.getPawns().toArray(new AbstractPawn[0]);
 
     PlayerPanelComponent player1 = new PlayerPanelComponent(
             "Player 1",

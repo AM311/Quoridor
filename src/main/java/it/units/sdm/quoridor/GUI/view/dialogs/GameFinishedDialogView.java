@@ -1,21 +1,21 @@
 package it.units.sdm.quoridor.GUI.view.dialogs;
 
 import it.units.sdm.quoridor.cli.StatisticsCounter;
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
-import it.units.sdm.quoridor.GUI.controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GameFinishedDialogView implements DialogView {
-  private final GameController gameController;
+  private final GUIQuoridorGameEngine gameEngine;
   private final JFrame mainFrame;
   private final JDialog gameFinishedDialog;
   private final StatisticsCounter statistics;
 
-  public GameFinishedDialogView(GameController gameController, JFrame mainFrame, StatisticsCounter statistics) {
-    this.gameController = gameController;
+  public GameFinishedDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame, StatisticsCounter statistics) {
+    this.gameEngine = gameEngine;
     this.mainFrame = mainFrame;
     this.statistics = statistics;
     this.gameFinishedDialog = new JDialog(mainFrame, true);
@@ -25,7 +25,7 @@ public class GameFinishedDialogView implements DialogView {
   @Override
   public void displayDialog() {
     gameFinishedDialog.setUndecorated(true);
-    gameFinishedDialog.setSize(600,  gameController.getNumberOfPlayers() == 4 ? 500 : 400);
+    gameFinishedDialog.setSize(600,  gameEngine.getNumberOfPlayers() == 4 ? 500 : 400);
     gameFinishedDialog.setLocationRelativeTo(mainFrame);
     gameFinishedDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
@@ -55,7 +55,7 @@ public class GameFinishedDialogView implements DialogView {
       if (mainFrame != null) {
         mainFrame.dispose();
       }
-      gameController.restartGame();
+      gameEngine.restartGame();
     });
 
 
@@ -72,8 +72,8 @@ public class GameFinishedDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel() {
-    int numberOfPlayers = gameController.getNumberOfPlayers();
-    boolean isGameFinished = gameController.isGameFinished();
+    int numberOfPlayers = gameEngine.getNumberOfPlayers();
+    boolean isGameFinished = gameEngine.isGameFinished();
     JLabel messageLabel = getMessageLabel(numberOfPlayers, isGameFinished);
 
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -83,7 +83,7 @@ public class GameFinishedDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel(int numberOfPlayers, boolean isGameFinished) {
-    int playingPawnIndex = gameController.getPlayingPawnIndex();
+    int playingPawnIndex = gameEngine.getPlayingPawnIndex();
 
     JLabel messageLabel;
     if (numberOfPlayers == 2) {
@@ -109,7 +109,7 @@ public class GameFinishedDialogView implements DialogView {
             .append("<th style='padding:6px;'>TOTAL WALLS</th>")
             .append("</tr>");
 
-    for (AbstractPawn pawn : gameController.getPawns()) {
+    for (AbstractPawn pawn : gameEngine.getPawns()) {
       String playerColor = pawn.getPawnAppearance().color().toString();
       String playerIdentifier = pawn.getPawnAppearance().toString();
 

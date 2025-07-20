@@ -6,6 +6,7 @@ import it.units.sdm.quoridor.utils.Position;
 import java.util.List;
 
 public interface GameActionHandler {
+  /*
   void handleTileClick(Position position);
   void setMoveAction();
   void setPlaceWallAction();
@@ -15,4 +16,5 @@ public interface GameActionHandler {
   void changeRound();
   List<AbstractPawn> getPawns();
   boolean isGameFinished();
+   */
 }

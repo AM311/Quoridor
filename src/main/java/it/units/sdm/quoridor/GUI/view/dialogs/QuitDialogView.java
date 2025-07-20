@@ -1,6 +1,7 @@
 package it.units.sdm.quoridor.GUI.view.dialogs;
 
 import it.units.sdm.quoridor.GUI.controller.GameController;
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
@@ -8,11 +9,11 @@ import java.awt.*;
 
 public class QuitDialogView implements DialogView {
   private final JDialog confirmQuitDialog;
-  private final GameController gameController;
+  private final GUIQuoridorGameEngine gameEngine;
   private final JFrame mainFrame;
 
-  public QuitDialogView(GameController gameController, JFrame mainFrame) {
-    this.gameController = gameController;
+  public QuitDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
+    this.gameEngine = gameEngine;
     this.mainFrame = mainFrame;
     this.confirmQuitDialog = new JDialog(mainFrame, true);
   }
@@ -55,7 +56,7 @@ public class QuitDialogView implements DialogView {
     yesButton.addActionListener(e -> {
       confirmQuitDialog.dispose();
       // TODO da togliere il null
-      new GameFinishedDialogView(gameController, mainFrame, null).displayDialog();
+      new GameFinishedDialogView(gameEngine, mainFrame, null).displayDialog();
     });
 
     JButton noButton = new JButton("NO");

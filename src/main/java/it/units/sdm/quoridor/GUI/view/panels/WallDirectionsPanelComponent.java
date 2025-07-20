@@ -1,17 +1,19 @@
 package it.units.sdm.quoridor.GUI.view.panels;
 
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
-import it.units.sdm.quoridor.GUI.controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine.*;
+
 public class WallDirectionsPanelComponent implements PanelComponent {
-  private final GameController gameController;
+  private final GUIQuoridorGameEngine gameEngine;
   private final ActionsPanelComponent actionsPanelComponent;
 
-  public WallDirectionsPanelComponent(GameController gameController, ActionsPanelComponent actionsPanelComponent) {
-    this.gameController = gameController;
+  public WallDirectionsPanelComponent(GUIQuoridorGameEngine gameEngine, ActionsPanelComponent actionsPanelComponent) {
+    this.gameEngine = gameEngine;
     this.actionsPanelComponent = actionsPanelComponent;
   }
 
@@ -26,13 +28,13 @@ public class WallDirectionsPanelComponent implements PanelComponent {
     verticalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameController.setCurrentAction(GameController.Action.PLACE_VERTICAL_WALL);
+      gameEngine.setCurrentAction(GUIAction.PLACE_VERTICAL_WALL);
     });
 
     horizontalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameController.setCurrentAction(GameController.Action.PLACE_HORIZONTAL_WALL);
+      gameEngine.setCurrentAction(GUIAction.PLACE_HORIZONTAL_WALL);
     });
 
 
@@ -40,8 +42,8 @@ public class WallDirectionsPanelComponent implements PanelComponent {
     cancelButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameController.setCurrentAction(GameController.Action.DO_NOTHING);
-      actionsPanelComponent.displayActionsPanelForPlayingPlayer(gameController.getPlayingPawnIndex());
+      gameEngine.setCurrentAction(GUIAction.DO_NOTHING);
+      actionsPanelComponent.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     });
 
     directionsPanel.add(verticalButton);

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameController implements GameActionHandler {
-
+/*
   public enum Action {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
   }
@@ -165,4 +165,6 @@ public class GameController implements GameActionHandler {
       eventListener.onInvalidAction(e.getMessage());
     }
   }
+
+ */
 }

@@ -9,6 +9,7 @@ import it.units.sdm.quoridor.model.builder.BuilderDirector;
 public abstract class QuoridorGameEngine {
 
   protected AbstractQuoridorBuilder builder;
+  protected AbstractGame game;
   protected StatisticsCounter statisticsCounter;
 
   public QuoridorGameEngine(AbstractQuoridorBuilder builder,StatisticsCounter statisticsCounter) {
@@ -18,8 +19,8 @@ public abstract class QuoridorGameEngine {
 
   public abstract void runGame() throws BuilderException;
 
-  protected AbstractGame createGame() throws BuilderException {
+  protected void createGame() throws BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(builder);
-    return builderDirector.makeGame();
+    this.game = builderDirector.makeGame();
   }
 }

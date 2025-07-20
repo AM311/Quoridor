@@ -1,43 +1,38 @@
 package it.units.sdm.quoridor.GUI.view;
 
-import it.units.sdm.quoridor.GUI.controller.GameActionHandler;
-import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
 import it.units.sdm.quoridor.GUI.view.managers.PanelsManager;
 import it.units.sdm.quoridor.cli.StatisticsCounter;
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
 import javax.swing.*;
 
 public class GameView implements GameEventListener {
-  private final GameActionHandler actionHandler;
+  private final GUIQuoridorGameEngine gameEngine;
   private PanelsManager panelsManager;
   private DialogManager dialogManager;
 
-  public GameView(GameActionHandler actionHandler) {
-    this.actionHandler = actionHandler;
-
-    if (actionHandler instanceof GameController) {
-      ((GameController) actionHandler).setEventListener(this);
-    }
+  public GameView(GUIQuoridorGameEngine gameEngine) {
+    this.gameEngine = gameEngine;
+    gameEngine.setEventListener(this);
   }
-
 
   public void displayGUI() {
     JFrame mainFrame = new JFrame("Quoridor");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-    dialogManager = new DialogManager(mainFrame, (GameController) actionHandler);
-    panelsManager = new PanelsManager((GameController) actionHandler, dialogManager);
+    dialogManager = new DialogManager(mainFrame, gameEngine);
+    panelsManager = new PanelsManager(gameEngine, dialogManager);
 
     JPanel rootPanel = panelsManager.createRootPanel();
     mainFrame.setContentPane(rootPanel);
     mainFrame.setVisible(true);
 
     dialogManager.displayHelpDialog();
-    displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s round", false);
+    displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 
   @Override
@@ -45,15 +40,6 @@ public class GameView implements GameEventListener {
     panelsManager.updateWallVisualization(position, orientation);
     panelsManager.updateWallLabel(playerIndex, remainingWalls);
     onRoundFinished();
-  }
-
-  @Override
-  public void onRoundFinished() {
-    panelsManager.removeCurrentActionPanel(actionHandler.getPlayingPawnIndex());
-    actionHandler.changeRound();
-    panelsManager.updatePlayerPanel(actionHandler.getPlayingPawnIndex());
-    panelsManager.displayActionsPanelForPlayingPlayer(actionHandler.getPlayingPawnIndex());
-    displayNotification("Player " + (actionHandler.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 
   @Override
@@ -89,5 +75,14 @@ public class GameView implements GameEventListener {
   @Override
   public void onGameFinished(StatisticsCounter statistics) {
     dialogManager.displayGameFinishedDialog(statistics);
+  }
+
+  @Override
+  public void onRoundFinished() {
+    panelsManager.removeCurrentActionPanel(gameEngine.getPlayingPawnIndex());
+    gameEngine.changeRound();
+    panelsManager.updatePlayerPanel(gameEngine.getPlayingPawnIndex());
+    panelsManager.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+    displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 }

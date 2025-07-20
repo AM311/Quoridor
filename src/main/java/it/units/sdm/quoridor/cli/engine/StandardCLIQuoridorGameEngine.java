@@ -29,19 +29,19 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
   @Override
   public void runGame() throws BuilderException {
-    AbstractGame game = createGame();
+    createGame();
     printInitialInformation();
 
     while (!game.isGameFinished()) {
       System.out.println(game);
-      executeRound(game);
+      executeRound();
 
       if (!game.isGameFinished()) {
         game.changeRound();
       }
     }
 
-    printEndGameInformation(game);
+    printEndGameInformation();
     statisticsCounter.resetGameStats();
     handleEndGame();
   }
@@ -61,7 +61,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     }
   }
 
-  private void printEndGameInformation(AbstractGame game) {
+  private void printEndGameInformation() {
     statisticsCounter.updateAllTotalStats(game);
     System.out.print(game);
     System.out.println(generateSeparator());
@@ -69,14 +69,14 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.println(statisticsCounter.generateStatisticsReport(game));
   }
 
-  private void executeRound(AbstractGame game) {
+  private void executeRound() {
     boolean commandExecuted = false;
 
     do {
       try {
         System.out.print("\nMake your move: ");
         String command = askCommand();
-        commandExecuted = performCommand(command, game);
+        commandExecuted = performCommand(command);
       } catch (IOException e) {
         System.err.println("Error reading input: " + e.getMessage());
         System.out.println("Please try entering your command again:");
@@ -126,7 +126,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     return String.valueOf(reader.readLine());
   }
 
-  private boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+  private boolean performCommand(String command) throws ParserException, InvalidParameterException, InvalidActionException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 

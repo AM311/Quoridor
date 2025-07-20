@@ -3,6 +3,7 @@ package it.units.sdm.quoridor.GUI.view.managers;
 import it.units.sdm.quoridor.GUI.view.panels.GameBoardPanelComponent;
 import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.panels.RootPanelComponent;
+import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -10,24 +11,24 @@ import javax.swing.*;
 
 public class PanelsManager {
 
-  private final GameController gameController;
+  private final GUIQuoridorGameEngine gameEngine;
   private final PlayerPanelsManager playerPanelsManager;
   private final RootPanelComponent rootPanelComponent;
   private final GameBoardPanelComponent gameBoardPanelComponent;
 
   private JPanel currentActionPanel;
 
-  public PanelsManager(GameController gameController, DialogManager dialogManager) {
-    this.gameController = gameController;
-    this.gameBoardPanelComponent = new GameBoardPanelComponent(gameController);
-    this.playerPanelsManager = new PlayerPanelsManager(gameController, dialogManager);
-    this.rootPanelComponent = new RootPanelComponent(gameController, gameBoardPanelComponent, playerPanelsManager);
+  public PanelsManager(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager) {
+    this.gameEngine = gameEngine;
+    this.gameBoardPanelComponent = new GameBoardPanelComponent(gameEngine);
+    this.playerPanelsManager = new PlayerPanelsManager(gameEngine, dialogManager);
+    this.rootPanelComponent = new RootPanelComponent(gameEngine, gameBoardPanelComponent, playerPanelsManager);
   }
 
   public JPanel createRootPanel() {
     JPanel rootPanel = rootPanelComponent.createPanel();
-    updatePlayerPanel(gameController.getPlayingPawnIndex());
-    displayActionsPanelForPlayingPlayer(gameController.getPlayingPawnIndex());
+    updatePlayerPanel(gameEngine.getPlayingPawnIndex());
+    displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     return rootPanel;
   }
 
