@@ -61,7 +61,7 @@ public class QuoridorServer {
       CountDownLatch latch = new CountDownLatch(1);
 
       while (true) {
-        Thread.sleep(1000);      //todo ABBASSATO IL CONTATORE
+        Thread.sleep(1000);
 
         if (clientList.size() == numOfPlayers) {
           latch.countDown();
@@ -139,7 +139,7 @@ public class QuoridorServer {
       }
     } catch (InterruptedException ex) {
       Logger.printLog(System.err, "Exception while handling Sleep: " + ex.getMessage());
-    }  finally {
+    } finally {
       executorService.shutdown();
     }
   }
@@ -163,13 +163,14 @@ public class QuoridorServer {
   }
 
   public void shutdown() {
+
     try {
+      executorService.shutdown();
       serverSocket.close();
-    } catch (IOException ex) {
-      Logger.printLog(System.err, "Exception while closing ServerSocket: " + ex);
+    } catch (IOException ignored) {
     }
 
-    System.exit(0);
+    //System.exit(0);
   }
 
   private void nextRound() {
