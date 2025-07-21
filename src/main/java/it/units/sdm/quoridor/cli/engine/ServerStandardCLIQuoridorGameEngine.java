@@ -25,7 +25,7 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
   }
 
   @Override
-  protected void executeRound(AbstractGame game) {
+  protected void executeRound() {
     boolean commandExecuted = false;
     String serverMessage = null;
     try {
@@ -42,9 +42,9 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
           System.out.println("It's your round!\n");
           String command = askCommand();
 
-          commandExecuted = performCommand(command, game);
+          commandExecuted = performCommand(command);
         } else {
-          commandExecuted = performCommand(serverMessage, game);
+          commandExecuted = performCommand(serverMessage);
         }
       } catch (IOException e) {
         System.err.println("Unable to communicate with server!");
