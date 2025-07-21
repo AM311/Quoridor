@@ -19,10 +19,6 @@ public enum Color {
     this.ansiEscapeCode = ansiEscapeCode;
   }
 
-  public java.awt.Color getColor() {
-    return color;
-  }
-
   public String getAnsiEscapeCode() {
     return ansiEscapeCode;
   }

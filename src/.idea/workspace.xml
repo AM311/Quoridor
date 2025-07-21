@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d44c8e25-c33f-4a78-afe4-6cccf4e6aa60" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.coverage/jacocoReport.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.coverage/jacocoReport.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/controller/GameActionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/controller/GameActionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/GameEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/GameEventListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/GameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/dialogs/GameFinishedDialogView.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/dialogs/GameFinishedDialogView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/dialogs/QuitDialogView.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/dialogs/QuitDialogView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/managers/DialogManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/GUI/view/managers/DialogManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/cli/StatisticsCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/cli/StatisticsCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/cli/engine/QuoridorGameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/cli/engine/QuoridorGameEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/cli/engine/StandardCLIQuoridorGameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/cli/engine/StandardCLIQuoridorGameEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/utils/GUIConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/it/units/sdm/quoridor/utils/GUIConstants.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "lorenzodiaz2"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AM311/Quoridor",
+    "accountId": "d207943a-c3d7-4816-9992-914b0446bb0a"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2xBWSdzv4EQtclbt8ZrhZSkDh75" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/GUI",
+    "last_opened_file_path": "C:/Users/utente/IdeaProjects/Quoridor/src",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d44c8e25-c33f-4a78-afe4-6cccf4e6aa60" name="Changes" comment="" />
+      <created>1747411947638</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747411947638</updated>
+      <workItem from="1747411948897" duration="65000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

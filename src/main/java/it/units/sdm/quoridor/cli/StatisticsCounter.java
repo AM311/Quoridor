@@ -123,8 +123,9 @@ public class StatisticsCounter {
     return gameWalls.getOrDefault(key, 0);
   }
 
-  private double getWinRate(String key) {
+  public double getWinRate(String key) {
     if (totalGamesPlayed == 0) return 0;
-    return (getTotalWins(key) * 100.0) / totalGamesPlayed;
+    double rate = (getTotalWins(key) * 100.0) / totalGamesPlayed;
+    return Math.round(rate * 100) / 100.0;
   }
 }

@@ -6,14 +6,17 @@ import it.units.sdm.quoridor.model.*;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class WallPlacementChecker implements ActionChecker<Wall> {
-  public boolean isValidAction(AbstractGame game, Wall target) {
+  public CheckResult isValidAction(AbstractGame game, Wall target) {
     if (checkNumberOfWalls(game.getPlayingPawn())) {
-      return switch (target.orientation()) {
+      if (switch (target.orientation()) {
         case HORIZONTAL -> checkHorizontalWallPosition(game.getGameBoard(), target.startingTile());
         case VERTICAL -> checkVerticalWallPosition(game.getGameBoard(), target.startingTile());
-      }; //&& checkPathExistence(game, target);
-    } else
-      return false;
+      }) {
+        return QuoridorCheckResult.OKAY;
+      }
+      return QuoridorCheckResult.INVALID_WALL_POSITION;
+    }
+    return QuoridorCheckResult.END_OF_AVAILABLE_WALLS;
   }
 
   private boolean checkNumberOfWalls(AbstractPawn pawn) {

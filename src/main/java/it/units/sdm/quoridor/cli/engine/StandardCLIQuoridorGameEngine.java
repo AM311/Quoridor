@@ -9,7 +9,6 @@ import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.utils.Color;
 import it.units.sdm.quoridor.utils.Position;
 
@@ -19,38 +18,35 @@ import java.util.Optional;
 
 public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   private final BufferedReader reader;
-  protected final QuoridorParser parser;
-  private final StatisticsCounter statisticsCounter;
+  private final QuoridorParser parser;
+
 
   public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
-    super(builder);
+    super(builder, statisticsCounter);
     this.reader = reader;
     this.parser = parser;
-    this.statisticsCounter = statisticsCounter;
   }
 
   @Override
   public void runGame() throws BuilderException {
-    AbstractGame game = createGame();
+    createGame();
     printInitialInformation();
 
     while (!game.isGameFinished()) {
       System.out.println(game);
-      executeRound(game);
+      executeRound();
 
       if (!game.isGameFinished()) {
         game.changeRound();
       }
     }
 
-    printEndGameInformation(game);
+    printEndGameInformation();
+    statisticsCounter.resetGameStats();
+
     handleEndGame();
   }
 
-  private AbstractGame createGame() throws BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(builder);
-    return builderDirector.makeGame();
-  }
 
   private void printInitialInformation() {
     System.out.println("\n--- Welcome to QUORIDOR! ---\n");
@@ -66,7 +62,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     }
   }
 
-  private void printEndGameInformation(AbstractGame game) {
+  private void printEndGameInformation() {
     statisticsCounter.updateAllTotalStats(game);
     System.out.print(game);
     System.out.println(generateSeparator());
@@ -74,14 +70,15 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.println(statisticsCounter.generateStatisticsReport(game));
   }
 
-  protected void executeRound(AbstractGame game) throws BuilderException {
+  private void executeRound() {
+
     boolean commandExecuted = false;
 
     do {
       try {
         System.out.print("\nMake your move: ");
         String command = askCommand();
-        commandExecuted = performCommand(command, game);
+        commandExecuted = performCommand(command);
       } catch (IOException e) {
         System.err.println("Error reading input: " + e.getMessage());
         System.out.println("Please try entering your command again:");
@@ -142,7 +139,8 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     return String.valueOf(reader.readLine());
   }
 
-  protected boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException, BuilderException, IOException {
+  private boolean performCommand(String command) throws ParserException, InvalidParameterException, InvalidActionException {
+
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 

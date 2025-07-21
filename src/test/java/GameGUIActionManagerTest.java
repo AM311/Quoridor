@@ -10,7 +10,7 @@ import testDoubles.MockGameActionManager;
 import testDoubles.StubAction;
 import testDoubles.StubActionChecker;
 
-public class GameActionManagerTest {
+public class GameGUIActionManagerTest {
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
   void noChecksRequired_actionIsValid(boolean useOrInsteadOfAnd) throws InvalidActionException {
@@ -23,7 +23,7 @@ public class GameActionManagerTest {
   @ValueSource(booleans = {true, false})
   void singleChecksReturnsTrue_actionIsValid(boolean useOrInsteadOfAnd) throws InvalidActionException {
     MockGameActionManager actionManager = new MockGameActionManager();
-    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysTrueActionChecker()), useOrInsteadOfAnd);
+    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysOKAYActionChecker()), useOrInsteadOfAnd);
     Assertions.assertTrue(actionManager.isValidAction());
   }
 
@@ -31,7 +31,7 @@ public class GameActionManagerTest {
   @ValueSource(booleans = {true, false})
   void singleChecksReturnsFalse_actionIsNotValid(boolean useOrInsteadOfAnd) throws InvalidActionException {
     MockGameActionManager actionManager = new MockGameActionManager();
-    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysFalseActionChecker()), useOrInsteadOfAnd);
+    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysKOActionChecker()), useOrInsteadOfAnd);
     Assertions.assertFalse(actionManager.isValidAction());
   }
 
@@ -39,27 +39,27 @@ public class GameActionManagerTest {
   @ValueSource(booleans = {true, false})
   void multipleChecksReturnsTrue_actionIsValid(boolean useOrInsteadOfAnd) throws InvalidActionException {
     MockGameActionManager actionManager = new MockGameActionManager();
-    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysTrueActionChecker(), StubActionChecker.returnAlwaysTrueActionChecker()), useOrInsteadOfAnd);
+    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysOKAYActionChecker(), StubActionChecker.returnAlwaysOKAYActionChecker()), useOrInsteadOfAnd);
     Assertions.assertTrue(actionManager.isValidAction());
   }
 
   @Test
   void multipleChecks_oneReturnsFalse_trueBoolean_actionIsValid() throws InvalidActionException {
     MockGameActionManager actionManager = new MockGameActionManager();
-    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysTrueActionChecker(), StubActionChecker.returnAlwaysFalseActionChecker()), true);
+    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysOKAYActionChecker(), StubActionChecker.returnAlwaysKOActionChecker()), true);
     Assertions.assertTrue(actionManager.isValidAction());
   }
 
   @Test
   void multipleChecks_oneReturnsFalse_falseBoolean_actionIsNotValid() throws InvalidActionException {
     MockGameActionManager actionManager = new MockGameActionManager();
-    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysTrueActionChecker(), StubActionChecker.returnAlwaysFalseActionChecker()), false);
+    actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysOKAYActionChecker(), StubActionChecker.returnAlwaysKOActionChecker()), false);
     Assertions.assertFalse(actionManager.isValidAction());
   }
 
   @Test
   void multipleChecks_oneReturnsFalse_falseBoolean_exceptionIsThrown() {
     ActionManager actionManager = new GameActionManager();
-    Assertions.assertThrows(InvalidActionException.class, () -> actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysTrueActionChecker(), StubActionChecker.returnAlwaysFalseActionChecker()), false));
+    Assertions.assertThrows(InvalidActionException.class, () -> actionManager.performAction(null, null, new ActionController<>(StubAction.returnEmpyAction(), StubActionChecker.returnAlwaysOKAYActionChecker(), StubActionChecker.returnAlwaysKOActionChecker()), false));
   }
 }

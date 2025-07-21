@@ -7,6 +7,8 @@ import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.CheckResult;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
@@ -32,8 +34,8 @@ public class PawnMovementCheckerTest {
 
     movePawn(game, startingPosition);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
@@ -60,8 +62,8 @@ public class PawnMovementCheckerTest {
 
     movePawn(game, startingPosition);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationPosition));
-    Assertions.assertTrue(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(destinationPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkMove);
   }
 
 
@@ -80,8 +82,9 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(opponentPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(opponentPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OCCUPIED_TILE, checkMove);
+
   }
 
 
@@ -101,8 +104,8 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertTrue(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkMove);
   }
 
 
@@ -122,8 +125,8 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
 
@@ -143,8 +146,8 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
 
@@ -161,8 +164,9 @@ public class PawnMovementCheckerTest {
     movePawn(game, startingPosition);
 
     game.placeWall(wallPosition, HORIZONTAL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
 
@@ -179,8 +183,9 @@ public class PawnMovementCheckerTest {
     movePawn(game, startingPosition);
 
     game.placeWall(wallPosition, VERTICAL);
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
 
@@ -203,8 +208,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, VERTICAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
   @ParameterizedTest
@@ -226,8 +231,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, HORIZONTAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
   @ParameterizedTest
@@ -249,8 +254,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, HORIZONTAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
   @ParameterizedTest
@@ -272,8 +277,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, VERTICAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
 
@@ -296,8 +301,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, HORIZONTAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertTrue(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkMove);
   }
 
 
@@ -320,8 +325,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, VERTICAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertTrue(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkMove);
   }
 
 
@@ -347,8 +352,8 @@ public class PawnMovementCheckerTest {
     game.placeWall(horizontalwallPosition, HORIZONTAL);
 
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
 
@@ -366,8 +371,8 @@ public class PawnMovementCheckerTest {
 
     game.placeWall(wallPosition, HORIZONTAL);
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(opponentPosition));
-    Assertions.assertTrue(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(opponentPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkMove);
   }
 
 
@@ -387,8 +392,8 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertTrue(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.OKAY, checkMove);
   }
 
 
@@ -407,8 +412,8 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
   @Test
@@ -426,12 +431,12 @@ public class PawnMovementCheckerTest {
     movePawn(game, opponentPosition);
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, gameBoard.getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 
   @ParameterizedTest
-  @CsvSource({"4, 3, 3, 3, 2, 3, 1, 3", "4, 3, 4, 2, 4, 1, 4, 0", "4, 5, 4, 6, 4, 7, 4, 8", "4, 5, 5, 5, 6, 5, 7, 5"})
+  @CsvSource({"4, 3, 3, 3, 2, 3, 1, 3", "6, 4, 6, 3, 6, 2, 6, 1", "2, 5, 2, 6, 2, 7, 2, 8", "4, 5, 5, 5, 6, 5, 7, 5"})
   void jumpingOverTwoPlayersNotAllowed(int startingRow, int startingColumn, int secondPlayerRow, int secondPlayerColumn, int thirdPlayerRow, int thirdPlayerColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
     AbstractGame game = builderDirector.makeGame();
@@ -452,8 +457,8 @@ public class PawnMovementCheckerTest {
     game.changeRound();
     game.changeRound();
 
-    boolean checkMove = pawnMovementChecker.isValidAction(game, game.getGameBoard().getTile(targetPosition));
-    Assertions.assertFalse(checkMove);
+    CheckResult checkMove = pawnMovementChecker.isValidAction(game, game.getGameBoard().getTile(targetPosition));
+    Assertions.assertEquals(QuoridorCheckResult.INVALID_MOVEMENT, checkMove);
   }
 }
 

@@ -13,18 +13,21 @@ import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class PawnMovementChecker implements ActionChecker<AbstractTile> {
   @Override
-  public boolean isValidAction(AbstractGame game, AbstractTile destinationTile) {
+  public CheckResult isValidAction(AbstractGame game, AbstractTile destinationTile) {
     AbstractGameBoard gameBoard = game.getGameBoard();
     AbstractPawn playingPawn = game.getPlayingPawn();
     AbstractTile currentTile = playingPawn.getCurrentTile();
 
     if (destinationTile.isOccupiedBy().isPresent()) {
-      return false;
+      return QuoridorCheckResult.OCCUPIED_TILE;
     }
-
-    return isValidStraightMove(gameBoard, destinationTile, currentTile)
+    if(isValidStraightMove(gameBoard, destinationTile, currentTile)
             || isValidDiagonalMove(gameBoard, destinationTile, currentTile)
-            || isValidJumpingMove(gameBoard, destinationTile, currentTile);
+            || isValidJumpingMove(gameBoard, destinationTile, currentTile)){
+      return QuoridorCheckResult.OKAY;
+    }
+    return QuoridorCheckResult.INVALID_MOVEMENT;
+
   }
 
   private boolean isValidStraightMove(AbstractGameBoard gameBoard, AbstractTile destinationTile, AbstractTile currentTile) {
