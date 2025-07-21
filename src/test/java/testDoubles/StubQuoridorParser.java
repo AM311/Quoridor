@@ -10,56 +10,42 @@ import java.util.Optional;
 import static it.units.sdm.quoridor.cli.parser.QuoridorParser.CommandType.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 
-public class StubQuoridorParser implements QuoridorParser {
-  public CommandType commandType;
-  Position position;
-  WallOrientation wallOrientation;
-
+public class StubQuoridorParser extends QuoridorParser {
   @Override
-  public void parse(String command) throws ParserException {
-    switch (command) {
+  protected CommandType parseSpecific() throws ParserException {
+    return switch (commandTokens[0]) {
       case "0"-> {
-        this.commandType = MOVE;
         this.position = new Position(1, 5);
+        yield MOVE;
       }
       case "1" -> {
-        this.commandType = MOVE;
         this.position = new Position(1, 4);
+        yield MOVE;
       }
       case "2" -> {
-        this.commandType = WALL;
         this.position = new Position(4, 4);
         this.wallOrientation = HORIZONTAL;
-      }
-      case "3" -> {
-        this.commandType = QUIT;
+        yield WALL;
       }
       case "4" -> {
-        this.commandType = MOVE;
         this.position = new Position(0, 3);
+        yield MOVE;
       }
       case "5" ->{
-        this.commandType = MOVE;
         this.position = new Position(1, 1);
+        yield MOVE;
       }
-      case "6" ->{
-        this.commandType = MOVE;
-        throw new ParserException();
-      }
+      case "6" -> throw new ParserException();
       case "7" ->{
-        this.commandType = MOVE;
         this.position = new Position(-1, -1);
+        yield MOVE;
       }
       case "8" ->{
-        this.commandType = MOVE;
         this.position = new Position(4, 4);
+        yield MOVE;
       }
-      case "9" -> {
-        this.commandType = HELP;
-      }
-      case "10" -> {
-        this.commandType = RESTART;
-      }
+      case "9" -> HELP;
+      default -> null;
     };
   }
 
@@ -76,5 +62,10 @@ public class StubQuoridorParser implements QuoridorParser {
   @Override
   public Optional<WallOrientation> getWallOrientation() {
     return Optional.ofNullable(wallOrientation);
+  }
+
+  @Override
+  public String toString() {
+    return "";
   }
 }

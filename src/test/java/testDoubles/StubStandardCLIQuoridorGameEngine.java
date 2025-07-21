@@ -17,27 +17,26 @@ import java.util.Optional;
 
 public class StubStandardCLIQuoridorGameEngine {
 
-  private final BufferedReader reader;
-  private final QuoridorParser parser;
-  private final AbstractQuoridorBuilder builder;
-  private boolean isPawnMoved;
-  private boolean isWallPlaced;
-  private boolean isGameQuit;
-  private boolean isGameEnded;
-  private AbstractGame currentGame;
-  private boolean isLoopStoppedAfterOneRound;
-  private boolean isLoopStoppedAfterTwoRounds;
-  private int loopCounter;
-  private boolean isInvalidParameterExceptionCaught;
-  private boolean isParserExceptionCaught;
-  private boolean isInvalidActionExceptionCaught;
-  private boolean pawn0HasToWin;
-  private boolean pawn1HasToWin;
-  private boolean isHelpAsked;
-  private boolean isCommandExecuted;
-  private boolean isGameCompletelyQuit;
-  private boolean isLoopStoppedImmediately;
-  private boolean isGameRestarted;
+  protected final BufferedReader reader;
+  protected final QuoridorParser parser;
+  protected final AbstractQuoridorBuilder builder;
+  protected boolean isPawnMoved;
+  protected boolean isWallPlaced;
+  protected boolean isGameQuit;
+  protected boolean isGameEnded;
+  protected AbstractGame currentGame;
+  protected boolean isLoopStoppedAfterOneRound;
+  protected int loopCounter = 0;
+  protected boolean isInvalidParameterExceptionCaught;
+  protected boolean isParserExceptionCaught;
+  protected boolean isInvalidActionExceptionCaught;
+  protected boolean pawn0HasToWin;
+  protected boolean pawn1HasToWin;
+  protected boolean isHelpAsked;
+  protected boolean isCommandExecuted;
+  protected boolean isRoundCompleted;
+  protected boolean isLoopStoppedImmediately;
+  protected boolean isGameRestarted;
 
   public StubStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
@@ -50,9 +49,10 @@ public class StubStandardCLIQuoridorGameEngine {
     currentGame = game;
 
     while (!game.isGameFinished()) {
-      if(isLoopStoppedImmediately){
+      if (isLoopStoppedImmediately) {
         break;
       }
+
       if (pawn0HasToWin && loopCounter == 0) {
         Position destinationTilePosition = new Position(8, 5);
         AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
@@ -63,50 +63,30 @@ public class StubStandardCLIQuoridorGameEngine {
         AbstractTile destinationTile = currentGame.getGameBoard().getTile(destinationTilePosition);
         currentGame.getPlayingPawn().move(destinationTile);
       }
-      if (isLoopStoppedAfterTwoRounds && loopCounter == 1) {
-        break;
-      }
+
       executeRound(game);
-      if (isLoopStoppedAfterOneRound) {
+
+      loopCounter++;
+      if (isLoopStoppedAfterOneRound && loopCounter == 1) {
         break;
       }
+
       if (!game.isGameFinished()) {
         game.changeRound();
       }
 
-      loopCounter++;
     }
-    handleEndGame();
-  }
-
-  private void handleEndGame() {
     isGameEnded = true;
-    try {
-      String command = askCommand();
-      parser.parse(command);
-
-      switch (parser.getCommandType().orElseThrow()) {
-        case QUIT -> isGameCompletelyQuit = true;
-        case RESTART -> isGameRestarted = true;
-      }
-    } catch (IOException e) {
-      handleEndGame();
-    } catch (ParserException e) {
-      System.err.println(e.getMessage());
-      handleEndGame();
-    }
   }
 
-  private AbstractGame createGame() throws BuilderException {
+  protected AbstractGame createGame() throws BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(builder);
     return builderDirector.makeGame();
   }
 
-  private void executeRound(AbstractGame game) {
-    performInputCommand(game);
-  }
+  protected void executeRound(AbstractGame game) {
+    isRoundCompleted = false;
 
-  private void performInputCommand(AbstractGame game) {
     String command;
     boolean commandExecuted;
     do {
@@ -114,25 +94,32 @@ public class StubStandardCLIQuoridorGameEngine {
         command = askCommand();
         commandExecuted = performCommand(command, game);
         isCommandExecuted = commandExecuted;
-        if(isHelpAsked){
+
+        if (isHelpAsked) {
           break;
         }
       } catch (IOException e) {
-        break;
+        return;
       } catch (ParserException e) {
         isParserExceptionCaught = true;
-        break;
+        return;
       } catch (InvalidParameterException e) {
         isInvalidParameterExceptionCaught = true;
-        break;
+        return;
       } catch (InvalidActionException e) {
         isInvalidActionExceptionCaught = true;
-        break;
+        return;
       }
     } while (!commandExecuted);
+
+    isRoundCompleted = true;
   }
 
-  private boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
+  protected String askCommand() throws IOException {
+    return String.valueOf(reader.readLine());
+  }
+
+  protected boolean performCommand(String command, AbstractGame game) throws ParserException, InvalidParameterException, InvalidActionException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
     return switch (parser.getCommandType().orElseThrow()) {
@@ -147,7 +134,6 @@ public class StubStandardCLIQuoridorGameEngine {
         yield true;
       }
       case QUIT -> {
-        isGameQuit = true;
         handleEndGame();
         yield true;
       }
@@ -156,14 +142,20 @@ public class StubStandardCLIQuoridorGameEngine {
         yield false;
       }
       case RESTART -> {
-        System.out.println("Restart command is only available after quitting the current game.");
-        yield false;
+        handleRestartGame();
+        yield true;
       }
     };
   }
 
-  private String askCommand() throws IOException {
-    return String.valueOf(reader.readLine());
+  protected void handleEndGame() {
+    isGameQuit = true;
+    isGameEnded = true;
+  }
+
+  protected void handleRestartGame() {
+    isGameRestarted = true;
+    isGameEnded = true;
   }
 
   public boolean isPawnMoved() {
@@ -184,10 +176,6 @@ public class StubStandardCLIQuoridorGameEngine {
 
   public void setLoopStoppedAfterOneRound(boolean loopStoppedAfterOneRound) {
     isLoopStoppedAfterOneRound = loopStoppedAfterOneRound;
-  }
-
-  public void setLoopStoppedAfterTwoRounds(boolean loopStoppedAfterTwoRounds) {
-    isLoopStoppedAfterTwoRounds = loopStoppedAfterTwoRounds;
   }
 
   public boolean isInvalidParameterExceptionCaught() {
@@ -222,16 +210,16 @@ public class StubStandardCLIQuoridorGameEngine {
     return isCommandExecuted;
   }
 
-  public boolean isGameCompletelyQuit() {
-    return isGameCompletelyQuit;
-  }
-
   public boolean isGameRestarted() {
     return isGameRestarted;
   }
 
   public void setLoopStoppedImmediately(boolean loopStoppedImmediately) {
     isLoopStoppedImmediately = loopStoppedImmediately;
+  }
+
+  public boolean isRoundCompleted() {
+    return isRoundCompleted;
   }
 }
 

@@ -17,9 +17,9 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
-
   private final BufferedReader reader;
   private final QuoridorParser parser;
+
 
   public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
     super(builder, statisticsCounter);
@@ -43,6 +43,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
 
     printEndGameInformation();
     statisticsCounter.resetGameStats();
+
     handleEndGame();
   }
 
@@ -70,6 +71,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private void executeRound() {
+
     boolean commandExecuted = false;
 
     do {
@@ -86,16 +88,15 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     } while (!commandExecuted);
   }
 
-  private void handleEndGame() {
+  protected void handleEndGame() {
     try {
-      System.out.println(generateSeparator());
-      System.out.println("Quit (q) or restart (r)?");
+      System.out.println("Do you want to Quit (q) or restart a new game (r)?");
       String command = askCommand();
       parser.parse(command);
 
       switch (parser.getCommandType().orElseThrow()) {
-        case QUIT -> System.exit(0);
-        case RESTART -> runGame();
+        case QUIT -> handleQuitGame();
+        case RESTART -> handleRestartGame();
       }
     } catch (IOException e) {
       System.err.println("Error reading input: " + e.getMessage());
@@ -105,6 +106,15 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       System.err.println(e.getMessage());
       handleEndGame();
     }
+  }
+
+  protected void handleQuitGame() {
+    System.exit(0);
+  }
+
+  protected void handleRestartGame() throws BuilderException {
+    statisticsCounter.resetGameStats();
+    runGame();
   }
 
   private void printWallsConvention() {
@@ -122,28 +132,29 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.print(figure);
   }
 
-  private String askCommand() throws IOException {
+  protected void forwardCommand(String command) throws IOException {
+  }
+
+  protected String askCommand() throws IOException {
     return String.valueOf(reader.readLine());
   }
 
   private boolean performCommand(String command) throws ParserException, InvalidParameterException, InvalidActionException {
+
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 
     return switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
         game.movePlayingPawn(targetPosition.orElse(null));
-
+        forwardCommand(command);
         statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
       case WALL -> {
         game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        forwardCommand(command);
         statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-        yield true;
-      }
-      case QUIT -> {
-        handleEndGame();
         yield true;
       }
       case HELP -> {
@@ -151,14 +162,20 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
         System.out.println(parser);
         yield false;
       }
+      case QUIT -> {
+        forwardCommand(command);
+        handleQuitGame();
+        yield true;
+      }
       case RESTART -> {
-        System.out.println("Restart command is only available after quitting the current game.");
-        yield false;
+        forwardCommand(command);
+        handleRestartGame();
+        yield true;
       }
     };
   }
 
-  private String generateSeparator(){
+  protected String generateSeparator() {
     return "\n" + "-".repeat(27) + "\n";
   }
 
