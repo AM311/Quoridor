@@ -3,6 +3,7 @@ package it.units.sdm.quoridor;
 import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.cli.engine.QuoridorGameEngine;
 import it.units.sdm.quoridor.cli.engine.ServerStandardCLIQuoridorGameEngine;
+import it.units.sdm.quoridor.cli.engine.ServerStandardGUIQuoridorGameEngine;
 import it.units.sdm.quoridor.cli.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
@@ -30,12 +31,20 @@ public class ClientStarter {
         }
 
         int numOfPlayers = Integer.parseInt(reader.readLine());
-        QuoridorGameEngine engine = new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
+
+        QuoridorGameEngine engine = switch (args[2]) {
+          case "CLI" ->
+                  new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
+          case "GUI" ->
+                  new ServerStandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), reader, writer, new StandardQuoridorParser());
+          default -> throw new InvalidParameterException("Invalid game mode.");
+        };
+
         engine.runGame();
       } catch (IOException e) {
         System.err.println("Could not connect to server: " + e.getMessage());
       } catch (InvalidParameterException e) {
-        System.err.println("Invalid number of players!");
+        System.err.println("Invalid parameter: " + e.getMessage());
       } catch (BuilderException e) {
         System.err.println("Exception encountered while creating the Game: " + e.getMessage());
       }
