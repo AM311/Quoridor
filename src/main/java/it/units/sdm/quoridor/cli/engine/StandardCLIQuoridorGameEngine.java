@@ -6,7 +6,6 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
-import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Color;
@@ -17,8 +16,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
-  private final BufferedReader reader;
   protected final QuoridorParser parser;
+  private final BufferedReader reader;
 
 
   public StandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
@@ -78,7 +77,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       try {
         System.out.print("\nMake your move: ");
         String command = askCommand();
-        commandExecuted = performCommand(command);
+        commandExecuted = performCommand(command, false);
       } catch (IOException e) {
         System.err.println("Error reading input: " + e.getMessage());
         System.out.println("Please try entering your command again:");
@@ -139,21 +138,24 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     return String.valueOf(reader.readLine());
   }
 
-  protected boolean performCommand(String command) throws ParserException, InvalidParameterException, InvalidActionException, IOException, BuilderException {
-
+  protected boolean performCommand(String command, boolean forwardCommand) throws ParserException, InvalidParameterException, InvalidActionException, IOException, BuilderException {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 
     return switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
         game.movePlayingPawn(targetPosition.orElse(null));
-        forwardCommand(command);
+        if (forwardCommand) {
+          forwardCommand(command);
+        }
         statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
       case WALL -> {
         game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
-        forwardCommand(command);
+        if (forwardCommand) {
+          forwardCommand(command);
+        }
         statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
         yield true;
       }
@@ -163,12 +165,16 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
         yield false;
       }
       case QUIT -> {
-        forwardCommand(command);
+        if (forwardCommand) {
+          forwardCommand(command);
+        }
         handleQuitGame();
         yield true;
       }
       case RESTART -> {
-        forwardCommand(command);
+        if (forwardCommand) {
+          forwardCommand(command);
+        }
         handleRestartGame();
         yield true;
       }

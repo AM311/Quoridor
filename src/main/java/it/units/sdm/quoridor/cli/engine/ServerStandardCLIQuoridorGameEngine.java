@@ -42,9 +42,9 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
           System.out.println("It's your round!\n");
           String command = askCommand();
 
-          commandExecuted = performCommand(command);
+          commandExecuted = performCommand(command, true);
         } else {
-          commandExecuted = performCommand(serverMessage);
+          commandExecuted = performCommand(serverMessage, false);
         }
       } catch (IOException e) {
         System.err.println("Unable to communicate with server!");
