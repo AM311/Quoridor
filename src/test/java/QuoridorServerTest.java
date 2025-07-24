@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import testDoubles.MockQuoridorServer;
 
 import java.io.*;
 import java.net.Socket;
@@ -45,7 +46,7 @@ class QuoridorServerTest {
   }
 
   private void setupServer(int numberOfPlayers) throws QuoridorServerException {
-    server = new QuoridorServer(testPort, numberOfPlayers);
+    server = new MockQuoridorServer(testPort, numberOfPlayers);
   }
 
   @Test
@@ -267,29 +268,6 @@ class QuoridorServerTest {
 
         Assertions.assertEquals("Q", cmd);
       }
-    }
-  }
-
-  static class MockSocket extends Socket {
-    private final ByteArrayInputStream in;
-    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-    MockSocket(String input) {
-      this.in = new ByteArrayInputStream(input.getBytes());
-    }
-
-    @Override
-    public InputStream getInputStream() {
-      return in;
-    }
-
-    @Override
-    public OutputStream getOutputStream() {
-      return out;
-    }
-
-    String getOutput() {
-      return out.toString();
     }
   }
 }

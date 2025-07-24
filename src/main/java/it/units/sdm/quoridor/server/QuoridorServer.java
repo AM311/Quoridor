@@ -19,13 +19,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class QuoridorServer {
   private final int port;
-  private final ExecutorService executorService = Executors.newCachedThreadPool();
+  protected final ExecutorService executorService = Executors.newCachedThreadPool();
   private final int numOfPlayers;
   private final Lock lock = new ReentrantLock();
   private final Condition turnChanged = lock.newCondition();
   private final AtomicInteger currentPlayer = new AtomicInteger(1);
   private final List<Socket> clientList = Collections.synchronizedList(new ArrayList<>());
-  private final ServerSocket serverSocket;
+  protected final ServerSocket serverSocket;
 
   public QuoridorServer(int port, int numOfPlayers) throws QuoridorServerException {
     this.port = port;
@@ -163,14 +163,12 @@ public class QuoridorServer {
   }
 
   public void shutdown() {
-
     try {
       executorService.shutdown();
       serverSocket.close();
     } catch (IOException ignored) {
     }
-
-    //System.exit(0);
+    System.exit(0);
   }
 
   private void nextRound() {

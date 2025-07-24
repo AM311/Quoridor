@@ -3,7 +3,7 @@ package it.units.sdm.quoridor;
 import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.cli.engine.QuoridorGameEngine;
 import it.units.sdm.quoridor.cli.engine.ServerStandardCLIQuoridorGameEngine;
-import it.units.sdm.quoridor.cli.engine.ServerStandardGUIQuoridorGameEngine;
+//import it.units.sdm.quoridor.cli.engine.ServerStandardGUIQuoridorGameEngine;
 import it.units.sdm.quoridor.cli.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
@@ -35,8 +35,8 @@ public class ClientStarter {
         QuoridorGameEngine engine = switch (args[2]) {
           case "CLI" ->
                   new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
-          case "GUI" ->
-                  new ServerStandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), reader, writer, new StandardQuoridorParser());
+          /*case "GUI" ->
+                  new ServerStandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), reader, writer, new StandardQuoridorParser());*/
           default -> throw new InvalidParameterException("Invalid game mode.");
         };
 
