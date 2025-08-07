@@ -7,11 +7,12 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 public interface GameEventListener {
   void onWallPlaced(Position position, WallOrientation orientation, int playerIndex, int remainingWalls);
   void displayNotification(String message, boolean isError);
+  void displayCommandsForCurrentPlayer();
   void highlightValidMoves();
   void onPawnMoved(Position oldPosition, Position newPosition, int playerIndex);
   void onInvalidAction(String message);
   void clearHighlights();
   void displayWallDirectionButtons(int playerIndex);
   void onGameFinished(StatisticsCounter statistics);
-  void onRoundFinished();
+  void onRoundFinished(boolean showControls);
 }

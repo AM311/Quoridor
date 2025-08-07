@@ -19,7 +19,7 @@ public class GameView implements GameEventListener {
     gameEngine.setEventListener(this);
   }
 
-  public void displayGUI() {
+  public void displayGUI(boolean showControlsForPlayer1) {
     JFrame mainFrame = new JFrame("Quoridor");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -27,7 +27,7 @@ public class GameView implements GameEventListener {
     dialogManager = new DialogManager(mainFrame, gameEngine);
     panelsManager = new PanelsManager(gameEngine, dialogManager);
 
-    JPanel rootPanel = panelsManager.createRootPanel();
+    JPanel rootPanel = panelsManager.createRootPanel(showControlsForPlayer1);
     mainFrame.setContentPane(rootPanel);
     mainFrame.setVisible(true);
 
@@ -39,7 +39,6 @@ public class GameView implements GameEventListener {
   public void onWallPlaced(Position position, WallOrientation orientation, int playerIndex, int remainingWalls) {
     panelsManager.updateWallVisualization(position, orientation);
     panelsManager.updateWallLabel(playerIndex, remainingWalls);
-    onRoundFinished();
   }
 
   @Override
@@ -78,11 +77,20 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void onRoundFinished() {
-    panelsManager.removeCurrentActionPanel(gameEngine.getPlayingPawnIndex());
+  public void displayCommandsForCurrentPlayer() {
+    panelsManager.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+  }
+
+  @Override
+  public void onRoundFinished(boolean showControls) {           //todo CHECK
+    //panelsManager.removeCurrentActionPanel(gameEngine.getPlayingPawnIndex());
     gameEngine.changeRound();
     panelsManager.updatePlayerPanel(gameEngine.getPlayingPawnIndex());
-    panelsManager.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+
+    if (showControls) {
+      displayCommandsForCurrentPlayer();
+    }
+
     displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 }

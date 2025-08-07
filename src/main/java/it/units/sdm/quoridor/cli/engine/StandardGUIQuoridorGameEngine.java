@@ -30,7 +30,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
   public void runGame() throws BuilderException {
     createGame();
     GameView gameView = new GameView(this);
-    gameView.displayGUI();
+    gameView.displayGUI(true);
   }
 
   @Override
@@ -53,6 +53,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     return game.getPlayingPawnIndex();
   }
 
+  //todo VALUTARE DI CAMBIARE PACKAGE E MODIFICATORI PER LIMITARE ACCESSO A QUESTI METODI
   @Override
   public void changeRound() {
     game.changeRound();
@@ -73,7 +74,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
-  private void attemptPawnMove(Position targetPosition) {
+  protected void attemptPawnMove(Position targetPosition) {
     try {
       Position currentPosition = new Position(
               game.getPlayingPawn().getCurrentTile().getRow(),
@@ -86,7 +87,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
         statisticsCounter.updateAllTotalStats(game);
         eventListener.onGameFinished(statisticsCounter);
       } else {
-        eventListener.onRoundFinished();
+        eventListener.onRoundFinished(true);
       }
       setCurrentAction(GUIAction.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
@@ -94,12 +95,13 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
-  private void attemptPlaceWall(Position position, WallOrientation orientation) {
+  protected void attemptPlaceWall(Position position, WallOrientation orientation) {
     try {
       game.placeWall(position, orientation);
       statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
       setCurrentAction(GUIAction.DO_NOTHING);
       eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
+      eventListener.onRoundFinished(true);
     } catch (InvalidActionException | InvalidParameterException e) {
       eventListener.onInvalidAction(e.getMessage());
     }
@@ -153,7 +155,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
-// TODO capire se lasciare così o fare in altro modo
+  // TODO capire se lasciare così o fare reader altro modo
   @Override
   public void restartGame() {
     try {

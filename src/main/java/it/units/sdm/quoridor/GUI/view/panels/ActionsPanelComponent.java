@@ -1,6 +1,5 @@
 package it.units.sdm.quoridor.GUI.view.panels;
 
-import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
 import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
@@ -45,10 +44,14 @@ public class ActionsPanelComponent implements PanelComponent {
     return actionsPanel;
   }
 
-  public void displayActionsPanelForPlayingPlayer(int playerIndex) {
-    if (currentActionPanel != null) {
+  public void removeActionPanel() {
+    if (currentActionPanel != null) {                       //todo DA MONITORARE
       removeCurrentActionPanel(currentPlayerIndex);
     }
+  }
+
+  public void displayActionsPanelForPlayingPlayer(int playerIndex) {
+    //todo QUI GIACEVA removeActionPanel
 
     currentPlayerIndex = playerIndex;
     currentActionPanel = new JPanel();

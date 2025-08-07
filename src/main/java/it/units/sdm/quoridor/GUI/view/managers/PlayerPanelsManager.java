@@ -1,6 +1,5 @@
 package it.units.sdm.quoridor.GUI.view.managers;
 
-import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.panels.ActionsPanelComponent;
 import it.units.sdm.quoridor.GUI.view.panels.PlayerPanelComponent;
 import it.units.sdm.quoridor.GUI.view.panels.WallDirectionsPanelComponent;
@@ -16,7 +15,6 @@ public class PlayerPanelsManager {
   private final int numberOfPlayers;
   private final String[] pawnColors;
   private final List<PlayerPanelComponent> playerPanelComponents;
-
   private final ActionsPanelComponent actionsPanelComponent;
   private final WallDirectionsPanelComponent wallDirectionsPanelComponent;
 
@@ -97,6 +95,8 @@ public class PlayerPanelsManager {
   }
 
   public void updateActivePlayer(int activePlayerIndex) {
+    actionsPanelComponent.removeActionPanel();
+
     for (PlayerPanelComponent playerPanelComponent : playerPanelComponents) {
       playerPanelComponent.setActive(playerPanelComponent.getPlayerIndex() == activePlayerIndex);
     }
