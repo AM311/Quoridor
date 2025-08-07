@@ -24,8 +24,8 @@ public class QuoridorServer {
   private final Lock lock = new ReentrantLock();
   private final Condition turnChanged = lock.newCondition();
   private final AtomicInteger currentPlayer = new AtomicInteger(1);
-  private final List<Socket> clientList = Collections.synchronizedList(new ArrayList<>());
-  protected final ServerSocket serverSocket;
+  private final List<Client> clientList = Collections.synchronizedList(new ArrayList<>());
+  private final ServerSocket serverSocket;
 
   public QuoridorServer(int port, int numOfPlayers) throws QuoridorServerException {
     this.port = port;
@@ -46,7 +46,7 @@ public class QuoridorServer {
     return numOfPlayers;
   }
 
-  public List<Socket> getClientList() {
+  public List<Client> getClientList() {
     return clientList;
   }
 
@@ -68,33 +68,37 @@ public class QuoridorServer {
         }
 
         try {
-          Socket client = serverSocket.accept();
+          Socket clientSocket = serverSocket.accept();
+          Client client = new Client(clientSocket);
+
           if (clientList.size() >= numOfPlayers) {
-            client.close();
+            clientSocket.close();
             Logger.printLog(System.err, "Unable to accept connection: the game has already started!");
           } else {
             executorService.submit(() -> {
               try (client) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-
                 clientList.add(client);
-                Logger.printLog(System.out, "New connection: " + client.getInetAddress());
+                Logger.printLog(System.out, "New connection: " + clientSocket.getInetAddress());
                 Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
                 latch.await();
                 int playerNumber = (clientList.indexOf(client) + 1);
-                writer.write("READY" + System.lineSeparator());
-                writer.write("You are player " + playerNumber + System.lineSeparator());
-                writer.write(numOfPlayers + System.lineSeparator());
-                writer.flush();
+                client.write("READY");
+                client.write("You are player " + playerNumber);
+                client.write(String.valueOf(numOfPlayers));
 
                 while (true) {
                   waitForRound(playerNumber);
-                  writer.write("PLAY" + System.lineSeparator());
-                  writer.flush();
-                  String request = reader.readLine();
+                  client.write("PLAY");
+                  Logger.printLog(System.out, "PLAY sent to player: " + playerNumber);
 
-                  notifyClients(request);
+                  String request;
+                  do {
+                    request = client.reader().readLine();
+                  } while (request == null);
+
+                  Logger.printLog(System.out, "Command: " + request + " from: " + client);
+
+                  notifyClients(request, client);
 
                   if (request.equals("Q")) {
                     Thread.sleep(1000);
@@ -107,25 +111,25 @@ public class QuoridorServer {
                   nextRound();
                 }
               } catch (InterruptedException ex) {
-                Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
+                Logger.printLog(System.err, "Thread managing " + clientSocket.getInetAddress() + " has been interrupted");
               } catch (IOException ex) {
-                Logger.printLog(System.err, "Client " + client.getInetAddress() + " abruptly closed connection.");
+                Logger.printLog(System.err, "Client " + clientSocket.getInetAddress() + " abruptly closed connection.");
               } catch (RuntimeException ex) {
-                Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client.getInetAddress() + ": " + ex.getMessage());
+                Logger.printLog(System.err, "Unhandled RuntimeException while managing " + clientSocket.getInetAddress() + ": " + ex.getMessage());
               } catch (Error er) {
-                Logger.printLog(System.err, "ERROR while managing " + client.getInetAddress() + ": " + er.getMessage());
+                Logger.printLog(System.err, "ERROR while managing " + clientSocket.getInetAddress() + ": " + er.getMessage());
               } finally {
                 clientList.remove(client);
-                Logger.printLog(System.out, "Closed connection: " + client.getInetAddress());
+                Logger.printLog(System.out, "Closed connection: " + clientSocket.getInetAddress());
 
                 if (latch.getCount() == 0) {
                   try {
-                    notifyClients("Q" + System.lineSeparator());
+                    notifyClients("Q", client);
                     Thread.sleep(1000);
                   } catch (IOException ex) {
                     Logger.printLog(System.err, "IOException: " + ex.getMessage());
                   } catch (InterruptedException ex) {
-                    Logger.printLog(System.err, "Thread managing " + client.getInetAddress() + " has been interrupted");
+                    Logger.printLog(System.err, "Thread managing " + clientSocket.getInetAddress() + " has been interrupted");
                   }
 
                   shutdown();
@@ -154,15 +158,16 @@ public class QuoridorServer {
     lock.unlock();
   }
 
-  private void notifyClients(String message) throws IOException {
-    for (Socket client : clientList) {
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-      writer.write(message + System.lineSeparator());
-      writer.flush();
+  private void notifyClients(String message, Client sender) throws IOException {        //todo TMP - CHECK
+    for (Client client : clientList) {
+      if (client != sender) {
+        client.write(message);
+      }
     }
   }
 
   public void shutdown() {
+
     try {
       executorService.shutdown();
       serverSocket.close();
