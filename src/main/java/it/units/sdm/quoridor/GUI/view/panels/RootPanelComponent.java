@@ -3,7 +3,6 @@ package it.units.sdm.quoridor.GUI.view.panels;
 import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.GUI.view.managers.GameBoardPanelLayoutManager;
-import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.PlayerPanelsManager;
 
 import javax.swing.*;

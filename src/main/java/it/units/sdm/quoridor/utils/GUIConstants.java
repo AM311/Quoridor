@@ -43,7 +43,7 @@ public final class GUIConstants {
           "<li>Vertical walls appear on the left side of tiles<br>" +
           "<li>Horizontal walls appear on the bottom side of tiles" +
           "</ul>" +
-          "You cannot place walls in the margins</div></html>";
+          "You cannot place walls on the margins</div></html>";
 
 
   private GUIConstants() {

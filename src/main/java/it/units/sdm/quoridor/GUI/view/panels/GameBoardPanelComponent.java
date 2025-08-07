@@ -2,7 +2,6 @@ package it.units.sdm.quoridor.GUI.view.panels;
 
 import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
-import it.units.sdm.quoridor.GUI.controller.GameController;
 import it.units.sdm.quoridor.GUI.view.managers.BorderManager;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.Position;
