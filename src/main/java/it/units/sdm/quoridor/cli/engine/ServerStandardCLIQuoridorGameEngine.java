@@ -84,6 +84,6 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
   protected void forwardCommand(String command) throws IOException {
     socketWriter.write(command + System.lineSeparator());
     socketWriter.flush();
-    socketReader.readLine();
+    //socketReader.readLine();
   }
 }
