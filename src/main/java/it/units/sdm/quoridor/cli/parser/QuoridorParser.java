@@ -42,9 +42,10 @@ public abstract class QuoridorParser {
     this.wallOrientation = null;
   }
 
-  protected void verifyNumberOfParameters(int num) throws ParserException {
-    if (commandTokens.length - 1 != num)
-      throw new ParserException("Wrong number of parameters provided for this command!");
+  protected void verifyNumberOfParameters(int expected) throws ParserException {
+    int actual = commandTokens.length - 1;
+    if (commandTokens.length - 1 != expected)
+      throw new ParserException("Wrong number of parameters provided for this command: " + expected + " expected, " + actual + " given.");
   }
 
   abstract public Optional<CommandType> getCommandType();
@@ -54,6 +55,8 @@ public abstract class QuoridorParser {
   abstract public Optional<WallOrientation> getWallOrientation();
 
   abstract public String toString();
+
+  abstract public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation) ;
 
   public enum CommandType {
     QUIT, MOVE, WALL, HELP, RESTART

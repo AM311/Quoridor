@@ -68,4 +68,10 @@ public class StubQuoridorParser extends QuoridorParser {
   public String toString() {
     return "";
   }
+
+  //todo FARE...
+  @Override
+  public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation) {
+    return "";
+  }
 }
