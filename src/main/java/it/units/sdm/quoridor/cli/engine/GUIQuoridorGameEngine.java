@@ -43,6 +43,8 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
 
   abstract public List<Position> getValidMovePositions();
 
+  abstract public StatisticsCounter getStatisticsCounter();
+
   //todo SERVE ??? -- UNIFORMARE CON CLI...
   public enum GUIAction {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING

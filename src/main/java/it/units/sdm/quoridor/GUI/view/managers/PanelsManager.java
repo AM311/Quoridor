@@ -15,8 +15,6 @@ public class PanelsManager {
   private final RootPanelComponent rootPanelComponent;
   private final GameBoardPanelComponent gameBoardPanelComponent;
 
-  //private JPanel currentActionPanel;
-
   public PanelsManager(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager) {
     this.gameEngine = gameEngine;
     this.gameBoardPanelComponent = new GameBoardPanelComponent(gameEngine);
@@ -48,13 +46,6 @@ public class PanelsManager {
   public void updateWallLabel(int playerIndex, int remainingWalls) {
     playerPanelsManager.updateWallLabel(playerIndex, remainingWalls);
   }
-/*
-  public void removeCurrentActionPanel(int playerIndex) {
-    if (currentActionPanel != null) {
-      playerPanelsManager.removeActionPanel(playerIndex, currentActionPanel);
-      currentActionPanel = null;
-    }
-  }*/
 
   public void highlightValidMoves() {
     gameBoardPanelComponent.highlightValidMoves();

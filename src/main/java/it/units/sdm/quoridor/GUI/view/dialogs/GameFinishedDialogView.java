@@ -12,12 +12,10 @@ public class GameFinishedDialogView implements DialogView {
   private final GUIQuoridorGameEngine gameEngine;
   private final JFrame mainFrame;
   private final JDialog gameFinishedDialog;
-  private final StatisticsCounter statistics;
 
-  public GameFinishedDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame, StatisticsCounter statistics) {
+  public GameFinishedDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
     this.gameEngine = gameEngine;
     this.mainFrame = mainFrame;
-    this.statistics = statistics;
     this.gameFinishedDialog = new JDialog(mainFrame, true);
   }
 
@@ -52,9 +50,7 @@ public class GameFinishedDialogView implements DialogView {
     restartButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     restartButton.addActionListener(e -> {
       gameFinishedDialog.dispose();
-      if (mainFrame != null) {
-        mainFrame.dispose();
-      }
+      mainFrame.dispose();
       gameEngine.restartGame();
     });
 
@@ -63,7 +59,12 @@ public class GameFinishedDialogView implements DialogView {
 
     exitButton.setFont(GUIConstants.BUTTON_FONT);
     exitButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
-    exitButton.addActionListener(e -> System.exit(0));
+    exitButton.addActionListener(e -> {
+      gameFinishedDialog.dispose();
+      mainFrame.dispose();
+      System.exit(0);
+    });
+            
 
     buttonPanel.add(restartButton);
     buttonPanel.add(exitButton);
@@ -72,9 +73,8 @@ public class GameFinishedDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel() {
-    int numberOfPlayers = gameEngine.getNumberOfPlayers();
-    boolean isGameFinished = gameEngine.isGameFinished();
-    JLabel messageLabel = getMessageLabel(numberOfPlayers, isGameFinished);
+    JLabel messageLabel = new JLabel("<html><br>" + getStatistics() + "</html>", SwingConstants.CENTER);
+    messageLabel.setForeground(GUIConstants.TEXT_COLOR);
 
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
     messageLabel.setFont(GUIConstants.NORMAL_FONT);
@@ -82,22 +82,10 @@ public class GameFinishedDialogView implements DialogView {
     return messageLabel;
   }
 
-  private JLabel getMessageLabel(int numberOfPlayers, boolean isGameFinished) {
-    int playingPawnIndex = gameEngine.getPlayingPawnIndex();
-
-    JLabel messageLabel;
-    if (numberOfPlayers == 2) {
-      messageLabel = new JLabel("<html>Player " + (isGameFinished ? (playingPawnIndex + 1) : (2 - playingPawnIndex)) + " WINS!<br><br><br>" + getStatistics() + "</html>", SwingConstants.CENTER);
-    } else {
-      messageLabel = new JLabel("<html>Player " + (isGameFinished ? (playingPawnIndex + 1) + " WINS!" : (playingPawnIndex + 1) + " QUIT!") + "<br><br><br><br>" + getStatistics() + "</html>", SwingConstants.CENTER);
-    }
-    messageLabel.setForeground(GUIConstants.TEXT_COLOR);
-    return messageLabel;
-  }
-
   private String getStatistics() {
+    StatisticsCounter statistics = gameEngine.getStatisticsCounter();
     StringBuilder statisticsString = new StringBuilder();
-    statisticsString.append("============= GAME STATISTICS ============= <br><br>");
+    statisticsString.append("============= GAME STATISTICS ============= <br><br><br>");
 
     statisticsString.append("<table style='width:100%; text-align:right;'>");
 

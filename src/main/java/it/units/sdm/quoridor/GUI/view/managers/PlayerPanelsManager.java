@@ -102,15 +102,6 @@ public class PlayerPanelsManager {
     }
   }
 
-  public void removeActionPanel(int playerIndex, JPanel actionPanel) {
-    for (PlayerPanelComponent playerPanelComponent : playerPanelComponents) {
-      if (playerPanelComponent.getPlayerIndex() == playerIndex) {
-        playerPanelComponent.removeActionPanel(actionPanel);
-        break;
-      }
-    }
-  }
-
   public ActionsPanelComponent getActionsPanelComponent() {
     return actionsPanelComponent;
   }

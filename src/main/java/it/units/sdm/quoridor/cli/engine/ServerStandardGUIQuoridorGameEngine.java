@@ -57,7 +57,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
         attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
         sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.VERTICAL);
       }
-      case DO_NOTHING -> eventListener.onInvalidAction("Wait for yor round or choose an action");
+      case DO_NOTHING -> eventListener.displayNotification("Wait for yor round or choose an action", true);
     }
   }
 
@@ -69,7 +69,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     try {
       new ServerStandardGUIQuoridorGameEngine(new StdQuoridorBuilder(getNumberOfPlayers()), statisticsCounter, socketReader, socketWriter, parser).runGame();
     } catch (InvalidParameterException | BuilderException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -86,13 +86,13 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
       eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
       if (isGameFinished()) {
         statisticsCounter.updateAllTotalStats(game);
-        eventListener.onGameFinished(statisticsCounter);
+        eventListener.onGameFinished();
       } else {
         eventListener.onRoundFinished(false);
       }
       setCurrentAction(GUIAction.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -111,7 +111,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     Logger.printLog(System.out, "ENTRO IN FORWARD");                            //todo TMP
     socketWriter.write(command + System.lineSeparator());
     socketWriter.flush();
-    socketReader.readLine();
+    // socketReader.readLine();
   }
 
   @Override
@@ -124,7 +124,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
       eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
       eventListener.onRoundFinished(false);
     } catch (InvalidActionException | InvalidParameterException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 

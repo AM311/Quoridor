@@ -2,7 +2,6 @@ package it.units.sdm.quoridor.GUI.view;
 
 import it.units.sdm.quoridor.GUI.view.managers.DialogManager;
 import it.units.sdm.quoridor.GUI.view.managers.PanelsManager;
-import it.units.sdm.quoridor.cli.StatisticsCounter;
 import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
@@ -57,11 +56,6 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void onInvalidAction(String message) {
-    dialogManager.displayNotificationDialog(message, true);
-  }
-
-  @Override
   public void clearHighlights() {
     panelsManager.clearHighlights();
   }
@@ -72,8 +66,8 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void onGameFinished(StatisticsCounter statistics) {
-    dialogManager.displayGameFinishedDialog(statistics);
+  public void onGameFinished() {
+    dialogManager.displayGameFinishedDialog();
   }
 
   @Override

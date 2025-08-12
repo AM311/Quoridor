@@ -70,7 +70,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
       case MOVE -> attemptPawnMove(targetPosition);
       case PLACE_HORIZONTAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
       case PLACE_VERTICAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
-      case DO_NOTHING -> eventListener.onInvalidAction("Choose an action");
+      case DO_NOTHING -> eventListener.displayNotification("Choose an action", true);
     }
   }
 
@@ -85,13 +85,13 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
       eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
       if (isGameFinished()) {
         statisticsCounter.updateAllTotalStats(game);
-        eventListener.onGameFinished(statisticsCounter);
+        eventListener.onGameFinished();
       } else {
         eventListener.onRoundFinished(true);
       }
       setCurrentAction(GUIAction.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -103,7 +103,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
       eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
       eventListener.onRoundFinished(true);
     } catch (InvalidActionException | InvalidParameterException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -124,7 +124,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
         }
       }
     } catch (InvalidParameterException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
     return validPositions;
   }
@@ -140,7 +140,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     try {
       eventListener.highlightValidMoves();
     } catch (Exception e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -155,13 +155,18 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
+  @Override
+  public StatisticsCounter getStatisticsCounter() {
+    return statisticsCounter;
+  }
+
   // TODO capire se lasciare così o fare reader altro modo
   @Override
   public void restartGame() {
     try {
       new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(getNumberOfPlayers()), statisticsCounter).runGame();
     } catch (InvalidParameterException | BuilderException e) {
-      eventListener.onInvalidAction(e.getMessage());
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 }
