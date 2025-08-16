@@ -44,20 +44,24 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
   //todo SPOSTARE QUI FLAG BOOLEANO, COSÌ NON SERVE FARE OVERRIDE DEI DUE METODI attempt
   @Override
   public void handleTileClick(Position targetPosition) {
-    switch (currentGUIAction) {
-      case MOVE -> {
-        attemptPawnMove(targetPosition);
-        sendCommand(QuoridorParser.CommandType.MOVE, targetPosition, null);
+    try {
+      switch (currentGUIAction) {
+        case MOVE -> {
+          attemptPawnMove(targetPosition);
+          sendCommand(QuoridorParser.CommandType.MOVE, targetPosition, null);
+        }
+        case PLACE_HORIZONTAL_WALL -> {
+          attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
+          sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.HORIZONTAL);
+        }
+        case PLACE_VERTICAL_WALL -> {
+          attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
+          sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.VERTICAL);
+        }
+        case DO_NOTHING -> eventListener.displayNotification("Wait for yor round or choose an action", true);
       }
-      case PLACE_HORIZONTAL_WALL -> {
-        attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
-        sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.HORIZONTAL);
-      }
-      case PLACE_VERTICAL_WALL -> {
-        attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
-        sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.VERTICAL);
-      }
-      case DO_NOTHING -> eventListener.displayNotification("Wait for yor round or choose an action", true);
+    }catch (InvalidParameterException | InvalidActionException e){
+       eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -74,8 +78,8 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
   }
 
   @Override
-  protected void attemptPawnMove(Position targetPosition) {
-    try {
+  protected void attemptPawnMove(Position targetPosition) throws InvalidParameterException, InvalidActionException {
+
       Position currentPosition = new Position(
               game.getPlayingPawn().getCurrentTile().getRow(),
               game.getPlayingPawn().getCurrentTile().getColumn()
@@ -91,9 +95,6 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
         eventListener.onRoundFinished(false);
       }
       setCurrentAction(GUIAction.DO_NOTHING);
-    } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.displayNotification(e.getMessage(), true);
-    }
   }
 
   //todo CHECK ++ MANCA INOLTRO PER QUIT E RESTART
@@ -115,17 +116,13 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
   }
 
   @Override
-  protected void attemptPlaceWall(Position position, WallOrientation orientation) {
-    try {
+  protected void attemptPlaceWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
       game.placeWall(position, orientation);
       Logger.printLog(System.out, "ENTRO IN WALL");                            //todo TMP
       statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
       setCurrentAction(GUIAction.DO_NOTHING);
       eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
       eventListener.onRoundFinished(false);
-    } catch (InvalidActionException | InvalidParameterException e) {
-      eventListener.displayNotification(e.getMessage(), true);
-    }
   }
 
   private void listenSocket() {

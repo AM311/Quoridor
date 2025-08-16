@@ -66,16 +66,19 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
 
   @Override
   public void handleTileClick(Position targetPosition) {
-    switch (currentGUIAction) {
-      case MOVE -> attemptPawnMove(targetPosition);
-      case PLACE_HORIZONTAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
-      case PLACE_VERTICAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
-      case DO_NOTHING -> eventListener.displayNotification("Choose an action", true);
+    try {
+      switch (currentGUIAction) {
+        case MOVE -> attemptPawnMove(targetPosition);
+        case PLACE_HORIZONTAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
+        case PLACE_VERTICAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
+        case DO_NOTHING -> eventListener.displayNotification("Choose an action", true);
+      }
+    } catch (InvalidParameterException | InvalidActionException e) {
+      eventListener.displayNotification(e.getMessage(), true);
     }
   }
 
-  protected void attemptPawnMove(Position targetPosition) {
-    try {
+  protected void attemptPawnMove(Position targetPosition) throws InvalidParameterException, InvalidActionException {
       Position currentPosition = new Position(
               game.getPlayingPawn().getCurrentTile().getRow(),
               game.getPlayingPawn().getCurrentTile().getColumn()
@@ -90,21 +93,14 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
         eventListener.onRoundFinished(true);
       }
       setCurrentAction(GUIAction.DO_NOTHING);
-    } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.displayNotification(e.getMessage(), true);
-    }
   }
 
-  protected void attemptPlaceWall(Position position, WallOrientation orientation) {
-    try {
+  protected void attemptPlaceWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
       game.placeWall(position, orientation);
       statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
       setCurrentAction(GUIAction.DO_NOTHING);
       eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
       eventListener.onRoundFinished(true);
-    } catch (InvalidActionException | InvalidParameterException e) {
-      eventListener.displayNotification(e.getMessage(), true);
-    }
   }
 
 
