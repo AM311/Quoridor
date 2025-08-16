@@ -94,8 +94,8 @@ public class PlayerPanelsManager {
     }
   }
 
-  public void updateActivePlayer(int activePlayerIndex) {
-    actionsPanelComponent.removeActionPanel();
+  public void updateActivePlayer(int activePlayerIndex, int oldPlayerIndex) {
+    actionsPanelComponent.removeCurrentActionPanel(oldPlayerIndex);
 
     for (PlayerPanelComponent playerPanelComponent : playerPanelComponents) {
       playerPanelComponent.setActive(playerPanelComponent.getPlayerIndex() == activePlayerIndex);

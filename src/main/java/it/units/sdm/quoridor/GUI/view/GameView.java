@@ -78,8 +78,9 @@ public class GameView implements GameEventListener {
   @Override
   public void onRoundFinished(boolean showControls) {           //todo CHECK
     //panelsManager.removeCurrentActionPanel(gameEngine.getPlayingPawnIndex());
+    int oldPlayerIndex = gameEngine.getPlayingPawnIndex();
     gameEngine.changeRound();
-    panelsManager.updatePlayerPanel(gameEngine.getPlayingPawnIndex());
+    panelsManager.updatePlayerPanel(gameEngine.getPlayingPawnIndex(), oldPlayerIndex);
 
     if (showControls) {
       displayCommandsForCurrentPlayer();

@@ -11,7 +11,6 @@ import java.util.List;
 public class ActionsPanelComponent implements PanelComponent {
   private final GUIQuoridorGameEngine gameEngine;
   private JPanel currentActionPanel;
-  private int currentPlayerIndex;
   private final DialogManager dialogManager;
   private final List<PlayerPanelComponent> playerPanelComponents;
 
@@ -44,16 +43,9 @@ public class ActionsPanelComponent implements PanelComponent {
     return actionsPanel;
   }
 
-  public void removeActionPanel() {
-    if (currentActionPanel != null) {                       //todo DA MONITORARE
-      removeCurrentActionPanel(currentPlayerIndex);
-    }
-  }
-
   public void displayActionsPanelForPlayingPlayer(int playerIndex) {
-    //todo QUI GIACEVA removeActionPanel
+    removeCurrentActionPanel(playerIndex);
 
-    currentPlayerIndex = playerIndex;
     currentActionPanel = new JPanel();
     currentActionPanel.setLayout(new BoxLayout(currentActionPanel, BoxLayout.Y_AXIS));
     currentActionPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
@@ -72,7 +64,6 @@ public class ActionsPanelComponent implements PanelComponent {
 
     addActionPanel(playerIndex, containerPanel);
     currentActionPanel = containerPanel;
-    currentPlayerIndex = playerIndex;
   }
 
   public void removeCurrentActionPanel(int playerIndex) {

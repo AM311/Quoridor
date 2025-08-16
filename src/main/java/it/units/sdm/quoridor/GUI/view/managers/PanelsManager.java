@@ -24,15 +24,15 @@ public class PanelsManager {
 
   public JPanel createRootPanel(boolean showControlsForPlayer1) {
     JPanel rootPanel = rootPanelComponent.createPanel();
-    updatePlayerPanel(gameEngine.getPlayingPawnIndex());
+    updatePlayerPanel(gameEngine.getPlayingPawnIndex(), gameEngine.getPlayingPawnIndex());
     if (showControlsForPlayer1) {
       displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     }
     return rootPanel;
   }
 
-  public void updatePlayerPanel(int playerIndex) {
-    playerPanelsManager.updateActivePlayer(playerIndex);
+  public void updatePlayerPanel(int playerIndex, int oldPlayerIndex) {
+    playerPanelsManager.updateActivePlayer(playerIndex, oldPlayerIndex);
   }
 
   public void displayActionsPanelForPlayingPlayer(int playerIndex) {
