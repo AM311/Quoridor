@@ -19,7 +19,7 @@ public class Starter {
           case "CLI" ->
                   new StandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter());
           case "GUI" ->
-                  new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter());
+                  new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), new StandardQuoridorParser());
           default -> throw new InvalidParameterException("Invalid game mode.");
         };
 

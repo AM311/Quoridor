@@ -10,25 +10,34 @@ import javax.swing.*;
 
 public class GameView implements GameEventListener {
   private final GUIQuoridorGameEngine gameEngine;
+  private final JFrame mainFrame;
   private PanelsManager panelsManager;
   private DialogManager dialogManager;
 
   public GameView(GUIQuoridorGameEngine gameEngine) {
     this.gameEngine = gameEngine;
     gameEngine.setEventListener(this);
+
+    this.mainFrame = new JFrame("Quoridor");
+    this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
   }
 
   public void displayGUI(boolean showControlsForPlayer1) {
-    JFrame mainFrame = new JFrame("Quoridor");
-    mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
     dialogManager = new DialogManager(mainFrame, gameEngine);
     panelsManager = new PanelsManager(gameEngine, dialogManager);
 
     JPanel rootPanel = panelsManager.createRootPanel(showControlsForPlayer1);
     mainFrame.setContentPane(rootPanel);
-    mainFrame.setVisible(true);
+
+    //mainFrame.setVisible(true);
+
+    if (!mainFrame.isVisible()) {
+      mainFrame.setVisible(true);
+    } else {
+      mainFrame.revalidate();
+      mainFrame.repaint();
+    }
 
     dialogManager.displayHelpDialog();
     displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
@@ -46,8 +55,23 @@ public class GameView implements GameEventListener {
   }
 
   @Override
+  public void displayQuitRestartDialog() {
+    dialogManager.displayQuitRestartDialog();
+  }
+
+  @Override
+  public void displayCommandsForCurrentPlayer() {
+    panelsManager.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+  }
+
+  @Override
   public void highlightValidMoves() {
     panelsManager.highlightValidMoves();
+  }
+
+  @Override
+  public void disposeMainFrame() {
+    mainFrame.dispose();
   }
 
   @Override
@@ -66,13 +90,8 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void onGameFinished() {
-    dialogManager.displayGameFinishedDialog();
-  }
-
-  @Override
-  public void displayCommandsForCurrentPlayer() {
-    panelsManager.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+  public void displayStatistics() {
+    dialogManager.displayStatisticsDialog();
   }
 
   @Override

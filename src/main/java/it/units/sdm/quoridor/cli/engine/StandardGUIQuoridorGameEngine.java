@@ -1,133 +1,120 @@
 package it.units.sdm.quoridor.cli.engine;
 
-import it.units.sdm.quoridor.GUI.view.GameView;
 import it.units.sdm.quoridor.cli.StatisticsCounter;
+import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
+import it.units.sdm.quoridor.server.Logger;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
-  protected GUIAction currentGUIAction = GUIAction.DO_NOTHING;
 
-
-  public StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter) {
-    super(quoridorBuilder, statisticsCounter);
+  //todo CHECK SE FUNZIONA CON GAMEVIEW ESTERNA
+  public StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
+    super(quoridorBuilder, statisticsCounter, parser);
   }
 
   @Override
   public void runGame() throws BuilderException {
     createGame();
-    GameView gameView = new GameView(this);
     gameView.displayGUI(true);
   }
 
+
+  //todo OVERRIDATO IN GUIGAMEENGINE -- VEDERE SE FUNZIONA
+  /*
   @Override
-  public int getNumberOfPlayers() {
-    return game.getPawns().size();
+  public void handleRestartGame() throws BuilderException {
+    restartGame();
   }
 
   @Override
-  public int getSideLength() {
-    return game.getGameBoard().getSideLength();
+  public void handleQuitGame() {
+    quitGame();
+  }
+  */
+
+  @Override
+  protected void movePawn(Position targetPosition) throws InvalidParameterException, InvalidActionException {
+    Position currentPosition = new Position(
+            game.getPlayingPawn().getCurrentTile().getRow(),
+            game.getPlayingPawn().getCurrentTile().getColumn()
+    );
+    game.movePlayingPawn(targetPosition);
+    eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
   }
 
   @Override
-  public List<AbstractPawn> getPawns() {
-    return game.getPawns();
+  protected void sendCommand(String command) throws IOException {
   }
 
   @Override
-  public int getPlayingPawnIndex() {
-    return game.getPlayingPawnIndex();
-  }
-
-  //todo VALUTARE DI CAMBIARE PACKAGE E MODIFICATORI PER LIMITARE ACCESSO A QUESTI METODI
-  @Override
-  public void changeRound() {
-    game.changeRound();
+  protected void placeWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
+    game.placeWall(position, orientation);
+    eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
   }
 
   @Override
-  public void setCurrentAction(GUIAction currentGUIAction) {
-    this.currentGUIAction = currentGUIAction;
+  protected void quitGame() {
+    gameView.disposeMainFrame();
+    System.exit(0);
+  }
+
+  @Override
+  protected void restartGame() throws BuilderException {
+    Logger.printLog(System.out, "Restarting game");
+
+    statisticsCounter.resetGameStats();
+
+    createGame();
+    gameView.displayGUI(true);
+
   }
 
   @Override
   public void handleTileClick(Position targetPosition) {
     try {
       switch (currentGUIAction) {
-        case MOVE -> attemptPawnMove(targetPosition);
-        case PLACE_HORIZONTAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.HORIZONTAL);
-        case PLACE_VERTICAL_WALL -> attemptPlaceWall(targetPosition, WallOrientation.VERTICAL);
+        case MOVE -> {
+          movePawn(targetPosition);
+          statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
+
+          if (game.isGameFinished()) {
+            statisticsCounter.updateAllTotalStats(game);
+            eventListener.displayStatistics();
+            eventListener.displayQuitRestartDialog();
+          } else {
+            eventListener.onRoundFinished(true);
+          }
+        }
+        case PLACE_HORIZONTAL_WALL -> {
+          placeWall(targetPosition, WallOrientation.HORIZONTAL);
+          statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
+          eventListener.onRoundFinished(true);
+        }
+        case PLACE_VERTICAL_WALL -> {
+          placeWall(targetPosition, WallOrientation.VERTICAL);
+          statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
+          eventListener.onRoundFinished(true);
+        }
         case DO_NOTHING -> eventListener.displayNotification("Choose an action", true);
       }
+
+      setCurrentAction(GUIAction.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
       eventListener.displayNotification(e.getMessage(), true);
     }
-  }
-
-  protected void attemptPawnMove(Position targetPosition) throws InvalidParameterException, InvalidActionException {
-      Position currentPosition = new Position(
-              game.getPlayingPawn().getCurrentTile().getRow(),
-              game.getPlayingPawn().getCurrentTile().getColumn()
-      );
-      game.movePlayingPawn(targetPosition);
-      statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
-      eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
-      if (isGameFinished()) {
-        statisticsCounter.updateAllTotalStats(game);
-        eventListener.onGameFinished();
-      } else {
-        eventListener.onRoundFinished(true);
-      }
-      setCurrentAction(GUIAction.DO_NOTHING);
-  }
-
-  protected void attemptPlaceWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
-      game.placeWall(position, orientation);
-      statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-      setCurrentAction(GUIAction.DO_NOTHING);
-      eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
-      eventListener.onRoundFinished(true);
-  }
-
-
-  // TODO da chiamare game.getValidMovePositions()
-  @Override
-  public List<Position> getValidMovePositions() {
-    List<Position> validPositions = new ArrayList<>();
-    ActionChecker<AbstractTile> checker = new PawnMovementChecker();
-    int gameBoardSize = game.getGameBoard().getSideLength();
-    try {
-      for (int i = 0; i < gameBoardSize; i++) {
-        for (int j = 0; j < gameBoardSize; j++) {
-          Position position = new Position(i, j);
-          if (checker.isValidAction(game, game.getGameBoard().getTile(position)).equals(QuoridorCheckResult.OKAY)) {
-            validPositions.add(position);
-          }
-        }
-      }
-    } catch (InvalidParameterException e) {
-      eventListener.displayNotification(e.getMessage(), true);
-    }
-    return validPositions;
-  }
-
-  @Override
-  public boolean isGameFinished() {
-    return game.isGameFinished();
   }
 
   @Override
@@ -151,18 +138,24 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
+  // TODO da chiamare game.getValidMovePositions() !!! <<-- SI: non è possibile lasciare così (manca astrazione sui checker!)
   @Override
-  public StatisticsCounter getStatisticsCounter() {
-    return statisticsCounter;
-  }
-
-  // TODO capire se lasciare così o fare reader altro modo
-  @Override
-  public void restartGame() {
+  public List<Position> getValidMovePositions() {
+    List<Position> validPositions = new ArrayList<>();
+    ActionChecker<AbstractTile> checker = new PawnMovementChecker();
+    int gameBoardSize = game.getGameBoard().getSideLength();
     try {
-      new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(getNumberOfPlayers()), statisticsCounter).runGame();
-    } catch (InvalidParameterException | BuilderException e) {
+      for (int i = 0; i < gameBoardSize; i++) {
+        for (int j = 0; j < gameBoardSize; j++) {
+          Position position = new Position(i, j);
+          if (checker.isValidAction(game, game.getGameBoard().getTile(position)).equals(QuoridorCheckResult.OKAY)) {
+            validPositions.add(position);
+          }
+        }
+      }
+    } catch (InvalidParameterException e) {
       eventListener.displayNotification(e.getMessage(), true);
     }
+    return validPositions;
   }
 }

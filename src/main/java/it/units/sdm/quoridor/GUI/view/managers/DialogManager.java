@@ -1,9 +1,6 @@
 package it.units.sdm.quoridor.GUI.view.managers;
 
-import it.units.sdm.quoridor.GUI.view.dialogs.HelpDialogView;
-import it.units.sdm.quoridor.GUI.view.dialogs.NotificationDialogView;
-import it.units.sdm.quoridor.GUI.view.dialogs.GameFinishedDialogView;
-import it.units.sdm.quoridor.GUI.view.dialogs.QuitDialogView;
+import it.units.sdm.quoridor.GUI.view.dialogs.*;
 import it.units.sdm.quoridor.cli.engine.GUIQuoridorGameEngine;
 
 import javax.swing.*;
@@ -25,8 +22,12 @@ public class DialogManager {
     new QuitDialogView(gameEngine, mainFrame).displayDialog();
   }
 
-  public void displayGameFinishedDialog() {
-    new GameFinishedDialogView(gameEngine, mainFrame).displayDialog();
+  public void displayStatisticsDialog() {
+    new StatisticsDialogView(gameEngine, mainFrame).displayDialog();
+  }
+
+  public void displayQuitRestartDialog() {
+    new QuitRestartDialogView(gameEngine, mainFrame).displayDialog();
   }
 
   public void displayNotificationDialog(String message, boolean invalidActionFlag) {

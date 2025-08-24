@@ -54,7 +54,8 @@ public class QuitDialogView implements DialogView {
     yesButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     yesButton.addActionListener(e -> {
       confirmQuitDialog.dispose();
-      new GameFinishedDialogView(gameEngine, mainFrame).displayDialog();
+      new StatisticsDialogView(gameEngine, mainFrame).displayDialog();
+      new QuitRestartDialogView(gameEngine, mainFrame).displayDialog();
     });
 
     JButton noButton = new JButton("NO");

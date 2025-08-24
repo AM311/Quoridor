@@ -8,29 +8,28 @@ import it.units.sdm.quoridor.utils.GUIConstants;
 import javax.swing.*;
 import java.awt.*;
 
-public class GameFinishedDialogView implements DialogView {
+public class StatisticsDialogView implements DialogView {
   private final GUIQuoridorGameEngine gameEngine;
   private final JFrame mainFrame;
-  private final JDialog gameFinishedDialog;
+  private final JDialog dialog;
 
-  public GameFinishedDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
+  public StatisticsDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
     this.gameEngine = gameEngine;
     this.mainFrame = mainFrame;
-    this.gameFinishedDialog = new JDialog(mainFrame, true);
+    this.dialog = new JDialog(mainFrame, true);
   }
-
 
   @Override
   public void displayDialog() {
-    gameFinishedDialog.setUndecorated(true);
-    gameFinishedDialog.setSize(600,  gameEngine.getNumberOfPlayers() == 4 ? 500 : 400);
-    gameFinishedDialog.setLocationRelativeTo(mainFrame);
-    gameFinishedDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+    dialog.setUndecorated(true);
+    dialog.setSize(600,  gameEngine.getNumberOfPlayers() == 4 ? 500 : 400);
+    dialog.setLocationRelativeTo(mainFrame);
+    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
     JPanel panel = createDialog();
 
-    gameFinishedDialog.add(panel);
-    gameFinishedDialog.setVisible(true);
+    dialog.add(panel);
+    dialog.setVisible(true);
   }
 
   private JPanel createDialog() {
@@ -45,30 +44,16 @@ public class GameFinishedDialogView implements DialogView {
     buttonPanel.setBackground(GUIConstants.SCREEN_BACKGROUND);
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
-    JButton restartButton = new JButton("RESTART");
-    restartButton.setFont(GUIConstants.BUTTON_FONT);
-    restartButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
-    restartButton.addActionListener(e -> {
-      gameFinishedDialog.dispose();
-      mainFrame.dispose();
-      gameEngine.restartGame();
+    JButton closeButton = new JButton("CLOSE");
+    closeButton.setFont(GUIConstants.BUTTON_FONT);
+    closeButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
+    closeButton.addActionListener(e -> {
+      dialog.dispose();
     });
 
-
-    JButton exitButton = new JButton("EXIT");
-
-    exitButton.setFont(GUIConstants.BUTTON_FONT);
-    exitButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
-    exitButton.addActionListener(e -> {
-      gameFinishedDialog.dispose();
-      mainFrame.dispose();
-      System.exit(0);
-    });
-            
-
-    buttonPanel.add(restartButton);
-    buttonPanel.add(exitButton);
+    buttonPanel.add(closeButton);
     panel.add(buttonPanel, BorderLayout.CENTER);
+
     return panel;
   }
 

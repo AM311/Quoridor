@@ -1,7 +1,10 @@
 package it.units.sdm.quoridor.cli.engine;
 
 import it.units.sdm.quoridor.GUI.view.GameEventListener;
+import it.units.sdm.quoridor.GUI.view.GameView;
 import it.units.sdm.quoridor.cli.StatisticsCounter;
+import it.units.sdm.quoridor.cli.parser.QuoridorParser;
+import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
@@ -9,17 +12,23 @@ import it.units.sdm.quoridor.utils.Position;
 import java.util.List;
 
 public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
+  protected final GameView gameView;
   protected GameEventListener eventListener;
+    protected GUIAction currentGUIAction = GUIAction.DO_NOTHING;
 
-  public GUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter) {
-    super(builder, statisticsCounter);
+
+  public GUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
+    super(builder, statisticsCounter, parser);
+    this.gameView = new GameView(this);
   }
 
   public void setEventListener(GameEventListener eventListener) {
     this.eventListener = eventListener;
   }
 
-  abstract public void setCurrentAction(GUIAction currentGUIAction);
+  public void setCurrentAction(GUIAction currentGUIAction) {
+    this.currentGUIAction = currentGUIAction;
+  }
 
   abstract public void handleTileClick(Position position);
 
@@ -27,25 +36,42 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
 
   abstract public void setPlaceWallAction();
 
-  abstract public int getNumberOfPlayers();
+  public int getNumberOfPlayers() {
+    return game.getPawns().size();
+  }
 
-  abstract public int getPlayingPawnIndex();
+  public int getSideLength() {
+    return game.getGameBoard().getSideLength();
+  }
 
-  abstract public int getSideLength();
+  public int getPlayingPawnIndex() {
+    return game.getPlayingPawnIndex();
+  }
 
-  abstract public void changeRound();
+  public void changeRound() {
+    game.changeRound();
+  }
 
-  abstract public List<AbstractPawn> getPawns();
+  @Override
+  protected void printHelp() {
+  }
 
-  abstract public boolean isGameFinished();
+  @Override
+  public void handleQuitGame() {
+    super.handleQuitGame();
+  }
 
-  abstract public void restartGame();
+  @Override
+  public void handleRestartGame() throws BuilderException {
+    super.handleRestartGame();
+  }
+
+  public List<AbstractPawn> getPawns() {
+    return game.getPawns();
+  }
 
   abstract public List<Position> getValidMovePositions();
 
-  abstract public StatisticsCounter getStatisticsCounter();
-
-  //todo SERVE ??? -- UNIFORMARE CON CLI...
   public enum GUIAction {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
   }

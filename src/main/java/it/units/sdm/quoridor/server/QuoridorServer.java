@@ -25,7 +25,7 @@ public class QuoridorServer {
   private final Condition turnChanged = lock.newCondition();
   private final AtomicInteger currentPlayer = new AtomicInteger(1);
   private final List<Client> clientList = Collections.synchronizedList(new ArrayList<>());
-  private final ServerSocket serverSocket;
+  protected final ServerSocket serverSocket;
 
   public QuoridorServer(int port, int numOfPlayers) throws QuoridorServerException {
     this.port = port;
@@ -78,23 +78,25 @@ public class QuoridorServer {
             executorService.submit(() -> {
               try (client) {
                 clientList.add(client);
-                Logger.printLog(System.out, "New connection: " + clientSocket.getInetAddress());
+                Logger.printLog(System.out, "New connection: " + client);
                 Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
                 latch.await();
                 int playerNumber = (clientList.indexOf(client) + 1);
-                client.write("READY");
+                client.write(ServerProtocolCommands.READY.getCommandString());
                 client.write("You are player " + playerNumber);
                 client.write(String.valueOf(numOfPlayers));
 
                 while (true) {
                   waitForRound(playerNumber);
-                  client.write("PLAY");
-                  Logger.printLog(System.out, "PLAY sent to player: " + playerNumber);
+                  client.write(ServerProtocolCommands.PLAY.getCommandString());
+                  Logger.printLog(System.out, "PLAY sent to: " + client);
 
                   String request;
                   do {
                     request = client.reader().readLine();
                   } while (request == null);
+
+                  request = request.toUpperCase();
 
                   Logger.printLog(System.out, "Command: " + request + " from: " + client);
 
@@ -103,33 +105,33 @@ public class QuoridorServer {
                   if (request.equals("Q")) {
                     Thread.sleep(1000);
                     shutdown();
-                  }
-                  if (request.equals("R")) {
-                    currentPlayer.set(1);
+                  } else if (request.equals("R")) {
+                    Thread.sleep(1000);
+                    currentPlayer.set(0);
                   }
 
                   nextRound();
                 }
               } catch (InterruptedException ex) {
-                Logger.printLog(System.err, "Thread managing " + clientSocket.getInetAddress() + " has been interrupted");
+                Logger.printLog(System.err, "Thread managing " + client + " has been interrupted");
               } catch (IOException ex) {
-                Logger.printLog(System.err, "Client " + clientSocket.getInetAddress() + " abruptly closed connection.");
+                Logger.printLog(System.err, "Client " + client + " abruptly closed connection.");
               } catch (RuntimeException ex) {
-                Logger.printLog(System.err, "Unhandled RuntimeException while managing " + clientSocket.getInetAddress() + ": " + ex.getMessage());
+                Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client + ": " + ex.getMessage());
               } catch (Error er) {
-                Logger.printLog(System.err, "ERROR while managing " + clientSocket.getInetAddress() + ": " + er.getMessage());
+                Logger.printLog(System.err, "ERROR while managing " + client + ": " + er.getMessage());
               } finally {
                 clientList.remove(client);
-                Logger.printLog(System.out, "Closed connection: " + clientSocket.getInetAddress());
+                Logger.printLog(System.out, "Closed connection: " + client);
 
                 if (latch.getCount() == 0) {
                   try {
                     notifyClients("Q", client);
                     Thread.sleep(1000);
                   } catch (IOException ex) {
-                    Logger.printLog(System.err, "IOException: " + ex.getMessage());
+                    Logger.printLog(System.err, "IOException when notifying clients: " + ex.getMessage());
                   } catch (InterruptedException ex) {
-                    Logger.printLog(System.err, "Thread managing " + clientSocket.getInetAddress() + " has been interrupted");
+                    Logger.printLog(System.err, "Thread sleep managing " + client + " has been interrupted");
                   }
 
                   shutdown();
@@ -158,7 +160,7 @@ public class QuoridorServer {
     lock.unlock();
   }
 
-  private void notifyClients(String message, Client sender) throws IOException {        //todo TMP - CHECK
+  private void notifyClients(String message, Client sender) throws IOException {
     for (Client client : clientList) {
       if (client != sender) {
         client.write(message);

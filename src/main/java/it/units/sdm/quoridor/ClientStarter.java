@@ -8,6 +8,7 @@ import it.units.sdm.quoridor.cli.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.server.ServerProtocolCommands;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,7 +24,7 @@ public class ClientStarter {
            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
         System.out.println("Connected to the server! Waiting for other players to join...");
-        if (reader.readLine().equals("READY")) {
+        if (reader.readLine().equals(ServerProtocolCommands.READY.getCommandString())) {
           System.out.println("The game is starting");
           System.out.println(reader.readLine());
         } else {

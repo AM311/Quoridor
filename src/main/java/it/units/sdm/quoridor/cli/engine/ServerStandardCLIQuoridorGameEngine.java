@@ -6,8 +6,8 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
-import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
+import it.units.sdm.quoridor.server.ServerProtocolCommands;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,18 +28,19 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
   protected void executeRound() {
     boolean commandExecuted = false;
     String serverMessage = null;
+
     try {
       System.out.println("Waiting for another player's round...");
       serverMessage = socketReader.readLine();
     } catch (IOException e) {
       System.err.println("Unable to communicate with server!" + e.getMessage());
-      handleQuitGame();
+      quitGame();
     }
 
     do {
       try {
-        if (Objects.equals(serverMessage, "PLAY")) {
-          System.out.println("It's your round!\n");
+        if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
+          System.out.println("It's your round!" + System.lineSeparator());
           String command = askCommand();
 
           commandExecuted = performCommand(command, true);
@@ -48,7 +49,7 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
         }
       } catch (IOException e) {
         System.err.println("Unable to communicate with server!");
-        handleQuitGame();
+        quitGame();
       } catch (InvalidActionException | InvalidParameterException | ParserException | BuilderException e) {
         System.err.println(e.getMessage());
       }
@@ -57,19 +58,40 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
 
   @Override
   protected void handleEndGame() {
+    String serverMessage;
+
     try {
-      switch (parser.getCommandType().orElseThrow()) {
-        case QUIT -> handleQuitGame();
-        case RESTART -> handleRestartGame();
+      serverMessage = socketReader.readLine();
+
+      if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
+        super.handleEndGame();
+      } else {
+        System.out.println("The current player is choosing whether to start a new game. Please wait...");
+
+        parser.parse(serverMessage);
+
+        switch (parser.getCommandType().orElseThrow()) {
+          case QUIT -> quitGame();
+          case RESTART -> restartGame();
+        }
       }
-    } catch (BuilderException e) {
-      System.err.println(e.getMessage());
-      handleEndGame();
+    } catch (IOException e) {
+      System.err.println("Unable to communicate with server: " + e.getMessage());
+      quitGame();
+    } catch (ParserException | BuilderException e) {
+      System.err.println("Exception while handling Game End: " + e.getMessage());
+      quitGame();
     }
   }
 
   @Override
-  protected void handleQuitGame() {
+  protected void sendCommand(String command) throws IOException {
+    socketWriter.write(command + System.lineSeparator());
+    socketWriter.flush();
+  }
+
+  @Override
+  protected void quitGame() {
     System.out.println("A Player disconnected.");
     try {
       socketWriter.close();
@@ -78,12 +100,5 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
     }
 
     System.exit(0);
-  }
-
-  @Override
-  protected void forwardCommand(String command) throws IOException {
-    socketWriter.write(command + System.lineSeparator());
-    socketWriter.flush();
-    //socketReader.readLine();
   }
 }
