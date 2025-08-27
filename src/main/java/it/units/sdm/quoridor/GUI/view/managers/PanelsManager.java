@@ -39,6 +39,10 @@ public class PanelsManager {
     playerPanelsManager.getActionsPanelComponent().displayActionsPanelForPlayingPlayer(playerIndex);
   }
 
+  public void disposeActionsPanelForPlayingPlayer(int playerIndex) {
+    playerPanelsManager.getActionsPanelComponent().removeCurrentActionPanel(playerIndex);
+  }
+
   public void displayWallDirectionButtons(int playerIndex) {
     playerPanelsManager.getWallDirectionsPanelComponent().displayWallDirectionButtons(playerIndex);
   }

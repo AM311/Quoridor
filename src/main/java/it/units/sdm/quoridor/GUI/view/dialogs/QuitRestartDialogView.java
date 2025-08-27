@@ -77,7 +77,7 @@ public class QuitRestartDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel() {
-    JLabel messageLabel = new JLabel("<html><br>Choose how to continue</html>", SwingConstants.CENTER);
+    JLabel messageLabel = new JLabel("<html>Choose how to continue<br></html>", SwingConstants.CENTER);
     messageLabel.setForeground(GUIConstants.TEXT_COLOR);
 
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);

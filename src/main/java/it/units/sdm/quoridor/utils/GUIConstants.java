@@ -28,6 +28,9 @@ public final class GUIConstants {
   public static final int BUTTON_WIDTH = 120;
   public static final int BUTTON_HEIGHT = 40;
 
+  //TODO nelle istruzioni da aggiungere anche che quando si quitta le statistiche GLOBALI non si aggiornano...
+  // Altrimenti incoerenza quando si mostrano le statistiche dell'ultimo game e quelle totali
+  // (soprattutto quando si fa subito quit alla prima partita -> last game aggiornate, totali non aggiornate)
   public static final String INSTRUCTION = "<html><div style='width: 300px; text-align: left;'>" +
           "<h3>How to play Quoridor:</h3>" +
           "<ul>" +

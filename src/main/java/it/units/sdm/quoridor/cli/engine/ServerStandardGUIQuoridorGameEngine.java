@@ -151,7 +151,8 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     statisticsCounter.updateAllTotalStats(game);
 
     //eventListener.displayStatistics(false);        //todo CHECK / TMP
-    eventListener.displayStatistics();
+    //eventListener.displayStatistics();
+    eventListener.onGameFinished();
 
     if (waitForCommand) {
       try {

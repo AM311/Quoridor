@@ -107,4 +107,11 @@ public class GameView implements GameEventListener {
 
     displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
   }
+
+  @Override
+  public void onGameFinished() {
+    panelsManager.disposeActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+    displayStatistics();
+    displayQuitRestartDialog();
+  }
 }

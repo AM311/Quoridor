@@ -22,7 +22,7 @@ public class StatisticsDialogView implements DialogView {
   @Override
   public void displayDialog() {
     dialog.setUndecorated(true);
-    dialog.setSize(600,  gameEngine.getNumberOfPlayers() == 4 ? 500 : 400);
+    dialog.setSize(700,  gameEngine.getNumberOfPlayers() == 4 ? 750 : 600);
     dialog.setLocationRelativeTo(mainFrame);
     dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
@@ -47,9 +47,7 @@ public class StatisticsDialogView implements DialogView {
     JButton closeButton = new JButton("CLOSE");
     closeButton.setFont(GUIConstants.BUTTON_FONT);
     closeButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
-    closeButton.addActionListener(e -> {
-      dialog.dispose();
-    });
+    closeButton.addActionListener(e -> dialog.dispose());
 
     buttonPanel.add(closeButton);
     panel.add(buttonPanel, BorderLayout.CENTER);
@@ -58,7 +56,7 @@ public class StatisticsDialogView implements DialogView {
   }
 
   private JLabel getMessageLabel() {
-    JLabel messageLabel = new JLabel("<html><br>" + getStatistics() + "</html>", SwingConstants.CENTER);
+    JLabel messageLabel = new JLabel("<html><br>" + getLastGameStatistics() + "<br><br><br>" + getTotalStatistics() + "</html>", SwingConstants.CENTER);
     messageLabel.setForeground(GUIConstants.TEXT_COLOR);
 
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -67,14 +65,44 @@ public class StatisticsDialogView implements DialogView {
     return messageLabel;
   }
 
-  private String getStatistics() {
+  private String getLastGameStatistics() {
     StatisticsCounter statistics = gameEngine.getStatisticsCounter();
-    StringBuilder statisticsString = new StringBuilder();
-    statisticsString.append("============= GAME STATISTICS ============= <br><br><br>");
+    StringBuilder lastGameStatistics = new StringBuilder();
+    lastGameStatistics.append("============= LAST GAME STATISTICS ============= <br><br>");
 
-    statisticsString.append("<table style='width:100%; text-align:right;'>");
+    lastGameStatistics.append("<table style='width:100%; text-align:right;'>");
 
-    statisticsString.append("<tr>")
+    lastGameStatistics.append("<tr>")
+            .append("<th style='padding:6px;'>PLAYER</th>")
+            .append("<th style='padding:6px;'>MOVES MADE</th>")
+            .append("<th style='padding:6px;'>WALLS PLACED</th>")
+            .append("</tr>");
+
+    for (AbstractPawn pawn : gameEngine.getPawns()) {
+      String playerColor = pawn.getPawnAppearance().color().toString();
+      String playerIdentifier = pawn.getPawnAppearance().toString();
+
+      lastGameStatistics.append("<tr>")
+              .append("<th style='padding:6px;'>").append(playerColor).append("</td>")
+              .append("<th style='padding:6px;'>").append(statistics.getGameMoves(playerIdentifier)).append("</td>")
+              .append("<th style='padding:6px;'>").append(statistics.getGameWalls(playerIdentifier)).append("</td>")
+              .append("</tr>");
+    }
+
+    lastGameStatistics.append("</table>");
+
+    return lastGameStatistics.toString();
+  }
+
+
+  private String getTotalStatistics() {
+    StatisticsCounter statistics = gameEngine.getStatisticsCounter();
+    StringBuilder totalStatisticsString = new StringBuilder();
+    totalStatisticsString.append("============= TOTAL GAME STATISTICS ============= <br><br>");
+
+    totalStatisticsString.append("<table style='width:100%; text-align:right;'>");
+
+    totalStatisticsString.append("<tr>")
             .append("<th style='padding:6px;'>PLAYER</th>")
             .append("<th style='padding:6px;'>WINS</th>")
             .append("<th style='padding:6px;'>WIN RATE</th>")
@@ -86,7 +114,7 @@ public class StatisticsDialogView implements DialogView {
       String playerColor = pawn.getPawnAppearance().color().toString();
       String playerIdentifier = pawn.getPawnAppearance().toString();
 
-      statisticsString.append("<tr>")
+      totalStatisticsString.append("<tr>")
               .append("<th style='padding:6px;'>").append(playerColor).append("</td>")
               .append("<th style='padding:6px;'>").append(statistics.getTotalWins(playerIdentifier)).append("</td>")
               .append("<th style='padding:6px;'>").append(statistics.getWinRate(playerIdentifier)).append("</td>")
@@ -95,7 +123,7 @@ public class StatisticsDialogView implements DialogView {
               .append("</tr>");
     }
 
-    statisticsString.append("</table>");
-    return statisticsString.toString();
+    totalStatisticsString.append("</table>");
+    return totalStatisticsString.toString();
   }
 }

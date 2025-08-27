@@ -25,4 +25,6 @@ public interface GameEventListener {
   void displayStatistics();             //todo GESTIRE --> separare
 
   void onRoundFinished(boolean showControls);
+
+  void onGameFinished();
 }

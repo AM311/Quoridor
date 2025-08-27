@@ -92,8 +92,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
 
           if (game.isGameFinished()) {
             statisticsCounter.updateAllTotalStats(game);
-            eventListener.displayStatistics();
-            eventListener.displayQuitRestartDialog();
+            eventListener.onGameFinished();
           } else {
             eventListener.onRoundFinished(true);
           }
