@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
   protected final GameView gameView;
-  protected GameEventListener eventListener;
+  public GameEventListener eventListener;
   protected GUIAction currentGUIAction = GUIAction.DO_NOTHING;
 
 
