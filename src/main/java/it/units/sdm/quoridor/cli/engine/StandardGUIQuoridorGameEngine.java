@@ -5,17 +5,12 @@ import it.units.sdm.quoridor.cli.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.PawnMovementChecker;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.server.Logger;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
@@ -137,24 +132,8 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
-  // TODO da chiamare game.getValidMovePositions() !!! <<-- SI: non è possibile lasciare così (manca astrazione sui checker!)
   @Override
   public List<Position> getValidMovePositions() {
-    List<Position> validPositions = new ArrayList<>();
-    ActionChecker<AbstractTile> checker = new PawnMovementChecker();
-    int gameBoardSize = game.getGameBoard().getSideLength();
-    try {
-      for (int i = 0; i < gameBoardSize; i++) {
-        for (int j = 0; j < gameBoardSize; j++) {
-          Position position = new Position(i, j);
-          if (checker.isValidAction(game, game.getGameBoard().getTile(position)).equals(QuoridorCheckResult.OKAY)) {
-            validPositions.add(position);
-          }
-        }
-      }
-    } catch (InvalidParameterException e) {
-      eventListener.displayNotification(e.getMessage(), true);
-    }
-    return validPositions;
+    return game.getValidMovePositions();
   }
 }

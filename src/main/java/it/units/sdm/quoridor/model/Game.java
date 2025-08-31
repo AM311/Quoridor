@@ -2,11 +2,14 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.movemanagement.actionmanagers.ActionManager;
 import it.units.sdm.quoridor.utils.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends AbstractGame {
@@ -40,6 +43,27 @@ public class Game extends AbstractGame {
 
   public boolean isGameFinished() {
     return getPlayingPawn().hasReachedDestination();
+  }
+
+  public List<Position> getValidMovePositions() {
+    List<Position> validPositions = new ArrayList<>();
+    ActionChecker<AbstractTile> checker = movePawnActionController.actionCheckers()[0];
+    int gameBoardSize = getGameBoard().getSideLength();
+
+    try {
+      for (int i = 0; i < gameBoardSize; i++) {
+        for (int j = 0; j < gameBoardSize; j++) {
+          Position position = new Position(i, j);
+          if (checker.isValidAction(this, this.getGameBoard().getTile(position)).equals(QuoridorCheckResult.OKAY)) {
+            validPositions.add(position);
+          }
+        }
+      }
+    } catch (InvalidParameterException e) { //todo come la testo sta roba?
+      System.out.println(e.getMessage());
+    }
+
+    return validPositions;
   }
 
   @Override
