@@ -23,6 +23,7 @@ class StatisticsCounterTest {
   void setUp() throws InvalidParameterException, BuilderException {
     statisticsCounter = new StatisticsCounter();
     game = buildGame();
+    statisticsCounter.setGame(game);
   }
 
   @Test
@@ -88,7 +89,7 @@ class StatisticsCounterTest {
     statisticsCounter.updateGameWalls(pawn2);
     statisticsCounter.updateGameWalls(pawn2);
 
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
 
     assertEquals(2, statisticsCounter.getTotalMoves(pawn1));
     assertEquals(1, statisticsCounter.getTotalMoves(pawn2));
@@ -108,10 +109,11 @@ class StatisticsCounterTest {
     statisticsCounter.updateGameMoves(pawn2);
     statisticsCounter.updateGameWalls(pawn1);
 
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
     statisticsCounter.resetGameStats();
 
     game = buildGame();
+    statisticsCounter.setGame(game);
 
     statisticsCounter.updateGameMoves(pawn1);
     statisticsCounter.updateGameMoves(pawn2);
@@ -119,12 +121,13 @@ class StatisticsCounterTest {
     statisticsCounter.updateGameWalls(pawn1);
     statisticsCounter.updateGameWalls(pawn2);
 
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
     statisticsCounter.resetGameStats();
 
     game = buildGame();
+    statisticsCounter.setGame(game);
 
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
     statisticsCounter.resetGameStats();
 
     assertEquals(3, statisticsCounter.getTotalMoves(pawn1));
@@ -136,6 +139,6 @@ class StatisticsCounterTest {
 
   @Test
   void reportIsGenerated(){
-    assertNotNull(statisticsCounter.generateStatisticsReport(game));
+    assertNotNull(statisticsCounter.generateStatisticsReport());
   }
 }

@@ -33,6 +33,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   @Override
   public void runGame() throws BuilderException {
     AbstractGame game = createGame();
+    this.statisticsCounter.setGame(game);
     printInitialInformation();
 
     while (!game.isGameFinished()) {
@@ -69,11 +70,11 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   }
 
   private void printEndGameInformation(AbstractGame game) {
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
     System.out.print(game);
     System.out.println(generateSeparator());
     System.out.println(game.getPlayingPawn() + " has won!");
-    System.out.println(statisticsCounter.generateStatisticsReport(game));
+    System.out.println(statisticsCounter.generateStatisticsReport());
   }
 
   private void executeRound(AbstractGame game) {
