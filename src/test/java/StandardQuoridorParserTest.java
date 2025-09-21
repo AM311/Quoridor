@@ -12,6 +12,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Optional;
 
+import static it.units.sdm.quoridor.cli.parser.QuoridorParser.CommandType.*;
+import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
+import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
+
 public class StandardQuoridorParserTest {
   @ParameterizedTest
   @ValueSource(strings = {"q", "Q"})
@@ -26,7 +30,7 @@ public class StandardQuoridorParserTest {
   public void parseTest_moveCommand_commandTypeIsRecognized(String command) throws ParserException {
     QuoridorParser parser = new StandardQuoridorParser();
     parser.parse(command);
-    Assertions.assertEquals(CommandType.MOVE, parser.getCommandType().orElseThrow());
+    Assertions.assertEquals(MOVE, parser.getCommandType().orElseThrow());
   }
 
   @ParameterizedTest
@@ -137,7 +141,7 @@ public class StandardQuoridorParserTest {
     QuoridorParser parser = new StandardQuoridorParser();
     parser.parse("w 2,3 v");
     parser.parse("Q");
-    Assertions.assertEquals(parser.getCommandType().orElseThrow(), CommandType.QUIT);
+    Assertions.assertEquals(CommandType.QUIT, parser.getCommandType().orElseThrow());
   }
 
   @Test
@@ -154,5 +158,59 @@ public class StandardQuoridorParserTest {
     parser.parse("w 2,3 v");
     parser.parse("Q");
     Assertions.assertEquals(parser.getWallOrientation(), Optional.empty());
+  }
+
+  @ParameterizedTest
+  @CsvSource({"0,0", "5,7", "3,4", "8,1"})
+  public void parseTest_generatedStringIsCoherent_Move(int row, int column) {
+    QuoridorParser parser = new StandardQuoridorParser();
+    Position pos = new Position(row, column);
+    String actual = parser.generateString(MOVE, pos, null);
+    String expected = "M " + row + "," + column;
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @ParameterizedTest
+  @CsvSource({"2,2", "3,5", "1,5", "4,4"})
+  public void parseTest_generatedStringIsCoherent_VerticalWall(int row, int column) {
+    QuoridorParser parser = new StandardQuoridorParser();
+    Position pos = new Position(row, column);
+    String actual = parser.generateString(WALL, pos, VERTICAL);
+    String expected = "W " + row + "," + column + " V" ;
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @ParameterizedTest
+  @CsvSource({"2,2", "3,5", "1,5", "4,4"})
+  public void parseTest_generatedStringIsCoherent_HorizontalWall(int row, int column) {
+    QuoridorParser parser = new StandardQuoridorParser();
+    Position pos = new Position(row, column);
+    String actual = parser.generateString(WALL, pos, HORIZONTAL);
+    String expected = "W " + row + "," + column + " H" ;
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void parseTest_generatedStringIsCoherent_Quit() {
+    QuoridorParser parser = new StandardQuoridorParser();
+    String actual = parser.generateString(QUIT, null, null);
+    String expected = "Q";
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void parseTest_generatedStringIsCoherent_Help() {
+    QuoridorParser parser = new StandardQuoridorParser();
+    String actual = parser.generateString(HELP, null, null);
+    String expected = "H";
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void parseTest_generatedStringIsCoherent_Restart() {
+    QuoridorParser parser = new StandardQuoridorParser();
+    String actual = parser.generateString(RESTART, null, null);
+    String expected = "R";
+    Assertions.assertEquals(expected, actual);
   }
 }
