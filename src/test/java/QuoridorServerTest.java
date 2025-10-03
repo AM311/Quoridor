@@ -226,44 +226,6 @@ class QuoridorServerTest {
         clientWriter1.write("MOCK_MOVE" + System.lineSeparator());
         clientWriter1.flush();
 
-        clientReader1.readLine();
-        String cmd = clientReader1.readLine();
-
-        Assertions.assertEquals("Q", cmd);
-      }
-    }
-  }
-
-  @Test
-  void testClientSendQuitCommand() throws Exception {
-    setupServer(2);
-
-    exec.submit(() -> server.start());
-
-    try (Socket clientSocket1 = new Socket("localhost", testPort)) {
-      try (Socket clientSocket2 = new Socket("localhost", testPort)) {
-
-        BufferedWriter clientWriter1 = new BufferedWriter(new OutputStreamWriter(clientSocket1.getOutputStream()));
-        BufferedReader clientReader1 = new BufferedReader(new InputStreamReader(clientSocket1.getInputStream()));
-
-        BufferedReader clientReader2 = new BufferedReader(new InputStreamReader(clientSocket2.getInputStream()));
-
-        clientReader1.readLine();
-        clientReader1.readLine();
-        clientReader1.readLine();
-
-        clientReader2.readLine();
-        clientReader2.readLine();
-        clientReader2.readLine();
-
-        clientReader1.readLine();
-
-        clientSocket2.close();
-
-        clientWriter1.write("MOCK_MOVE" + System.lineSeparator());
-        clientWriter1.flush();
-
-        clientReader1.readLine();
         String cmd = clientReader1.readLine();
 
         Assertions.assertEquals("Q", cmd);

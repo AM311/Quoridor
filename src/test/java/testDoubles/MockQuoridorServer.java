@@ -15,7 +15,8 @@ public class MockQuoridorServer extends QuoridorServer {
     try {
       executorService.shutdown();
       serverSocket.close();
-    } catch (IOException ignored) {
+      Thread.sleep(1000);
+    } catch (IOException | InterruptedException ignored) {
     }
   }
 }

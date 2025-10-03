@@ -162,7 +162,7 @@ public class QuoridorServer {
 
   private void notifyClients(String message, Client sender) throws IOException {
     for (Client client : clientList) {
-      if (client != sender) {
+      if (!(client.equals(sender))) {
         client.write(message);
       }
     }
