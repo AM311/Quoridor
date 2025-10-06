@@ -63,7 +63,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
     System.out.print(game);
     System.out.println(generateSeparator());
     System.out.println(game.getPlayingPawn() + " has won!");
-    System.out.println(statisticsCounter.generateStatisticsReport(game));
+    System.out.println(statisticsCounter.generateStatisticsReport());
   }
 
   protected void executeRound() throws BuilderException {

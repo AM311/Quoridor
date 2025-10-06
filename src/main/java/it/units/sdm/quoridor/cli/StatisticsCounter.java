@@ -15,6 +15,7 @@ public class StatisticsCounter {
   private final Map<String, Integer> totalWalls = new HashMap<>();
   private final Map<String, Integer> gameMoves = new HashMap<>();
   private final Map<String, Integer> gameWalls = new HashMap<>();
+  private AbstractGame game;
 
 
   public void updateGameMoves(String key) {
@@ -25,7 +26,7 @@ public class StatisticsCounter {
     gameWalls.put(key, gameWalls.getOrDefault(key, 0) + 1);
   }
 
-  public void updateAllTotalStats(AbstractGame game) {
+  public void updateAllTotalStats() {
     updateTotalGamesPlayed();
     updateTotalWins(game.getPlayingPawn().toString());
     ArrayList<String> keys = new ArrayList<>();
@@ -61,7 +62,7 @@ public class StatisticsCounter {
     totalWalls.put(key, totalWalls.getOrDefault(key, 0) + wallsThisGame);
   }
 
-  public String generateStatisticsReport(AbstractGame game) {
+  public String generateStatisticsReport() {
     StringBuilder report = new StringBuilder();
     report.append("\n=========== LAST GAME STATISTICS ===========\n");
     report.append("-".repeat(44)).append("\n");
@@ -127,5 +128,13 @@ public class StatisticsCounter {
     if (totalGamesPlayed == 0) return 0;
     double rate = (getTotalWins(key) * 100.0) / totalGamesPlayed;
     return Math.round(rate * 100) / 100.0;
+  }
+
+  public void setGame(AbstractGame game) {
+    this.game = game;
+  }
+
+  public AbstractGame getGame(){
+    return game;
   }
 }
