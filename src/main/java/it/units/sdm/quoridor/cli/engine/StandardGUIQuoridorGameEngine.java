@@ -23,6 +23,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
   @Override
   public void runGame() throws BuilderException {
     createGame();
+    statisticsCounter.setGame(game);
     gameView.displayGUI(true);
   }
 
@@ -73,6 +74,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     statisticsCounter.resetGameStats();
 
     createGame();
+    statisticsCounter.setGame(game);
     gameView.displayGUI(true);
 
   }
@@ -86,7 +88,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
           statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
 
           if (game.isGameFinished()) {
-            statisticsCounter.updateAllTotalStats(game);
+            statisticsCounter.updateAllTotalStats();
             eventListener.onGameFinished();
           } else {
             eventListener.onRoundFinished(true);

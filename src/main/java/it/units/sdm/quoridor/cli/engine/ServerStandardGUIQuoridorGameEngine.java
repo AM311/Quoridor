@@ -31,6 +31,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
   @Override
   public void runGame() throws BuilderException {
     createGame();
+    statisticsCounter.setGame(game);
     gameView.displayGUI(false);
 
     listenSocket();
@@ -95,6 +96,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     statisticsCounter.resetGameStats();
 
     createGame();
+    statisticsCounter.setGame(game);
     gameView.displayGUI(false);
   }
 
@@ -148,7 +150,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     Logger.printLog(System.out, "Ending game");
     String serverMessage = null;
 
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
 
     //eventListener.displayStatistics(false);        //todo CHECK / TMP
     //eventListener.displayStatistics();

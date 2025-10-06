@@ -26,6 +26,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
   @Override
   public void runGame() throws BuilderException {
     createGame();
+    statisticsCounter.setGame(game);
     printInitialInformation();
 
     while (!game.isGameFinished()) {
@@ -37,7 +38,7 @@ public class StandardCLIQuoridorGameEngine extends QuoridorGameEngine {
       }
     }
 
-    statisticsCounter.updateAllTotalStats(game);
+    statisticsCounter.updateAllTotalStats();
     printEndGameInformation();
     statisticsCounter.resetGameStats();
 
