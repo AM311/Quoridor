@@ -27,6 +27,10 @@ public abstract class AbstractGame implements Cloneable {
     return List.copyOf(pawns);
   }
 
+  public int getPlayingPawnIndex() {
+    return playingPawn;
+  }
+
   public AbstractGameBoard getGameBoard() {
     return gameBoard;
   }
@@ -42,6 +46,8 @@ public abstract class AbstractGame implements Cloneable {
   public abstract void changeRound();
 
   public abstract boolean isGameFinished();
+
+  public abstract List<Position> getValidMovePositions();
 
   @Override
   public int hashCode() {

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public record PawnAppearance(Color color) {
   public static final String RESET_STRING = "\u001B[0m";
-  private static final List<Color> defaultColors = List.of(Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA);
+  private static final List<Color> defaultColors = List.of(Color.RED, Color.CYAN, Color.GREEN, Color.MAGENTA);
 
   public static List<PawnAppearance> getDefaultPawnStyles() {
     return defaultColors.stream().map(PawnAppearance::new)
