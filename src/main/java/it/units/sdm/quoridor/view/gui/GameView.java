@@ -109,6 +109,5 @@ public class GameView implements GameEventListener {
   public void onGameFinished() {
     panelsManager.disposeActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     displayStatistics();
-    displayQuitRestartDialog();
   }
 }

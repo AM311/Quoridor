@@ -66,7 +66,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
           sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.VERTICAL);
           eventListener.onRoundFinished(false);
         }
-        case DO_NOTHING -> eventListener.displayNotification("Wait for yor round or choose an action", true);
+        case DO_NOTHING -> eventListener.displayNotification("Wait for your round or choose an action", true);
       }
 
       setCurrentAction(GUIAction.DO_NOTHING);
