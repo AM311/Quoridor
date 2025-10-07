@@ -1,6 +1,6 @@
-import it.units.sdm.quoridor.cli.parser.QuoridorParser;
-import it.units.sdm.quoridor.cli.parser.QuoridorParser.CommandType;
-import it.units.sdm.quoridor.cli.parser.StandardQuoridorParser;
+import it.units.sdm.quoridor.controller.parser.QuoridorParser;
+import it.units.sdm.quoridor.controller.parser.QuoridorParser.CommandType;
+import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Optional;
 
-import static it.units.sdm.quoridor.cli.parser.QuoridorParser.CommandType.*;
+import static it.units.sdm.quoridor.controller.parser.QuoridorParser.CommandType.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 

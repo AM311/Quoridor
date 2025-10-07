@@ -3,7 +3,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
-import it.units.sdm.quoridor.movemanagement.actions.PawnMover;
+import it.units.sdm.quoridor.model.movemanagement.actions.PawnMover;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

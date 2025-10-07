@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static it.units.sdm.quoridor.cli.GameStringBuilder.createGameString;
+import static it.units.sdm.quoridor.view.cli.GameStringBuilder.createGameString;
 
 public abstract class AbstractGame implements Cloneable {
   protected List<AbstractPawn> pawns;

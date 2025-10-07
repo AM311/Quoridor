@@ -1,14 +1,14 @@
 package it.units.sdm.quoridor;
 
-import it.units.sdm.quoridor.cli.StatisticsCounter;
-import it.units.sdm.quoridor.cli.engine.QuoridorGameEngine;
-import it.units.sdm.quoridor.cli.engine.ServerStandardCLIQuoridorGameEngine;
-import it.units.sdm.quoridor.cli.engine.ServerStandardGUIQuoridorGameEngine;
-import it.units.sdm.quoridor.cli.parser.StandardQuoridorParser;
+import it.units.sdm.quoridor.controller.StatisticsCounter;
+import it.units.sdm.quoridor.controller.engine.QuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.cli.ServerStandardCLIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.gui.ServerStandardGUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
-import it.units.sdm.quoridor.server.ServerProtocolCommands;
+import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;
 
 import java.io.*;
 import java.net.Socket;

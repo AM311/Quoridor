@@ -1,6 +1,6 @@
 package testDoubles;
 
-import it.units.sdm.quoridor.cli.parser.QuoridorParser;
+import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;

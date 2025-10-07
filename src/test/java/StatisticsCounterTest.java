@@ -1,4 +1,4 @@
-import it.units.sdm.quoridor.cli.*;
+import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;

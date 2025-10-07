@@ -1,7 +1,7 @@
 package testDoubles;
 
-import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.CheckResult;
+import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.model.movemanagement.actioncheckers.CheckResult;
 
 public class StubActionChecker {
   public enum StubCheckResult implements CheckResult{

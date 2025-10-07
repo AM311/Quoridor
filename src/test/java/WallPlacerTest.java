@@ -8,7 +8,7 @@ import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.Wall;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
-import it.units.sdm.quoridor.movemanagement.actions.WallPlacer;
+import it.units.sdm.quoridor.model.movemanagement.actions.WallPlacer;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

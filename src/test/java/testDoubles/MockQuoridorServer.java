@@ -1,7 +1,7 @@
 package testDoubles;
 
 import it.units.sdm.quoridor.exceptions.QuoridorServerException;
-import it.units.sdm.quoridor.server.QuoridorServer;
+import it.units.sdm.quoridor.controller.server.QuoridorServer;
 
 import java.io.IOException;
 

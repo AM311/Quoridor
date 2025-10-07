@@ -1,5 +1,5 @@
 import it.units.sdm.quoridor.exceptions.QuoridorServerException;
-import it.units.sdm.quoridor.server.QuoridorServer;
+import it.units.sdm.quoridor.controller.server.QuoridorServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

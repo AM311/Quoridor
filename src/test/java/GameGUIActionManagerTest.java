@@ -1,6 +1,6 @@
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
-import it.units.sdm.quoridor.movemanagement.actionmanagers.ActionManager;
-import it.units.sdm.quoridor.movemanagement.actionmanagers.GameActionManager;
+import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
+import it.units.sdm.quoridor.model.movemanagement.actionmanagers.GameActionManager;
 import it.units.sdm.quoridor.utils.ActionController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

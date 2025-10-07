@@ -2,9 +2,9 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.ActionChecker;
-import it.units.sdm.quoridor.movemanagement.actioncheckers.QuoridorCheckResult;
-import it.units.sdm.quoridor.movemanagement.actionmanagers.ActionManager;
+import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
+import it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult;
+import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
 import it.units.sdm.quoridor.utils.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
