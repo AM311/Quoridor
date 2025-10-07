@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor;
 
-import it.units.sdm.quoridor.exceptions.QuoridorServerException;
 import it.units.sdm.quoridor.controller.server.QuoridorServer;
+import it.units.sdm.quoridor.exceptions.QuoridorServerException;
 
 public class ServerStarter {
   public static void main(String[] args) {

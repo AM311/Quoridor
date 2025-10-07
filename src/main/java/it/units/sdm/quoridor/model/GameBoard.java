@@ -9,7 +9,9 @@ import it.units.sdm.quoridor.utils.TargetTiles;
 import it.units.sdm.quoridor.utils.directions.Direction;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,7 +19,7 @@ import static it.units.sdm.quoridor.utils.directions.DiagonalDirection.*;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class GameBoard extends AbstractGameBoard {
-  public GameBoard(AbstractTile[][] gameState) throws InvalidParameterException{
+  public GameBoard(AbstractTile[][] gameState) throws InvalidParameterException {
     super(gameState);
   }
 
@@ -52,6 +54,7 @@ public class GameBoard extends AbstractGameBoard {
       throw new InvalidParameterException("The provided coordinates are outside the GameBoard!");
     }
   }
+
   @Override
   public List<AbstractTile> getRowTiles(int row) throws InvalidParameterException {
     try {

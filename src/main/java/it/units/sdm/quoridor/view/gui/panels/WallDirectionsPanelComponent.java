@@ -6,7 +6,7 @@ import it.units.sdm.quoridor.utils.GUIConstants;
 import javax.swing.*;
 import java.awt.*;
 
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.*;
+import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction;
 
 public class WallDirectionsPanelComponent implements PanelComponent {
   private final GUIQuoridorGameEngine gameEngine;
@@ -52,7 +52,6 @@ public class WallDirectionsPanelComponent implements PanelComponent {
 
     return directionsPanel;
   }
-
 
   public void displayWallDirectionButtons(int playerIndex) {
     actionsPanelComponent.removeCurrentActionPanel(playerIndex);

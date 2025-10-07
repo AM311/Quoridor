@@ -1,8 +1,8 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
 import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
-import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.controller.server.Logger;
+import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
@@ -47,6 +47,29 @@ public class QuitRestartDialogView implements DialogView {
     buttonPanel.setBackground(GUIConstants.SCREEN_BACKGROUND);
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
+    JButton restartButton = getRestartButton();
+    JButton exitButton = getExitButton();
+
+    buttonPanel.add(restartButton);
+    buttonPanel.add(exitButton);
+    panel.add(buttonPanel, BorderLayout.CENTER);
+
+    return panel;
+  }
+
+  private JButton getExitButton() {
+    JButton exitButton = new JButton("EXIT");
+
+    exitButton.setFont(GUIConstants.BUTTON_FONT);
+    exitButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
+    exitButton.addActionListener(e -> {
+      dialog.dispose();
+      gameEngine.handleQuitGame();
+    });
+    return exitButton;
+  }
+
+  private JButton getRestartButton() {
     JButton restartButton = new JButton("RESTART");
     restartButton.setFont(GUIConstants.BUTTON_FONT);
     restartButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
@@ -59,21 +82,7 @@ public class QuitRestartDialogView implements DialogView {
         gameEngine.handleQuitGame();
       }
     });
-
-    JButton exitButton = new JButton("EXIT");
-
-    exitButton.setFont(GUIConstants.BUTTON_FONT);
-    exitButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
-    exitButton.addActionListener(e -> {
-      dialog.dispose();
-      gameEngine.handleQuitGame();
-    });
-
-    buttonPanel.add(restartButton);
-    buttonPanel.add(exitButton);
-    panel.add(buttonPanel, BorderLayout.CENTER);
-
-    return panel;
+    return restartButton;
   }
 
   private JLabel getMessageLabel() {

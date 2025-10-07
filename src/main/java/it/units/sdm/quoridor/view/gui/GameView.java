@@ -1,10 +1,10 @@
 package it.units.sdm.quoridor.view.gui;
 
-import it.units.sdm.quoridor.view.gui.managers.PanelsManager;
-import it.units.sdm.quoridor.view.gui.managers.DialogManager;
 import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
+import it.units.sdm.quoridor.view.gui.managers.DialogManager;
+import it.units.sdm.quoridor.view.gui.managers.PanelsManager;
 
 import javax.swing.*;
 
@@ -29,8 +29,6 @@ public class GameView implements GameEventListener {
 
     JPanel rootPanel = panelsManager.createRootPanel(showControlsForPlayer1);
     mainFrame.setContentPane(rootPanel);
-
-    //mainFrame.setVisible(true);
 
     if (!mainFrame.isVisible()) {
       mainFrame.setVisible(true);
@@ -95,8 +93,7 @@ public class GameView implements GameEventListener {
   }
 
   @Override
-  public void onRoundFinished(boolean showControls) {           //todo CHECK
-    //panelsManager.removeCurrentActionPanel(gameEngine.getPlayingPawnIndex());
+  public void onRoundFinished(boolean showControls) {
     int oldPlayerIndex = gameEngine.getPlayingPawnIndex();
     gameEngine.changeRound();
     panelsManager.updatePlayerPanel(gameEngine.getPlayingPawnIndex(), oldPlayerIndex);

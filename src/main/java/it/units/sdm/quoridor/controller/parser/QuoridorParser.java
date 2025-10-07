@@ -56,7 +56,7 @@ public abstract class QuoridorParser {
 
   abstract public String toString();
 
-  abstract public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation) ;
+  abstract public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation);
 
   public enum CommandType {
     QUIT, MOVE, WALL, HELP, RESTART

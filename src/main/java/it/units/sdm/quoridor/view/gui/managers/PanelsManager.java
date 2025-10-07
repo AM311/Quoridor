@@ -1,10 +1,10 @@
 package it.units.sdm.quoridor.view.gui.managers;
 
-import it.units.sdm.quoridor.view.gui.panels.GameBoardPanelComponent;
-import it.units.sdm.quoridor.view.gui.panels.RootPanelComponent;
 import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
+import it.units.sdm.quoridor.view.gui.panels.GameBoardPanelComponent;
+import it.units.sdm.quoridor.view.gui.panels.RootPanelComponent;
 
 import javax.swing.*;
 

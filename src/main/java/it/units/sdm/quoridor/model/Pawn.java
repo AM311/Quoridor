@@ -18,8 +18,8 @@ public class Pawn extends AbstractPawn {
     return destinationTiles.contains(currentTile);
   }
 
-  public void decrementNumberOfWalls(){
-    if (this.numberOfWalls<=0){
+  public void decrementNumberOfWalls() {
+    if (this.numberOfWalls <= 0) {
       throw new NumberOfWallsBelowZeroException("Number of walls cannot be negative!");
     }
     this.numberOfWalls--;

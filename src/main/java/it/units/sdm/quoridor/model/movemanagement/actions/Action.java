@@ -5,5 +5,5 @@ import it.units.sdm.quoridor.model.AbstractGame;
 
 @FunctionalInterface
 public interface Action<T> {
-	void execute(AbstractGame game, T target) throws InvalidActionException;
+  void execute(AbstractGame game, T target) throws InvalidActionException;
 }

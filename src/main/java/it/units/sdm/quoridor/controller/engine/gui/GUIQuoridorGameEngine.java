@@ -1,14 +1,14 @@
 package it.units.sdm.quoridor.controller.engine.gui;
 
-import it.units.sdm.quoridor.view.gui.GameEventListener;
-import it.units.sdm.quoridor.view.gui.GameView;
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.controller.engine.QuoridorGameEngine;
+import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
+import it.units.sdm.quoridor.view.gui.GameEventListener;
+import it.units.sdm.quoridor.view.gui.GameView;
 
 import java.util.List;
 

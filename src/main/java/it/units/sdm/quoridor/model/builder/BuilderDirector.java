@@ -10,7 +10,7 @@ public class BuilderDirector {
     this.builder = builder;
   }
 
-  public void changeBuilder(AbstractQuoridorBuilder builder) {
+  public void setBuilder(AbstractQuoridorBuilder builder) {
     this.builder = builder;
   }
 

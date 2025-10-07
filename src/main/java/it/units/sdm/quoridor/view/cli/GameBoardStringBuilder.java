@@ -4,7 +4,6 @@ package it.units.sdm.quoridor.view.cli;
 import it.units.sdm.quoridor.model.AbstractGameBoard;
 import it.units.sdm.quoridor.model.AbstractTile;
 
-
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.DOWN;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.RIGHT;
 

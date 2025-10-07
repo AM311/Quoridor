@@ -22,7 +22,7 @@ public class StatisticsDialogView implements DialogView {
   @Override
   public void displayDialog() {
     dialog.setUndecorated(true);
-    dialog.setSize(700,  gameEngine.getNumberOfPlayers() == 4 ? 750 : 600);
+    dialog.setSize(700, gameEngine.getNumberOfPlayers() == 4 ? 750 : 600);
     dialog.setLocationRelativeTo(mainFrame);
     dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 

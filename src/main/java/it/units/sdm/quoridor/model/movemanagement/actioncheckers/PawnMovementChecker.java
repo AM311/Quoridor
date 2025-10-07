@@ -21,13 +21,13 @@ public class PawnMovementChecker implements ActionChecker<AbstractTile> {
     if (destinationTile.isOccupiedBy().isPresent()) {
       return QuoridorCheckResult.OCCUPIED_TILE;
     }
-    if(isValidStraightMove(gameBoard, destinationTile, currentTile)
+    if (isValidStraightMove(gameBoard, destinationTile, currentTile)
             || isValidDiagonalMove(gameBoard, destinationTile, currentTile)
-            || isValidJumpingMove(gameBoard, destinationTile, currentTile)){
+            || isValidJumpingMove(gameBoard, destinationTile, currentTile)) {
       return QuoridorCheckResult.OKAY;
     }
-    return QuoridorCheckResult.INVALID_MOVEMENT;
 
+    return QuoridorCheckResult.INVALID_MOVEMENT;
   }
 
   private boolean isValidStraightMove(AbstractGameBoard gameBoard, AbstractTile destinationTile, AbstractTile currentTile) {

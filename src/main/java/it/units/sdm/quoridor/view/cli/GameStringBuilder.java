@@ -2,6 +2,7 @@ package it.units.sdm.quoridor.view.cli;
 
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.AbstractPawn;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,7 @@ public class GameStringBuilder {
       pawnInfoList.add(pawn + " (" + remainingWalls + ")");
 
     }
+
     gameString.append(String.join("  -  ", pawnInfoList));
-
   }
-
 }

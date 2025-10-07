@@ -1,10 +1,10 @@
 package it.units.sdm.quoridor.view.gui.managers;
 
+import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.view.gui.panels.ActionsPanelComponent;
 import it.units.sdm.quoridor.view.gui.panels.PlayerPanelComponent;
 import it.units.sdm.quoridor.view.gui.panels.WallDirectionsPanelComponent;
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
-import it.units.sdm.quoridor.model.AbstractPawn;
 
 import javax.swing.*;
 import java.awt.*;

@@ -59,7 +59,7 @@ public class Game extends AbstractGame {
           }
         }
       }
-    } catch (InvalidParameterException e) { //todo come la testo sta roba?
+    } catch (InvalidParameterException e) {
       System.out.println(e.getMessage());
     }
 

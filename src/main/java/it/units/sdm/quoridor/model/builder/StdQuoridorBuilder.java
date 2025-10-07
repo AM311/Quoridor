@@ -2,9 +2,8 @@ package it.units.sdm.quoridor.model.builder;
 
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
-import it.units.sdm.quoridor.model.PawnAppearance;
-import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PathExistenceChecker;
+import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.WallPlacementChecker;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.GameActionManager;
@@ -19,7 +18,6 @@ import java.util.stream.IntStream;
 
 import static it.units.sdm.quoridor.model.AbstractTile.LinkState.EDGE;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
-import static it.units.sdm.quoridor.utils.directions.StraightDirection.RIGHT;
 
 public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
   private AbstractGameBoard gameBoard;
@@ -46,8 +44,6 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
     return new Game(gameBoard, pawns, playingPawn, actionManager, movePawnActionController, placeWallActionController);
   }
 
-  //=====================
-
   @Override
   AbstractQuoridorBuilder setGameBoard() {
     AbstractTile[][] gameState = new AbstractTile[gameBoardSideLength][gameBoardSideLength];
@@ -70,7 +66,7 @@ public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
     } catch (InvalidParameterException e) {
       throw new RuntimeException(e);
     }
-    
+
     return this;
   }
 

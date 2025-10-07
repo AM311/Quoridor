@@ -2,11 +2,11 @@ package it.units.sdm.quoridor.controller.engine.gui;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
+import it.units.sdm.quoridor.controller.server.Logger;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.controller.server.Logger;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -15,7 +15,6 @@ import java.util.List;
 
 public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
 
-  //todo CHECK SE FUNZIONA CON GAMEVIEW ESTERNA
   public StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
     super(quoridorBuilder, statisticsCounter, parser);
   }
@@ -26,20 +25,6 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     statisticsCounter.setGame(game);
     gameView.displayGUI(true);
   }
-
-
-  //todo OVERRIDATO IN GUIGAMEENGINE -- VEDERE SE FUNZIONA
-  /*
-  @Override
-  public void handleRestartGame() throws BuilderException {
-    restartGame();
-  }
-
-  @Override
-  public void handleQuitGame() {
-    quitGame();
-  }
-  */
 
   @Override
   protected void movePawn(Position targetPosition) throws InvalidParameterException, InvalidActionException {

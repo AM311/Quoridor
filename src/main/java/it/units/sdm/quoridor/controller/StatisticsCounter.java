@@ -133,7 +133,7 @@ public class StatisticsCounter {
     this.game = game;
   }
 
-  public AbstractGame getGame(){
+  public AbstractGame getGame() {
     return game;
   }
 }

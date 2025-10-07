@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
-import it.units.sdm.quoridor.view.gui.managers.DialogManager;
 import it.units.sdm.quoridor.utils.GUIConstants;
+import it.units.sdm.quoridor.view.gui.managers.DialogManager;
 
 import javax.swing.*;
 import java.awt.*;

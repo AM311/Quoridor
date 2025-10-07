@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
-import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 import it.units.sdm.quoridor.utils.GUIConstants;
+import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 
 import javax.swing.*;
 import java.awt.*;

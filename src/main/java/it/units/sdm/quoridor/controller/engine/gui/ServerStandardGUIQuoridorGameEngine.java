@@ -2,13 +2,13 @@ package it.units.sdm.quoridor.controller.engine.gui;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
+import it.units.sdm.quoridor.controller.server.Logger;
+import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.controller.server.Logger;
-import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
@@ -36,20 +36,6 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
 
     listenSocket();
   }
-
-  /*                  //todo VEDERE SE SUFFICIENTE COSI
-  @Override
-  public void handleRestartGame() throws BuilderException {
-    sendCommand(QuoridorParser.CommandType.RESTART, null, null);
-    restartGame();
-  }
-
-  @Override
-  public void handleQuitGame() {
-    sendCommand(QuoridorParser.CommandType.QUIT, null, null);
-    super.quitGame();
-  }
-  */
 
   @Override
   public void handleTileClick(Position targetPosition) {
@@ -89,7 +75,6 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     }
   }
 
-
   protected void restartGame() throws BuilderException {
     Logger.printLog(System.out, "Restarting game");
 
@@ -99,7 +84,6 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     statisticsCounter.setGame(game);
     gameView.displayGUI(false);
   }
-
 
   @Override
   protected void sendCommand(String command) throws IOException {
@@ -145,15 +129,11 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     } while (!game.isGameFinished());
   }
 
-  //todo <<<<<<<<<<<<<<<<<<
-  protected void handleEndGame(boolean waitForCommand) {      //todo CHECK...
+  protected void handleEndGame(boolean waitForCommand) {
     Logger.printLog(System.out, "Ending game");
     String serverMessage = null;
 
     statisticsCounter.updateAllTotalStats();
-
-    //eventListener.displayStatistics(false);        //todo CHECK / TMP
-    //eventListener.displayStatistics();
     eventListener.onGameFinished();
 
     if (waitForCommand) {
@@ -161,10 +141,9 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
         serverMessage = socketReader.readLine();
 
         if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
-          //eventListener.displayStatistics(true);
           eventListener.displayQuitRestartDialog();
         } else {
-          parser.parse(serverMessage);                //todo NON ENTRA QUI, PERCHÈ È BLOCCATO SULL'ALTRO READLINE (?)
+          parser.parse(serverMessage);
 
           switch (parser.getCommandType().orElseThrow()) {
             case QUIT -> quitGame();
@@ -181,7 +160,5 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
         System.err.println("Exception with command '" + serverMessage + " ': " + e.getMessage());
       }
     }
-
-
   }
 }

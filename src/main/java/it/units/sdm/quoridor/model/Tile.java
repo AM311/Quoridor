@@ -2,7 +2,9 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
+
 import java.util.Optional;
+
 import static it.units.sdm.quoridor.model.AbstractTile.LinkState.FREE;
 import static it.units.sdm.quoridor.model.AbstractTile.LinkState.WALL;
 

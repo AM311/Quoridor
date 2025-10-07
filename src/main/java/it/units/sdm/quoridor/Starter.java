@@ -1,10 +1,10 @@
 package it.units.sdm.quoridor;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.controller.engine.QuoridorGameEngine;
 import it.units.sdm.quoridor.controller.engine.cli.StandardCLIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.engine.gui.StandardGUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
@@ -15,15 +15,7 @@ import java.io.InputStreamReader;
 public class Starter {
   public static void main(String[] args) {
     try {
-      int numOfPlayers = Integer.parseInt(args[0]);
-
-      QuoridorGameEngine engine = switch (args[1]) {
-          case "CLI" ->
-                  new StandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter());
-          case "GUI" ->
-                  new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), new StandardQuoridorParser());
-          default -> throw new InvalidParameterException("Invalid game mode.");
-        };
+      QuoridorGameEngine engine = getQuoridorGameEngine(args);
 
       engine.runGame();
     } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
@@ -33,5 +25,17 @@ public class Starter {
     } catch (BuilderException e) {
       System.err.println("Exception encountered while creating the Game: " + e.getMessage());
     }
+  }
+
+  private static QuoridorGameEngine getQuoridorGameEngine(String[] args) throws InvalidParameterException {
+    int numOfPlayers = Integer.parseInt(args[0]);
+
+    return switch (args[1]) {
+      case "CLI" ->
+              new StandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter());
+      case "GUI" ->
+              new StandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), new StandardQuoridorParser());
+      default -> throw new InvalidParameterException("Invalid game mode.");
+    };
   }
 }

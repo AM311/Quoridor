@@ -1,18 +1,20 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
 import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
-import it.units.sdm.quoridor.utils.GUIConstants;
-import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
+import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class GameBoardPanelComponent implements PanelComponent {
 

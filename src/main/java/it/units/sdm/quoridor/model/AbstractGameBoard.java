@@ -7,17 +7,18 @@ import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 import it.units.sdm.quoridor.utils.directions.Direction;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
-import static it.units.sdm.quoridor.view.cli.GameBoardStringBuilder.createGameBoardString;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static it.units.sdm.quoridor.view.cli.GameBoardStringBuilder.createGameBoardString;
+
 public abstract class AbstractGameBoard implements Cloneable {
   protected AbstractTile[][] gameState;
   protected final int sideLength;
 
-  public AbstractGameBoard(AbstractTile[][] gameState) throws InvalidParameterException{
+  public AbstractGameBoard(AbstractTile[][] gameState) throws InvalidParameterException {
     this.gameState = gameState;
 
     for (AbstractTile[] abstractTiles : gameState) {
@@ -28,9 +29,11 @@ public abstract class AbstractGameBoard implements Cloneable {
 
     this.sideLength = gameState.length;
   }
+
   public int getSideLength() {
     return sideLength;
   }
+
   public AbstractTile[][] getGameState() {
     return Arrays.copyOf(gameState, sideLength);
   }
@@ -82,7 +85,7 @@ public abstract class AbstractGameBoard implements Cloneable {
 
   public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;
 
-  public String toString(){
+  public String toString() {
     return createGameBoardString(this);
   }
 }

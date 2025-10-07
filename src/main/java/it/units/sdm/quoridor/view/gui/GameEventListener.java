@@ -22,7 +22,7 @@ public interface GameEventListener {
 
   void displayWallDirectionButtons(int playerIndex);
 
-  void displayStatistics();             //todo GESTIRE --> separare
+  void displayStatistics();
 
   void onRoundFinished(boolean showControls);
 
