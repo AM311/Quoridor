@@ -1,0 +1,26 @@
+codecov:
+  bot: codecov-io
+  disable_default_path_fixes: false
+  max_report_age: false
+  notify:
+    wait_for_ci: true
+  require_ci_to_pass: true
+comment:
+  behavior: default
+  layout: diff, files, reach
+  require_changes: false
+parsers:
+  jacoco:
+    partials_as_hits: true
+coverage:
+  precision: 2
+  range: "50...100"
+  round: up
+  status:
+    project:
+      default:
+        target: 50
+    patch: false
+ignore:
+  - "**/gui/**"
+  - "**/engine/**"
