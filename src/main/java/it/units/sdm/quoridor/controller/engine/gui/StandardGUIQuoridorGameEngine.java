@@ -61,7 +61,6 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     createGame();
     statisticsCounter.setGame(game);
     gameView.displayGUI(true);
-
   }
 
   @Override

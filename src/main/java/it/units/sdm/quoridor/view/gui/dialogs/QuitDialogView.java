@@ -55,6 +55,7 @@ public class QuitDialogView implements DialogView {
     yesButton.addActionListener(e -> {
       confirmQuitDialog.dispose();
       gameEngine.eventListener.onGameFinished();
+      gameEngine.eventListener.displayQuitRestartDialog();
     });
 
     JButton noButton = new JButton("NO");
