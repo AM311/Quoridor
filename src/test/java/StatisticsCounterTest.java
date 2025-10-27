@@ -4,6 +4,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -135,10 +136,35 @@ class StatisticsCounterTest {
     assertEquals(2, statisticsCounter.getTotalWalls(pawn1));
     assertEquals(1, statisticsCounter.getTotalWalls(pawn2));
     assertEquals(3, statisticsCounter.getTotalGamesPlayed());
+
   }
 
   @Test
   void reportIsGenerated(){
     assertNotNull(statisticsCounter.generateStatisticsReport());
+  }
+
+  @Test
+  void getWinRate_isCoherent() {
+    String pawn1 = String.valueOf(game.getPawns().get(0));
+    String pawn2 = String.valueOf(game.getPawns().get(1));
+
+    statisticsCounter.updateAllTotalStats();
+    statisticsCounter.updateAllTotalStats();
+    game.changeRound();
+    statisticsCounter.updateAllTotalStats();
+    game.changeRound();
+    statisticsCounter.updateAllTotalStats();
+
+    double actualWinRatePawn1 = statisticsCounter.getWinRate(pawn1);
+    double actualWinRatePawn2 = statisticsCounter.getWinRate(pawn2);
+
+    Assertions.assertEquals(75.0, actualWinRatePawn1);
+    Assertions.assertEquals(25.0, actualWinRatePawn2);
+  }
+
+  @Test
+  void getGame_isNotNull(){
+    assertNotNull(statisticsCounter.getGame());
   }
 }
