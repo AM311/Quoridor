@@ -213,4 +213,38 @@ public class StandardQuoridorParserTest {
     String expected = "R";
     Assertions.assertEquals(expected, actual);
   }
+
+  @Test
+  public void parseTest_helpCommandIsCorrectlyParsed() throws ParserException {
+    QuoridorParser parser = new StandardQuoridorParser();
+    String command = "H";
+    parser.parse(command);
+    Assertions.assertEquals(HELP, parser.getCommandType().orElseThrow());
+  }
+
+  @Test
+  public void parseTest_restartCommandIsCorrectlyParsed() throws ParserException {
+    QuoridorParser parser = new StandardQuoridorParser();
+    String command = "R";
+    parser.parse(command);
+    Assertions.assertEquals(RESTART, parser.getCommandType().orElseThrow());
+  }
+
+  @Test
+  public void toString_isGenerated() {
+    QuoridorParser parser = new StandardQuoridorParser();
+    String string = parser.toString();
+    Assertions.assertEquals("""
+            
+            Command format:
+            1) "m r,c" => move the pawn in the cell (r,c)
+            2) "w r,c h" => place an horizontal wall near the cell (r,c)
+            3) "w r,c v" => place a vertical wall near the cell (r,c)
+            4) "h" => obtain information about the commands' format
+            5) "q" => quit the game
+            6) "r" => restart the game
+            """,
+
+            string);
+  }
 }
