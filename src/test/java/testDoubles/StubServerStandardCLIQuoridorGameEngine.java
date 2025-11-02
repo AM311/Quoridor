@@ -5,7 +5,6 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
-import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 
 import java.io.BufferedReader;
@@ -80,14 +79,6 @@ public class StubServerStandardCLIQuoridorGameEngine extends StubStandardCLIQuor
   @Override
   protected void quitGame() {
     System.exit(0);
-  }
-
-  public boolean isIOExceptionCaught() {
-    return isIOExceptionCaught;
-  }
-
-  public void setIOExceptionCaught(boolean IOExceptionCaught) {
-    isIOExceptionCaught = IOExceptionCaught;
   }
 }
 

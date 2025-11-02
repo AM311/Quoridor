@@ -249,14 +249,6 @@ public class StubStandardCLIQuoridorGameEngine {
     return isCommandExecuted;
   }
 
-  public boolean isGameRestarted() {
-    return isGameRestarted;
-  }
-
-  public void setLoopStoppedImmediately(boolean loopStoppedImmediately) {
-    isLoopStoppedImmediately = loopStoppedImmediately;
-  }
-
   public boolean isRoundCompleted() {
     return isRoundCompleted;
   }
