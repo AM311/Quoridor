@@ -44,7 +44,7 @@ public class StubQuoridorParser extends QuoridorParser {
         this.position = new Position(4, 4);
         yield MOVE;
       }
-      case "9" -> HELP;
+      case "H" -> HELP;
       default -> null;
     };
   }

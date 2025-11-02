@@ -1,6 +1,7 @@
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.model.AbstractGame;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ public class StandardCLIQuoridorGameEngineTest {
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
 
-    Assertions.assertNotNull(engine.getCurrentGame());
+   Assertions.assertNotNull(engine.getGame());
   }
 
   @Test
@@ -58,16 +59,6 @@ public class StandardCLIQuoridorGameEngineTest {
     engine.runGame();
 
     Assertions.assertTrue(engine.isWallPlaced());
-  }
-
-  @Test
-  void quitCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
-
-    engine.setLoopStoppedAfterOneRound(true);
-    engine.runGame();
-
-    Assertions.assertTrue(engine.isGameQuit());
   }
 
   @Test
@@ -122,23 +113,13 @@ public class StandardCLIQuoridorGameEngineTest {
   }
 
   @Test
-  void gameEndedAfterWin() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
-
-    engine.setPawn0HasToWin(true);
-    engine.runGame();
-
-    Assertions.assertTrue(engine.isGameEnded());
-  }
-
-  @Test
   void pawn0CorrectlyWins() throws InvalidParameterException, BuilderException {
     StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setPawn0HasToWin(true);
     engine.runGame();
 
-    Assertions.assertEquals(engine.getCurrentGame().getPlayingPawn(), engine.getCurrentGame().getPawns().getFirst());
+    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().getFirst());
   }
 
   @Test
@@ -148,12 +129,78 @@ public class StandardCLIQuoridorGameEngineTest {
     engine.setPawn1HasToWin(true);
     engine.runGame();
 
-    Assertions.assertEquals(engine.getCurrentGame().getPlayingPawn(), engine.getCurrentGame().getPawns().get(1));
+    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().get(1));
+  }
+
+  @Test
+  void gameIsQuit_onQuitCommand() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameQuit());
+  }
+
+  @Test
+  void gameIsActuallyRestarted_onRestartCommand() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.setGameHasToActuallyRestart(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameActuallyRestarted());
+  }
+
+  @Test
+  void gameIsCreatedAfterRestart() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.setGameHasToActuallyRestart(true);
+    engine.runGame();
+
+    Assertions.assertNotNull(engine.getGame());
+  }
+
+  @Test
+  void gameEndedAfterWin() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nQ");
+
+    engine.setPawn0HasToWin(true);
+    engine.setEndGameHasToBeHandled(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameEnded());
+  }
+
+  @Test
+  void gameIsQuit_onQuitCommand_afterEndGame() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nQ");
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.setEndGameHasToBeHandled(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameQuit());
+  }
+
+  @Test
+  void gameIsActuallyRestarted_onRestartCommand_afterEndGame() throws InvalidParameterException, BuilderException {
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nR");
+
+    engine.setLoopStoppedAfterOneRound(true);
+    engine.setEndGameHasToBeHandled(true);
+    engine.setGameHasToActuallyRestart(true);
+    engine.runGame();
+
+    Assertions.assertTrue(engine.isGameActuallyRestarted());
   }
 
   @Test
   void helpCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("9");
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("H");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -163,7 +210,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void commandExecutedIsFalse_afterHelpCommand() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("9");
+    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("H");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -180,25 +227,5 @@ public class StandardCLIQuoridorGameEngineTest {
     engine.runGame();
 
     Assertions.assertTrue(engine.isCommandExecuted());
-  }
-
-  @Test
-  void gameIsEnded() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
-
-    engine.setLoopStoppedImmediately(true);
-    engine.runGame();
-
-    Assertions.assertTrue(engine.isGameEnded());
-  }
-
-  @Test
-  void gameIsRestarted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
-
-    engine.setLoopStoppedAfterOneRound(true);
-    engine.runGame();
-
-    Assertions.assertTrue(engine.isGameRestarted());
   }
 }

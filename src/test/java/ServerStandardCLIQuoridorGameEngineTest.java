@@ -32,7 +32,7 @@ class ServerStandardCLIQuoridorGameEngineTest {
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
 
-    Assertions.assertNotNull(engine.getCurrentGame());
+    Assertions.assertNotNull(engine.getGame());
   }
 
 
@@ -99,9 +99,10 @@ class ServerStandardCLIQuoridorGameEngineTest {
     StubServerStandardCLIQuoridorGameEngine engine = createEngineWithInput("", "R");
 
     engine.setLoopStoppedAfterOneRound(true);
+    engine.setGameHasToActuallyRestart(true);
     engine.runGame();
 
-    Assertions.assertTrue(engine.isGameRestarted());
+    Assertions.assertTrue(engine.isGameActuallyRestarted());
   }
 
   @Test
@@ -109,9 +110,10 @@ class ServerStandardCLIQuoridorGameEngineTest {
     StubServerStandardCLIQuoridorGameEngine engine = createEngineWithInput("R", "PLAY");
 
     engine.setLoopStoppedAfterOneRound(true);
+    engine.setGameHasToActuallyRestart(true);
     engine.runGame();
 
-    Assertions.assertTrue(engine.isGameRestarted());
+    Assertions.assertTrue(engine.isGameActuallyRestarted());
   }
 
   @Test
