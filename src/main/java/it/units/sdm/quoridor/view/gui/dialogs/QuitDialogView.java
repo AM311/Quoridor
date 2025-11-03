@@ -25,14 +25,14 @@ public class QuitDialogView implements DialogView {
     confirmQuitDialog.setLocationRelativeTo(mainFrame);
     confirmQuitDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-    JPanel panel = createDialog();
+    JPanel panel = createDialogContent();
 
     confirmQuitDialog.add(panel);
     confirmQuitDialog.setVisible(true);
   }
 
 
-  private JPanel createDialog() {
+  private JPanel createDialogContent() {
     JPanel quitPanel = new JPanel(new BorderLayout());
     quitPanel.setBorder(GUIConstants.POPUP_BORDER);
     quitPanel.setBackground(GUIConstants.BACKGROUND_COLOR);

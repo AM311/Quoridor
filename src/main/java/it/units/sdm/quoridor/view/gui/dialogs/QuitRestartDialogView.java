@@ -26,7 +26,7 @@ public class QuitRestartDialogView implements DialogView {
     dialog.setLocationRelativeTo(mainFrame);
     dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-    JPanel panel = createDialog();
+    JPanel panel = createDialogContent();
 
     dialog.add(panel);
     dialog.setVisible(true);
@@ -35,20 +35,20 @@ public class QuitRestartDialogView implements DialogView {
     dialog.requestFocus();
   }
 
-  private JPanel createDialog() {
+  private JPanel createDialogContent() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
     panel.setBackground(GUIConstants.SCREEN_BACKGROUND);
 
-    JLabel messageLabel = getMessageLabel();
+    JLabel messageLabel = getQuitRestartMessageLabel();
     panel.add(messageLabel, BorderLayout.NORTH);
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
     buttonPanel.setBackground(GUIConstants.SCREEN_BACKGROUND);
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
-    JButton restartButton = getRestartButton();
-    JButton exitButton = getExitButton();
+    JButton restartButton = createRestartButton();
+    JButton exitButton = createExitButton();
 
     buttonPanel.add(restartButton);
     buttonPanel.add(exitButton);
@@ -57,7 +57,7 @@ public class QuitRestartDialogView implements DialogView {
     return panel;
   }
 
-  private JButton getExitButton() {
+  private JButton createExitButton() {
     JButton exitButton = new JButton("EXIT");
 
     exitButton.setFont(GUIConstants.BUTTON_FONT);
@@ -69,7 +69,7 @@ public class QuitRestartDialogView implements DialogView {
     return exitButton;
   }
 
-  private JButton getRestartButton() {
+  private JButton createRestartButton() {
     JButton restartButton = new JButton("RESTART");
     restartButton.setFont(GUIConstants.BUTTON_FONT);
     restartButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
@@ -85,7 +85,7 @@ public class QuitRestartDialogView implements DialogView {
     return restartButton;
   }
 
-  private JLabel getMessageLabel() {
+  private JLabel getQuitRestartMessageLabel() {
     JLabel messageLabel = new JLabel("<html>Choose how to continue<br></html>", SwingConstants.CENTER);
     messageLabel.setForeground(GUIConstants.TEXT_COLOR);
 

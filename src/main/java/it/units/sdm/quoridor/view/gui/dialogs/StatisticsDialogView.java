@@ -26,18 +26,19 @@ public class StatisticsDialogView implements DialogView {
     dialog.setLocationRelativeTo(mainFrame);
     dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-    JPanel panel = createDialog();
+    JPanel panel = createDialogContent();
 
     dialog.add(panel);
     dialog.setVisible(true);
   }
 
-  private JPanel createDialog() {
+
+  private JPanel createDialogContent() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
     panel.setBackground(GUIConstants.SCREEN_BACKGROUND);
 
-    JLabel messageLabel = getMessageLabel();
+    JLabel messageLabel = getStatisticsMessageLabel();
     panel.add(messageLabel, BorderLayout.NORTH);
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
@@ -55,7 +56,7 @@ public class StatisticsDialogView implements DialogView {
     return panel;
   }
 
-  private JLabel getMessageLabel() {
+  private JLabel getStatisticsMessageLabel() {
     JLabel messageLabel = new JLabel("<html><br>" + getLastGameStatistics() + "<br><br><br>" + getTotalStatistics() + "</html>", SwingConstants.CENTER);
     messageLabel.setForeground(GUIConstants.TEXT_COLOR);
 
@@ -83,9 +84,9 @@ public class StatisticsDialogView implements DialogView {
       String playerIdentifier = pawn.getPawnAppearance().toString();
 
       lastGameStatistics.append("<tr>")
-              .append("<th style='padding:6px;'>").append(playerColor).append("</td>")
-              .append("<th style='padding:6px;'>").append(statistics.getGameMoves(playerIdentifier)).append("</td>")
-              .append("<th style='padding:6px;'>").append(statistics.getGameWalls(playerIdentifier)).append("</td>")
+              .append(GUIConstants.STATISTICS_STYLE).append(playerColor).append("</td>")
+              .append(GUIConstants.STATISTICS_STYLE).append(statistics.getGameMoves(playerIdentifier)).append("</td>")
+              .append(GUIConstants.STATISTICS_STYLE).append(statistics.getGameWalls(playerIdentifier)).append("</td>")
               .append("</tr>");
     }
 
@@ -101,13 +102,12 @@ public class StatisticsDialogView implements DialogView {
     totalStatisticsString.append("============= TOTAL GAME STATISTICS ============= <br><br>");
 
     totalStatisticsString.append("<table style='width:100%; text-align:right;'>");
-
     totalStatisticsString.append("<tr>")
-            .append("<th style='padding:6px;'>PLAYER</th>")
-            .append("<th style='padding:6px;'>WINS</th>")
-            .append("<th style='padding:6px;'>WIN RATE</th>")
-            .append("<th style='padding:6px;'>TOTAL MOVES</th>")
-            .append("<th style='padding:6px;'>TOTAL WALLS</th>")
+            .append(GUIConstants.STATISTICS_STYLE).append("PLAYER</th>")
+            .append(GUIConstants.STATISTICS_STYLE).append("WINS</th>")
+            .append(GUIConstants.STATISTICS_STYLE).append("WIN RATE</th>")
+            .append(GUIConstants.STATISTICS_STYLE).append("TOTAL MOVES</th>")
+            .append(GUIConstants.STATISTICS_STYLE).append("TOTAL WALLS</th>")
             .append("</tr>");
 
     for (AbstractPawn pawn : gameEngine.getPawns()) {
@@ -115,11 +115,11 @@ public class StatisticsDialogView implements DialogView {
       String playerIdentifier = pawn.getPawnAppearance().toString();
 
       totalStatisticsString.append("<tr>")
-              .append("<th style='padding:6px;'>").append(playerColor).append("</td>")
-              .append("<th style='padding:6px;'>").append(statistics.getTotalWins(playerIdentifier)).append("</td>")
-              .append("<th style='padding:6px;'>").append(statistics.getWinRate(playerIdentifier)).append("</td>")
-              .append("<th style='padding:6px;'>").append(statistics.getTotalMoves(playerIdentifier)).append("</td>")
-              .append("<th style='padding:6px;'>").append(statistics.getTotalWalls(playerIdentifier)).append("</td>")
+              .append(GUIConstants.STATISTICS_STYLE).append(playerColor).append("</th>")
+              .append(GUIConstants.STATISTICS_STYLE).append(statistics.getTotalWins(playerIdentifier)).append("</th>")
+              .append(GUIConstants.STATISTICS_STYLE).append(statistics.getWinRate(playerIdentifier)).append("</th>")
+              .append(GUIConstants.STATISTICS_STYLE).append(statistics.getTotalMoves(playerIdentifier)).append("</th>")
+              .append(GUIConstants.STATISTICS_STYLE).append(statistics.getTotalWalls(playerIdentifier)).append("</th>")
               .append("</tr>");
     }
 

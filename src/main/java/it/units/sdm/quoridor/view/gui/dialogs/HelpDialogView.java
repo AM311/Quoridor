@@ -18,7 +18,7 @@ public class HelpDialogView implements DialogView {
 
   @Override
   public void displayDialog() {
-    JPanel helpPanel = createDialog();
+    JPanel helpPanel = createDialogContent();
 
     JOptionPane.showMessageDialog(
             mainFrame,
@@ -29,7 +29,7 @@ public class HelpDialogView implements DialogView {
   }
 
 
-  private JPanel createDialog() {
+  private JPanel createDialogContent() {
     JPanel helpPanel = new JPanel();
     helpPanel.setLayout(new BoxLayout(helpPanel, BoxLayout.Y_AXIS));
 

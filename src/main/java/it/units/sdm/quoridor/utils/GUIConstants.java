@@ -44,6 +44,7 @@ public final class GUIConstants {
           "<li>Horizontal walls appear on the bottom side of tiles" +
           "</ul>" +
           "You cannot place walls on the margins</div></html>";
+  public static final String STATISTICS_STYLE = "<th style='padding:6px;'>";
 
   private GUIConstants() {
     throw new AssertionError("UIConstants class should not be instantiated");

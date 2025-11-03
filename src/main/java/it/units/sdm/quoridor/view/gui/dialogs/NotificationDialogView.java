@@ -33,7 +33,7 @@ public class NotificationDialogView implements DialogView {
 
     updateNotificationDialog();
 
-    JPanel notificationPanel = createDialog();
+    JPanel notificationPanel = createDialogContent();
     notificationDialog.add(notificationPanel);
     notificationDialog.setVisible(true);
 
@@ -60,7 +60,8 @@ public class NotificationDialogView implements DialogView {
     notificationDialog.setLocation(dialogX, dialogY);
   }
 
-  private JPanel createDialog() {
+
+  private JPanel createDialogContent() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(GUIConstants.POPUP_BORDER);
     panel.setBackground(Color.WHITE);
