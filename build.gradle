@@ -31,3 +31,21 @@ jacocoTestReport {
         html.required = false
     }
 }
+
+// ----
+
+def createRunTask(String name, String mainClassName, String desc) {
+    tasks.register(name, JavaExec) {
+        group = "application"
+        description = desc
+        mainClass = "it.units.sdm.quoridor." + mainClassName
+        classpath = sourceSets.main.runtimeClasspath
+        standardInput = System.in
+        logging.captureStandardOutput(LogLevel.QUIET)
+        systemProperty 'org.gradle.console', 'plain'
+    }
+}
+
+createRunTask('runLocal', 'Starter', 'Runs a local game')
+createRunTask('runServer', 'ServerStarter', 'Runs the quoridor server')
+createRunTask('runClient', 'ClientStarter', 'Runs a quoridor client')
