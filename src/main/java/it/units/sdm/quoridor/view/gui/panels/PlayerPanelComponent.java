@@ -3,22 +3,23 @@ package it.units.sdm.quoridor.view.gui.panels;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import it.units.sdm.quoridor.utils.Color;
 
 public class PlayerPanelComponent implements PanelComponent {
   private final String playerName;
   private final int wallCount;
-  private final String pawnColor;
+  private final Color color;
   private final int playerIndex;
 
   private JPanel playerPanel;
   private JLabel nameLabel;
   private JLabel wallsLabel;
 
-  public PlayerPanelComponent(String playerName, int wallCount, String pawnColor, int playerIndex) {
+  public PlayerPanelComponent(String playerName, int wallCount, Color color, int playerIndex) {
     this.playerName = playerName;
     this.wallCount = wallCount;
-    this.pawnColor = pawnColor;
+    this.color = color;
     this.playerIndex = playerIndex;
   }
 
@@ -28,7 +29,7 @@ public class PlayerPanelComponent implements PanelComponent {
     playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
     playerPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
-    nameLabel = new JLabel(playerName + " (" + pawnColor + ")", SwingConstants.CENTER);
+    nameLabel = new JLabel(playerName + " (" + color.getName() + ")", SwingConstants.CENTER);
     nameLabel.setForeground(GUIConstants.TEXT_COLOR);
     nameLabel.setFont(GUIConstants.HEADER_FONT);
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -52,7 +53,7 @@ public class PlayerPanelComponent implements PanelComponent {
   }
 
   public void setActive(boolean active) {
-    Color textColor = active ? getColorFromString(pawnColor) : GUIConstants.TEXT_COLOR;
+    java.awt.Color textColor = active ? color.getColor() : GUIConstants.TEXT_COLOR;
     nameLabel.setForeground(textColor);
     wallsLabel.setForeground(textColor);
     playerPanel.revalidate();
@@ -73,13 +74,5 @@ public class PlayerPanelComponent implements PanelComponent {
 
   public int getPlayerIndex() {
     return playerIndex;
-  }
-
-  private Color getColorFromString(String colorStr) {
-    try {
-      return (Color) Color.class.getField(colorStr.toUpperCase()).get(null);
-    } catch (Exception e) {
-      return GUIConstants.TEXT_COLOR;
-    }
   }
 }

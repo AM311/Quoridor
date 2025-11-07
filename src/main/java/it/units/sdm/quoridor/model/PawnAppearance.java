@@ -14,6 +14,10 @@ public record PawnAppearance(Color color) {
             .collect(Collectors.toList());
   }
 
+  public String getGuiMarkerPath() {
+    return color().getGuiMarkerPath();
+  }
+
   @Override
   public String toString() {
     return " " + color.getAnsiEscapeCode() + "   " + RESET_STRING + " ";

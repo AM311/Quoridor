@@ -75,11 +75,6 @@ public class StubServerStandardCLIQuoridorGameEngine extends StubStandardCLIQuor
       case RESTART -> isGameRestarted = true;
     }
   }
-
-  @Override
-  protected void quitGame() {
-    System.exit(0);
-  }
 }
 
 

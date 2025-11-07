@@ -17,20 +17,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class GameBoardPanelComponent implements PanelComponent {
-
-  private final String[] PAWN_COLORS;
   private final JButton[][] tiles;
   private final GUIQuoridorGameEngine gameEngine;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
   private final ImageIcon[] pawnIcons;
   private JPanel gameBoardPanel;
 
-
   public GameBoardPanelComponent(GUIQuoridorGameEngine gameEngine) {
     this.gameEngine = gameEngine;
-    this.PAWN_COLORS = gameEngine.getPawns().stream()
-            .map(pawn -> pawn.getPawnAppearance().color().toString())
-            .toArray(String[]::new);
     this.pawnIcons = loadPawnIcons(gameEngine.getPawns().size());
     this.tiles = new JButton[gameEngine.getSideLength()][gameEngine.getSideLength()];
   }
@@ -48,7 +42,7 @@ public class GameBoardPanelComponent implements PanelComponent {
     ImageIcon[] icons = new ImageIcon[numPawns];
 
     for (int i = 0; i < numPawns; i++) {
-      String resourcePath = "/" + PAWN_COLORS[i] + "-pawn.png";
+      String resourcePath = gameEngine.getPawns().get(i).getPawnAppearance().getGuiMarkerPath();
       ImageIcon icon = new ImageIcon(Objects.requireNonNull(
               GameBoardPanelComponent.class.getResource(resourcePath)));
 
@@ -88,7 +82,6 @@ public class GameBoardPanelComponent implements PanelComponent {
     }
   }
 
-
   public void highlightValidMoves() {
     clearHighlights();
     List<Position> validPositions = gameEngine.getValidMovePositions();
@@ -123,7 +116,6 @@ public class GameBoardPanelComponent implements PanelComponent {
     tiles[oldPosition.row()][oldPosition.column()].setIcon(null);
     tiles[newPosition.row()][newPosition.column()].setIcon(pawnIcons[pawnIndex]);
   }
-
 
   private void updateButtonBorder(JButton button, int side) {
     BorderManager manager = borderManagers.computeIfAbsent(button, k -> new BorderManager());
