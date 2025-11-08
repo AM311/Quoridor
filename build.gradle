@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id("org.jetbrains.qodana") version "2023.3.2"
 }
 
 group = 'it.units.sdm.in20'
@@ -11,9 +10,23 @@ repositories {
     mavenCentral()
 }
 
+// --- BUILD ---
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+// --- RUN ---
+tasks.withType(JavaExec).configureEach {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("com.github.stefanbirkner:system-lambda:1.2.1")
 }
 
@@ -38,7 +51,7 @@ def createRunTask(String name, String mainClassName, String desc) {
     tasks.register(name, JavaExec) {
         group = "application"
         description = desc
-        mainClass = "it.units.sdm.quoridor." + mainClassName
+        mainClass.set("it.units.sdm.quoridor." + mainClassName)
         classpath = sourceSets.main.runtimeClasspath
         standardInput = System.in
         logging.captureStandardOutput(LogLevel.QUIET)
