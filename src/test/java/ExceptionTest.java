@@ -97,7 +97,7 @@ public class ExceptionTest {
   }
 
   @Test
-  void correctBuilderException() {
+  void correctThrowBuilderException() {
     Assertions.assertThrows(BuilderException.class, () -> {
       throw new BuilderException();
     });

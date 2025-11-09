@@ -2,7 +2,7 @@ import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class ServerStandardCLIQuoridorGameEngineTest {
   @BeforeEach
   void setUp() throws InvalidParameterException {
     parser = new StubQuoridorParser();
-    builder = new StdQuoridorBuilder(2);
+    builder = new StandardQuoridorBuilder(2);
   }
 
   @Test

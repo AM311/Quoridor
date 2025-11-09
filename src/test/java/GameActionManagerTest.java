@@ -10,7 +10,7 @@ import testDoubles.MockGameActionManager;
 import testDoubles.StubAction;
 import testDoubles.StubActionChecker;
 
-public class GameGUIActionManagerTest {
+public class GameActionManagerTest {
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
   void noChecksRequired_actionIsValid(boolean useOrInsteadOfAnd) throws InvalidActionException {

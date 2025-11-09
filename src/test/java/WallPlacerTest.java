@@ -7,7 +7,7 @@ import it.units.sdm.quoridor.model.AbstractGameBoard;
 import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.Wall;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.model.movemanagement.actions.WallPlacer;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +26,7 @@ public class WallPlacerTest {
   private final WallPlacer wallPlacer = new WallPlacer();
 
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(4));
     return builderDirector.makeGame();
   }
 

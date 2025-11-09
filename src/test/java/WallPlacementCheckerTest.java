@@ -6,7 +6,7 @@ import it.units.sdm.quoridor.model.AbstractGameBoard;
 import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.Wall;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.CheckResult;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult;
@@ -27,7 +27,7 @@ public class WallPlacementCheckerTest {
   private final WallPlacer wallPlacer = new WallPlacer();
 
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(4));
     return builderDirector.makeGame();
   }
 

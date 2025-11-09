@@ -4,7 +4,7 @@ import it.units.sdm.quoridor.model.AbstractGameBoard;
 import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +22,7 @@ import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class GameBoardTest {
   private static AbstractGame buildGame(int nOfPlayers) throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(nOfPlayers));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(nOfPlayers));
     return builderDirector.makeGame();
   }
 

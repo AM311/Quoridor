@@ -2,7 +2,7 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.model.movemanagement.actions.PawnMover;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 public class MovePawnTest {
 
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(2));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(2));
     return builderDirector.makeGame();
   }
 

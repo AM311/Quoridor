@@ -6,7 +6,7 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.CheckResult;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult;
@@ -29,7 +29,7 @@ public class PathExistenceCheckerTest {
   private final PawnMover pawnMover = new PawnMover();
 
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(4));
     return builderDirector.makeGame();
   }
 

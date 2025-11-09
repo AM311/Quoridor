@@ -3,7 +3,7 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,7 @@ import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class GameTest {
   private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(4));
     return builderDirector.makeGame();
   }
 
@@ -150,7 +150,7 @@ public class GameTest {
   @ParameterizedTest
   @CsvSource({"4, 3, 3, 3, 2, 3, 1, 3", "4, 3, 4, 2, 4, 1, 4, 0", "4, 5, 4, 6, 4, 7, 4, 8", "4, 5, 5, 5, 6, 5, 7, 5"})
   void jumpingOverTwoPlayersNotAllowed(int startingRow, int startingColumn, int secondPlayerRow, int secondPlayerColumn, int thirdPlayerRow, int thirdPlayerColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(4));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(4));
     AbstractGame game = builderDirector.makeGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);

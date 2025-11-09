@@ -1,11 +1,13 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,7 +22,7 @@ public class BuilderTest {
   @ParameterizedTest
   @ValueSource(ints = {2, 4})
   public void builderDirectorTest_stdGameIsCorrectlyBuilt_gameBoardIsCorrect(int numberOfPlayers) throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numberOfPlayers));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(numberOfPlayers));
     AbstractGame game = builderDirector.makeGame();
 
     AbstractGameBoard gameBoard = game.getGameBoard();
@@ -57,7 +59,7 @@ public class BuilderTest {
   @ParameterizedTest
   @CsvSource({"2,10", "4,5"})
   public void builderDirectorTest_stdGameIsCorrectlyBuilt_pawnsListIsCorrect(int numberOfPlayers, int numberOfWalls) throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numberOfPlayers));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(numberOfPlayers));
     AbstractGame game = builderDirector.makeGame();
 
     List<AbstractPawn> pawns = game.getPawns();
@@ -77,12 +79,25 @@ public class BuilderTest {
   @ParameterizedTest
   @ValueSource(ints = {-2, 0, 1, 3, 5, 11})
   public void builderTest_wrongParametersAreInhibited_wrongNumberOfPlayers(int numberOfPlayers) {
-    Assertions.assertThrows(InvalidParameterException.class, () -> new StdQuoridorBuilder(numberOfPlayers));
+    Assertions.assertThrows(InvalidParameterException.class, () -> new StandardQuoridorBuilder(numberOfPlayers));
   }
 
   @ParameterizedTest
   @ValueSource(ints = {2, 4})
   public void builderTest_correctParametersAreAccepted_correctNumberOfPlayers(int numberOfPlayers) {
-    Assertions.assertDoesNotThrow(() -> new StdQuoridorBuilder(numberOfPlayers));
+    Assertions.assertDoesNotThrow(() -> new StandardQuoridorBuilder(numberOfPlayers));
+  }
+
+    @Test
+  public void builderDirectorTest_setBuilderWorksCorrectly() throws InvalidParameterException, BuilderException {
+    AbstractQuoridorBuilder builder2 = new StandardQuoridorBuilder(2);
+    AbstractQuoridorBuilder builder4 = new StandardQuoridorBuilder(4);
+
+    BuilderDirector builderDirector = new BuilderDirector(builder2);
+    builderDirector.setBuilder(builder4);
+
+    AbstractGame game = builderDirector.makeGame();
+
+    Assertions.assertEquals(4, game.getPawns().size());
   }
 }

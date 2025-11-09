@@ -6,7 +6,7 @@ import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.AbstractTile;
 import it.units.sdm.quoridor.model.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class PawnTest {
   private static AbstractGame buildGame(int numberOfPlayers) throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numberOfPlayers));
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(numberOfPlayers));
     return builderDirector.makeGame();
   }
 

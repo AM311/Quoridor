@@ -19,14 +19,14 @@ import java.util.stream.IntStream;
 import static it.units.sdm.quoridor.model.AbstractTile.LinkState.EDGE;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
-public class StdQuoridorBuilder extends AbstractQuoridorBuilder {
+public class StandardQuoridorBuilder extends AbstractQuoridorBuilder {
   private AbstractGameBoard gameBoard;
   private List<AbstractPawn> pawns;
   private ActionManager actionManager;
   private ActionController<Wall> placeWallActionController;
   private ActionController<AbstractTile> movePawnActionController;
 
-  public StdQuoridorBuilder(int numberOfPlayers) throws InvalidParameterException {
+  public StandardQuoridorBuilder(int numberOfPlayers) throws InvalidParameterException {
     super(9, 10, numberOfPlayers);
 
     if (numberOfPlayers != 2 && numberOfPlayers != 4)

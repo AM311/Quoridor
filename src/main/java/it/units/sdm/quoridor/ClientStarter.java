@@ -8,7 +8,7 @@ import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.builder.StdQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 
 import java.io.*;
 import java.net.Socket;
@@ -35,9 +35,9 @@ public class ClientStarter {
 
         QuoridorGameEngine engine = switch (args[2]) {
           case "CLI" ->
-                  new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
+                  new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StandardQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
           case "GUI" ->
-                  new ServerStandardGUIQuoridorGameEngine(new StdQuoridorBuilder(numOfPlayers), new StatisticsCounter(), reader, writer, new StandardQuoridorParser());
+                  new ServerStandardGUIQuoridorGameEngine(new StandardQuoridorBuilder(numOfPlayers), new StatisticsCounter(), reader, writer, new StandardQuoridorParser());
           default -> throw new InvalidParameterException("Invalid game mode.");
         };
 

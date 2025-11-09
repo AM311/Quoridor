@@ -43,6 +43,22 @@ jacocoTestReport {
         xml.outputLocation = file(".coverage/jacocoReport.xml")
         html.required = false
     }
+
+    classDirectories.setFrom(files(
+        fileTree("${buildDir}/classes/java/main"),
+        fileTree("${buildDir}/classes/java/test") {
+            include "testDoubles/**"
+        }
+    ))
+
+    sourceDirectories.setFrom(files(
+        "src/main/java",
+        "src/test/java/testDoubles"
+    ))
+
+    executionData.setFrom(fileTree(buildDir) {
+        include "jacoco/test.exec"
+    })
 }
 
 // ----
