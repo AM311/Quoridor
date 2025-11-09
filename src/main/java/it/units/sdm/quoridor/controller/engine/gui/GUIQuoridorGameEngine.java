@@ -76,4 +76,8 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
   public enum GUIAction {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
   }
+
+  public GameView getGameView() {
+    return gameView;
+  }
 }
