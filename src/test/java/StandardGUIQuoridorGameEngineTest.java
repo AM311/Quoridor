@@ -4,7 +4,6 @@ import it.units.sdm.quoridor.controller.engine.gui.StandardGUIQuoridorGameEngine
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
-import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
@@ -25,37 +24,248 @@ public class StandardGUIQuoridorGameEngineTest {
   StatisticsCounter statisticsCounter;
   GUIQuoridorGameEngine engine;
 
-
-  @BeforeEach
-  void setUp() throws InvalidParameterException, InterruptedException {
+  private void initStandardEngine() throws Exception {
     parser = new StandardQuoridorParser();
     builder = new StandardQuoridorBuilder(2);
     statisticsCounter = new StatisticsCounter();
     engine = new StandardGUIQuoridorGameEngine(builder, statisticsCounter, parser);
 
     SwingUtilities.invokeLater(() -> {
-      try { engine.runGame(); } catch (BuilderException e) { throw new RuntimeException(e); }
+      try {
+        engine.runGame();
+      } catch (BuilderException e) {
+        throw new RuntimeException(e);
+      }
     });
-    long deadline = System.currentTimeMillis() + 3000;
-    while (engine.getGame() == null && System.currentTimeMillis() < deadline) Thread.sleep(25);
   }
 
   @AfterEach
   void closeWindows() throws InterruptedException, InvocationTargetException {
     SwingUtilities.invokeAndWait(() -> {
-      JFrame frame = engine.getGameView().getMainFrame();
-      frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-      frame.dispose();
-      for (Window w : Window.getWindows()) if (w.isDisplayable()) w.dispose();
-    });
-
-    SwingUtilities.invokeAndWait(() -> {
       for (Window w : Window.getWindows()) {
-        if (w instanceof JDialog && w.isDisplayable()) {
+        if (w instanceof JDialog) {
           w.dispose();
         }
       }
     });
+  }
+
+  @Test
+  void createdGameIsNotNull() throws Exception {
+    initStandardEngine();
+    long deadline = System.currentTimeMillis() + 500;
+    while (engine.getGame() == null && System.currentTimeMillis() < deadline) Thread.sleep(25);
+    Assertions.assertNotNull(engine.getGame());
+  }
+
+  @Test
+  void turnHasChanged_afterValidMove() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(engine::setMoveAction);
+    Position target = new Position(1, 4);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    Assertions.assertEquals(engine.getGame().getPawns().get(1), engine.getGame().getPlayingPawn());
+  }
+
+  @Test
+  void gameMovesCorrectlyUpdated_afterValidMove() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(engine::setMoveAction);
+    Position target = new Position(1, 4);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    AbstractPawn pawn0 = engine.getPawns().getFirst();
+    Assertions.assertEquals(1, statisticsCounter.getGameMoves(pawn0.toString()));
+  }
+
+  @Test
+  void gameMovesNotUpdated_afterInvalidMove() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(engine::setMoveAction);
+    Position target = new Position(4, 4);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    AbstractPawn pawn0 = engine.getPawns().getFirst();
+    Assertions.assertEquals(0, statisticsCounter.getGameMoves(pawn0.toString()));
+  }
+
+  @Test
+  void turnHasChanged_afterValidHorizontalWallIsPlaced() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
+    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_HORIZONTAL_WALL));
+
+    Position target = new Position(5, 5);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().get(1));
+  }
+
+  @Test
+  void turnHasNotChanged_afterInvalidHorizontalWallIsPlaced() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
+    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_HORIZONTAL_WALL));
+
+    Position target = new Position(8, 8);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().getFirst());
+  }
+
+  @Test
+  void gameWallsCorrectlyUpdated_afterValidHorizontalWallIsPlaced() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
+    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_HORIZONTAL_WALL));
+
+    Position target = new Position(3, 3);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    AbstractPawn pawn0 = engine.getPawns().getFirst();
+    Assertions.assertEquals(1, statisticsCounter.getGameWalls(pawn0.toString()));
+  }
+
+  @Test
+  void turnHasChanged_afterValidVerticalWallIsPlaced() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
+    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_VERTICAL_WALL));
+
+    Position target = new Position(5, 5);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().get(1));
+  }
+
+  @Test
+  void turnHasNotChanged_afterNoAction() throws Exception {
+    initStandardEngine();
+    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(DO_NOTHING));
+
+    Position target = new Position(8, 8);
+
+    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
+    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().getFirst());
+  }
+
+  @Test
+  void totalGameStatsUpdated_afterGameHasFinished() throws Exception {
+    initStandardEngine();
+    makeGameEnd(engine);
+
+    SwingUtilities.invokeAndWait(StandardGUIQuoridorGameEngineTest::closeVisibleDialog);
+
+    AbstractPawn pawn0 = engine.getPawns().getFirst();
+    AbstractPawn pawn1 = engine.getPawns().get(1);
+    Assertions.assertEquals(7, statisticsCounter.getTotalMoves(pawn0.toString()));
+    Assertions.assertEquals(7, statisticsCounter.getTotalMoves(pawn1.toString()));
+  }
+
+  @Test
+  void gameIsQuit_afterHasFinished() throws Exception {
+    parser = new StandardQuoridorParser();
+    builder = new StandardQuoridorBuilder(2);
+    statisticsCounter = new StatisticsCounter();
+
+    StubStandardGUIQuoridorGameEngine stubEngine =
+            new StubStandardGUIQuoridorGameEngine(builder, statisticsCounter, parser);
+    engine = stubEngine;
+
+    stubEngine.setShowQuitRestartDialog(true);
+
+    SwingUtilities.invokeLater(() -> {
+      try {
+        stubEngine.runGame();
+      } catch (BuilderException e) {
+        throw new RuntimeException(e);
+      }
+    });
+
+    makeGameEnd(stubEngine);
+
+    JDialog quitRestartDialog = waitForDialogWithButton();
+
+    SwingUtilities.invokeAndWait(() -> {
+      JButton exitButton = findButtonByText(quitRestartDialog.getContentPane(), "EXIT");
+      if (exitButton != null) {
+        exitButton.doClick();
+      }
+    });
+
+    Assertions.assertTrue(stubEngine.isGameEnded());
+    Assertions.assertTrue(stubEngine.isGameQuit());
+    Assertions.assertFalse(stubEngine.isGameRestarted());
+  }
+
+  @Test
+  void gameIsRestarted_afterHasFinished() throws Exception {
+    parser = new StandardQuoridorParser();
+    builder = new StandardQuoridorBuilder(2);
+    statisticsCounter = new StatisticsCounter();
+
+    StubStandardGUIQuoridorGameEngine stubEngine = new StubStandardGUIQuoridorGameEngine(builder, statisticsCounter, parser);
+    engine = stubEngine;
+
+    stubEngine.setShowQuitRestartDialog(true);
+
+    SwingUtilities.invokeLater(() -> {
+      try {
+        stubEngine.runGame();
+      } catch (BuilderException e) {
+        throw new RuntimeException(e);
+      }
+    });
+    makeGameEnd(stubEngine);
+
+    JDialog quitRestartDialog = waitForDialogWithButton();
+
+    SwingUtilities.invokeAndWait(() -> {
+      JButton exitButton = findButtonByText(quitRestartDialog.getContentPane(), "RESTART");
+      if (exitButton != null) {
+        exitButton.doClick();
+      }
+    });
+
+    Assertions.assertTrue(stubEngine.isGameEnded());
+    Assertions.assertFalse(stubEngine.isGameQuit());
+    Assertions.assertTrue(stubEngine.isGameRestarted());
+  }
+
+  @Test
+  void gameStatsAreReset_afterHasRestarted() throws Exception {parser = new StandardQuoridorParser();
+    builder = new StandardQuoridorBuilder(2);
+    statisticsCounter = new StatisticsCounter();
+
+    StubStandardGUIQuoridorGameEngine stubEngine = new StubStandardGUIQuoridorGameEngine(builder, statisticsCounter, parser);
+    engine = stubEngine;
+
+    stubEngine.setShowQuitRestartDialog(true);
+
+    SwingUtilities.invokeLater(() -> {
+      try {
+        stubEngine.runGame();
+      } catch (BuilderException e) {
+        throw new RuntimeException(e);
+      }
+    });
+    makeGameEnd(stubEngine);
+
+    JDialog quitRestartDialog = waitForDialogWithButton();
+
+    SwingUtilities.invokeAndWait(() -> {
+      JButton exitButton = findButtonByText(quitRestartDialog.getContentPane(), "RESTART");
+      if (exitButton != null) {
+        exitButton.doClick();
+      }
+    });
+
+    AbstractPawn pawn0 = engine.getPawns().getFirst();
+    AbstractPawn pawn1 = engine.getPawns().get(1);
+
+    Assertions.assertEquals(0, statisticsCounter.getGameMoves(pawn0.toString()));
+    Assertions.assertEquals(0, statisticsCounter.getGameMoves(pawn1.toString()));
   }
 
   private static JButton findButtonByText(Container root, String text) {
@@ -71,94 +281,59 @@ public class StandardGUIQuoridorGameEngineTest {
     return null;
   }
 
+  private static JDialog waitForDialogWithButton() throws Exception {
+    long deadline = System.currentTimeMillis() + (long) 500;
+    JDialog dialog = null;
 
-  @Test
-  void createdGameIsNotNull(){
-    Assertions.assertNotNull(engine.getGame());
+    while (System.currentTimeMillis() < deadline && dialog == null) {
+      final JDialog[] holder = new JDialog[1];
+      SwingUtilities.invokeAndWait(() -> holder[0] = findDialogWithExitButton());
+      dialog = holder[0];
+    }
+    return dialog;
   }
 
-  @Test
-  void turnHasChanged_afterValidMove() throws Exception {
-    SwingUtilities.invokeAndWait(engine::setMoveAction);
-    Position target = new Position(1, 4);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    Assertions.assertEquals(engine.getGame().getPawns().get(1), engine.getGame().getPlayingPawn());
+  private static JDialog findDialogWithExitButton() {
+    for (Window w : Window.getWindows()) {
+      if (w instanceof JDialog d && d.isShowing()) {
+        JButton btn = findButtonByText(d.getContentPane(), "EXIT");
+        if (btn != null) {
+          return d;
+        }
+      }
+    }
+    return null;
   }
 
-  @Test
-  void gameMovesCorrectlyUpdated_afterValidMove() throws Exception {
+  private static void makeGameEnd(GUIQuoridorGameEngine engine) {
+    List<Position> moves = List.of(
+            new Position(1, 4),
+            new Position(7, 4),
+            new Position(2, 4),
+            new Position(6, 4),
+            new Position(3, 4),
+            new Position(5, 4),
+            new Position(4, 4),
+            new Position(3, 4),
+            new Position(5, 4),
+            new Position(2, 4),
+            new Position(6, 4),
+            new Position(1, 4),
+            new Position(7, 4),
+            new Position(0, 4)
+    );
 
-    SwingUtilities.invokeAndWait(engine::setMoveAction);
-    Position target = new Position(1, 4);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    AbstractPawn pawn0 = engine.getPawns().getFirst();
-    Assertions.assertEquals(1, statisticsCounter.getGameMoves(pawn0.toString()));
+    for (Position move : moves) {
+      SwingUtilities.invokeLater(engine::setMoveAction);
+      SwingUtilities.invokeLater(() -> engine.handleTileClick(move));
+    }
   }
 
-  @Test
-  void gameMovesNotUpdated_afterInvalidMove() throws Exception {
-    SwingUtilities.invokeAndWait(engine::setMoveAction);
-    Position target = new Position(4, 4);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    AbstractPawn pawn0 = engine.getPawns().getFirst();
-    Assertions.assertEquals(0, statisticsCounter.getGameMoves(pawn0.toString()));
-  }
-
-  @Test
-  void turnHasChanged_afterValidHorizontalWallIsPlaced() throws Exception {
-    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
-    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_HORIZONTAL_WALL));
-
-    Position target = new Position(5, 5);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().get(1));
-  }
-
-  @Test
-  void turnHasNotChanged_afterInvalidHorizontalWallIsPlaced() throws Exception {
-    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
-    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_HORIZONTAL_WALL));
-
-    Position target = new Position(8, 8);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().getFirst());
-  }
-
-  @Test
-  void gameWallsCorrectlyUpdated_afterValidHorizontalWallIsPlaced() throws Exception {
-    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
-    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_HORIZONTAL_WALL));
-
-    Position target = new Position(3,3);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    AbstractPawn pawn0 = engine.getPawns().getFirst();
-    Assertions.assertEquals(1, statisticsCounter.getGameWalls(pawn0.toString()));
-  }
-
-  @Test
-  void turnHasChanged_afterValidVerticalWallIsPlaced() throws Exception {
-    SwingUtilities.invokeAndWait(() -> engine.setPlaceWallAction());
-    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(PLACE_VERTICAL_WALL));
-
-    Position target = new Position(5, 5);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().get(1));
-  }
-
-  @Test
-  void turnHasNotChanged_afterNoAction() throws Exception {
-    SwingUtilities.invokeAndWait(() -> engine.setCurrentAction(DO_NOTHING));
-
-    Position target = new Position(8, 8);
-
-    SwingUtilities.invokeAndWait(() -> engine.handleTileClick(target));
-    Assertions.assertEquals(engine.getGame().getPlayingPawn(), engine.getGame().getPawns().getFirst());
+  private static void closeVisibleDialog() {
+    for (Window w : Window.getWindows()) {
+      if (w instanceof JDialog d && d.isShowing()) {
+        d.dispose();
+      }
+    }
   }
 }

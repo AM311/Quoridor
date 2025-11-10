@@ -110,8 +110,4 @@ public class GameView implements GameEventListener {
     panelsManager.disposeActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     displayStatistics();
   }
-
-  public JFrame getMainFrame() {
-    return mainFrame;
-  }
 }
