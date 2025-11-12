@@ -6,13 +6,26 @@ import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
+import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.util.List;
 
-public class StubStandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
+import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.DO_NOTHING;
+import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.MOVE;
+import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
+import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
+
+public class StubStandardGUIQuoridorGameEngine {
+  protected AbstractQuoridorBuilder builder;
+  protected AbstractGame game;
+  protected QuoridorParser parser;
+  protected StatisticsCounter statisticsCounter;
+  protected GUIQuoridorGameEngine.GUIAction currentGUIAction = DO_NOTHING;
   private boolean gameHasToQuit;
   private boolean gameHasToRestart;
   private boolean isGameEnded;
@@ -21,20 +34,26 @@ public class StubStandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
   private boolean isInvalidParameterExceptionCaught;
   private boolean isInvalidActionExceptionCaught;
 
-  public StubStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
-    super(quoridorBuilder, statisticsCounter, parser);
+  public StubStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
+    this.builder = builder;
+    this.statisticsCounter = statisticsCounter;
+    this.parser = parser;
   }
 
-  @Override
   public void runGame() throws BuilderException {
     createGame();
     statisticsCounter.setGame(game);
   }
 
-  @Override
-  protected void sendCommand(String command){}
+  protected void createGame() throws BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(builder);
+    this.game = builderDirector.makeGame();
+  }
 
-  @Override
+  private void changeRound() {
+    game.changeRound();
+  }
+
   public void handleTileClick(Position targetPosition) {
     try {
       switch (currentGUIAction) {
@@ -50,20 +69,21 @@ public class StubStandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
           }
         }
         case PLACE_HORIZONTAL_WALL -> {
-          placeWall(targetPosition, WallOrientation.HORIZONTAL);
+          placeWall(targetPosition, HORIZONTAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
           changeRound();
         }
         case PLACE_VERTICAL_WALL -> {
-          placeWall(targetPosition, WallOrientation.VERTICAL);
+          placeWall(targetPosition, VERTICAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
           changeRound();
         }
-        case DO_NOTHING -> {}
+        case DO_NOTHING -> {
+        }
       }
 
-      setCurrentAction(GUIAction.DO_NOTHING);
-    } catch (InvalidParameterException e){
+      setCurrentAction(DO_NOTHING);
+    } catch (InvalidParameterException e) {
       isInvalidParameterExceptionCaught = true;
     } catch (InvalidActionException e) {
       isInvalidActionExceptionCaught = true;
@@ -72,19 +92,32 @@ public class StubStandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
-  @Override
+  protected void movePawn(Position targetPosition) throws InvalidParameterException, InvalidActionException {
+    game.movePlayingPawn(targetPosition);
+  }
+
+  protected void placeWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
+    game.placeWall(position, orientation);
+  }
+
+  public void setCurrentAction(GUIQuoridorGameEngine.GUIAction currentGUIAction) {
+    this.currentGUIAction = currentGUIAction;
+  }
+
   public void setMoveAction() {
-    setCurrentAction(GUIAction.MOVE);
+    setCurrentAction(MOVE);
   }
 
-  @Override
   public void setPlaceWallAction() {
-    setCurrentAction(GUIAction.DO_NOTHING);
+    setCurrentAction(DO_NOTHING);
   }
 
-  @Override
-  public List<Position> getValidMovePositions() {
-    return List.of();
+  public List<AbstractPawn> getPawns() {
+    return game.getPawns();
+  }
+
+  public AbstractGame getGame() {
+    return game;
   }
 
   private void handleEndGame() throws BuilderException {
@@ -97,12 +130,10 @@ public class StubStandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     }
   }
 
-  @Override
-  protected void quitGame(){
+  protected void quitGame() {
     isGameQuit = true;
   }
 
-  @Override
   protected void restartGame() throws BuilderException {
     statisticsCounter.resetGameStats();
 

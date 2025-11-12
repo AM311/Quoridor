@@ -1,5 +1,4 @@
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.model.AbstractPawn;
@@ -173,7 +172,7 @@ public class StandardGUIQuoridorGameEngineTest {
     Assertions.assertEquals(0, statisticsCounter.getGameMoves(pawn1.toString()));
   }
 
-  private static void makeGameEnd(GUIQuoridorGameEngine engine) {
+  private static void makeGameEnd(StubStandardGUIQuoridorGameEngine engine) {
     List<Position> moves = List.of(
             new Position(1, 4),
             new Position(7, 4),
