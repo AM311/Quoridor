@@ -1,7 +1,7 @@
 package testDoubles;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.gui.StandardGUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
@@ -10,16 +10,29 @@ import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
-public class StubStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGameEngine {
+import java.util.List;
+
+public class StubStandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
+  private boolean gameHasToQuit;
+  private boolean gameHasToRestart;
   private boolean isGameEnded;
   private boolean isGameQuit;
   private boolean isGameRestarted;
-  private boolean showQuitRestartDialog;
-
+  private boolean isInvalidParameterExceptionCaught;
+  private boolean isInvalidActionExceptionCaught;
 
   public StubStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
     super(quoridorBuilder, statisticsCounter, parser);
   }
+
+  @Override
+  public void runGame() throws BuilderException {
+    createGame();
+    statisticsCounter.setGame(game);
+  }
+
+  @Override
+  protected void sendCommand(String command){}
 
   @Override
   public void handleTileClick(Position targetPosition) {
@@ -31,28 +44,56 @@ public class StubStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGameEn
 
           if (game.isGameFinished()) {
             statisticsCounter.updateAllTotalStats();
-            isGameEnded = true;
-            if(showQuitRestartDialog) eventListener.displayQuitRestartDialog();
+            handleEndGame();
           } else {
-            eventListener.onRoundFinished(true);
+            changeRound();
           }
         }
         case PLACE_HORIZONTAL_WALL -> {
           placeWall(targetPosition, WallOrientation.HORIZONTAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-          eventListener.onRoundFinished(true);
+          changeRound();
         }
         case PLACE_VERTICAL_WALL -> {
           placeWall(targetPosition, WallOrientation.VERTICAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-          eventListener.onRoundFinished(true);
+          changeRound();
         }
-        case DO_NOTHING -> eventListener.displayNotification("Choose an action", true);
+        case DO_NOTHING -> {}
       }
 
       setCurrentAction(GUIAction.DO_NOTHING);
-    } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.displayNotification(e.getMessage(), true);
+    } catch (InvalidParameterException e){
+      isInvalidParameterExceptionCaught = true;
+    } catch (InvalidActionException e) {
+      isInvalidActionExceptionCaught = true;
+    } catch (BuilderException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void setMoveAction() {
+    setCurrentAction(GUIAction.MOVE);
+  }
+
+  @Override
+  public void setPlaceWallAction() {
+    setCurrentAction(GUIAction.DO_NOTHING);
+  }
+
+  @Override
+  public List<Position> getValidMovePositions() {
+    return List.of();
+  }
+
+  private void handleEndGame() throws BuilderException {
+    isGameEnded = true;
+    if (gameHasToRestart) {
+      restartGame();
+    }
+    if (gameHasToQuit) {
+      quitGame();
     }
   }
 
@@ -63,11 +104,11 @@ public class StubStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGameEn
 
   @Override
   protected void restartGame() throws BuilderException {
-    isGameRestarted = true;
     statisticsCounter.resetGameStats();
 
     createGame();
     statisticsCounter.setGame(game);
+    isGameRestarted = true;
   }
 
   public boolean isGameEnded() {
@@ -82,7 +123,19 @@ public class StubStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGameEn
     return isGameRestarted;
   }
 
-  public void setShowQuitRestartDialog(boolean showQuitRestartDialog) {
-    this.showQuitRestartDialog = showQuitRestartDialog;
+  public boolean isInvalidParameterExceptionCaught() {
+    return isInvalidParameterExceptionCaught;
+  }
+
+  public boolean isInvalidActionExceptionCaught() {
+    return isInvalidActionExceptionCaught;
+  }
+
+  public void setGameHasToQuit(boolean gameHasToQuit) {
+    this.gameHasToQuit = gameHasToQuit;
+  }
+
+  public void setGameHasToRestart(boolean gameHasToRestart) {
+    this.gameHasToRestart = gameHasToRestart;
   }
 }
