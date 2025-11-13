@@ -122,4 +122,17 @@ public class ExceptionTest {
     Assertions.assertEquals("Test", exception.getMessage());
   }
 
+  @Test
+  void correctThrowQuoridorServerException() {
+    Assertions.assertThrows(QuoridorServerException.class, () -> {
+      throw new QuoridorServerException();
+    });
+
+    Exception exception = Assertions.assertThrows(QuoridorServerException.class, () -> {
+      throw new QuoridorServerException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
 }
