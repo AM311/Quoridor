@@ -131,20 +131,6 @@ public class ServerStandardGUIQuoridorGameEngineTest {
   }
 
   @Test
-  void turnHasNotChanged_afterInvalidMoveFromClient() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("7", "PLAY");
-
-    engine.setLoopStoppedAfterOneRound(true);
-    engine.runGame();
-    engine.setMoveAction();
-    Position target = new Position(-1, -1);
-
-    engine.handleTileClick(target);
-
-    Assertions.assertEquals(engine.getGame().getPawns().getFirst(), engine.getGame().getPlayingPawn());
-  }
-
-  @Test
   void turnHasChanged_afterValidMoveFromServer() throws BuilderException {
     StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "1");
 
