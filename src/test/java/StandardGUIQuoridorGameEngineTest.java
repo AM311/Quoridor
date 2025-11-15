@@ -147,7 +147,7 @@ public class StandardGUIQuoridorGameEngineTest {
 
     Assertions.assertTrue(engine.isGameEnded());
     Assertions.assertTrue(engine.isGameQuit());
-    Assertions.assertFalse(engine.isGameRestarted());
+    Assertions.assertFalse(engine.isHasGameRestarted());
   }
 
   @Test
@@ -157,7 +157,7 @@ public class StandardGUIQuoridorGameEngineTest {
 
     Assertions.assertTrue(engine.isGameEnded());
     Assertions.assertFalse(engine.isGameQuit());
-    Assertions.assertTrue(engine.isGameRestarted());
+    Assertions.assertTrue(engine.isHasGameRestarted());
   }
 
   @Test

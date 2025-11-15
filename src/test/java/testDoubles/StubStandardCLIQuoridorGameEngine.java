@@ -26,7 +26,7 @@ public class StubStandardCLIQuoridorGameEngine {
   protected boolean isGameQuit;
   protected boolean isGameEnded;
   protected boolean isLoopStoppedAfterOneRound;
-  protected int loopCounter = 0;
+  protected int loopCounter;
   protected boolean isInvalidParameterExceptionCaught;
   protected boolean isParserExceptionCaught;
   protected boolean isInvalidActionExceptionCaught;
@@ -130,13 +130,13 @@ public class StubStandardCLIQuoridorGameEngine {
     Optional<Position> targetPosition = parser.getActionPosition();
     return switch (parser.getCommandType().orElseThrow()) {
       case MOVE -> {
-        isPawnMoved = true;
         game.movePlayingPawn(targetPosition.orElse(null));
+        isPawnMoved = true;
         yield true;
       }
       case WALL -> {
-        isWallPlaced = true;
         game.placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        isWallPlaced = true;
         yield true;
       }
       case HELP -> {

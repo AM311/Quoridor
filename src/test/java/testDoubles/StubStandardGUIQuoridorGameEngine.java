@@ -26,13 +26,13 @@ public class StubStandardGUIQuoridorGameEngine {
   protected QuoridorParser parser;
   protected StatisticsCounter statisticsCounter;
   protected GUIQuoridorGameEngine.GUIAction currentGUIAction = DO_NOTHING;
-  private boolean gameHasToQuit;
-  private boolean gameHasToRestart;
-  private boolean isGameEnded;
-  private boolean isGameQuit;
-  private boolean isGameRestarted;
-  private boolean isInvalidParameterExceptionCaught;
-  private boolean isInvalidActionExceptionCaught;
+  protected boolean gameHasToQuit;
+  protected boolean gameHasToRestart;
+  protected boolean isGameEnded;
+  protected boolean isGameQuit;
+  protected boolean hasGameRestarted;
+  protected boolean isInvalidParameterExceptionCaught;
+  protected boolean isInvalidActionExceptionCaught;
 
   public StubStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
     this.builder = builder;
@@ -40,7 +40,7 @@ public class StubStandardGUIQuoridorGameEngine {
     this.parser = parser;
   }
 
-  public void runGame() throws BuilderException {
+  public void runGame() throws BuilderException{
     createGame();
     statisticsCounter.setGame(game);
   }
@@ -120,7 +120,7 @@ public class StubStandardGUIQuoridorGameEngine {
     return game;
   }
 
-  private void handleEndGame() throws BuilderException {
+  protected void handleEndGame() throws BuilderException {
     isGameEnded = true;
     if (gameHasToRestart) {
       restartGame();
@@ -139,7 +139,7 @@ public class StubStandardGUIQuoridorGameEngine {
 
     createGame();
     statisticsCounter.setGame(game);
-    isGameRestarted = true;
+    hasGameRestarted = true;
   }
 
   public boolean isGameEnded() {
@@ -150,8 +150,8 @@ public class StubStandardGUIQuoridorGameEngine {
     return isGameQuit;
   }
 
-  public boolean isGameRestarted() {
-    return isGameRestarted;
+  public boolean isHasGameRestarted() {
+    return hasGameRestarted;
   }
 
   public boolean isInvalidParameterExceptionCaught() {
