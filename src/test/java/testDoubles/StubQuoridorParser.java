@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import static it.units.sdm.quoridor.controller.parser.QuoridorParser.CommandType.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
+import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
 public class StubQuoridorParser extends QuoridorParser {
   @Override
@@ -44,6 +45,11 @@ public class StubQuoridorParser extends QuoridorParser {
         this.position = new Position(4, 4);
         yield MOVE;
       }
+      case "9" -> {
+        this.position = new Position(4, 4);
+        this.wallOrientation = VERTICAL;
+        yield WALL;
+      }
       case "H" -> HELP;
       default -> null;
     };
@@ -72,6 +78,15 @@ public class StubQuoridorParser extends QuoridorParser {
   //todo FARE...
   @Override
   public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation) {
-    return "";
+    return switch (commandType) {
+      case MOVE -> "M " + position.toString();
+      case WALL -> "W " + position.toString() + " " + switch (wallOrientation) {
+        case VERTICAL -> "V";
+        case HORIZONTAL -> "H";
+      };
+      case HELP -> "H";
+      case QUIT -> "Q";
+      case RESTART -> "R";
+    };
   }
 }

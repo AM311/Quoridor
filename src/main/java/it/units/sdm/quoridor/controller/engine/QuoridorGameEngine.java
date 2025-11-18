@@ -117,4 +117,8 @@ public abstract class QuoridorGameEngine {
   public StatisticsCounter getStatisticsCounter() {
     return statisticsCounter;
   }
+
+  public AbstractGame getGame() {
+    return game;
+  }
 }

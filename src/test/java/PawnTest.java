@@ -52,7 +52,7 @@ public class PawnTest {
     AbstractGame game = buildGame(2);
     AbstractPawn pawn = game.getPlayingPawn();
 
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
       pawn.decrementNumberOfWalls();
     }
     Assertions.assertThrows(NumberOfWallsBelowZeroException.class,
@@ -75,7 +75,7 @@ public class PawnTest {
   @Test
   void defaultPawnsTest_colorNamesAndPathsAreCoherent() throws InvalidParameterException, BuilderException {
     List<String> colorNames = List.of("cyan", "magenta", "green", "red");
-    List<String> pawnPaths = List.of("/cyan-pawn.png", "/magenta-pawn.png",  "/green-pawn.png", "/red-pawn.png");
+    List<String> pawnPaths = List.of("/cyan-pawn.png", "/magenta-pawn.png", "/green-pawn.png", "/red-pawn.png");
 
     AbstractGame game = buildGame(4);
 
@@ -90,5 +90,12 @@ public class PawnTest {
       Assertions.assertEquals(pawnPaths.get(index), pawnPath);
       game.changeRound();
     }
+  }
+
+  @Test
+  void cloneTest_cloneEqualToNewPawn() throws InvalidParameterException, BuilderException, CloneNotSupportedException {
+    AbstractGame game = buildGame(2);
+    AbstractPawn pawn = game.getPlayingPawn();
+    Assertions.assertEquals(pawn, pawn.clone());
   }
 }
