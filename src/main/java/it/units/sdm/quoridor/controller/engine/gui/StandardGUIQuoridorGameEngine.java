@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
-
   public StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
     super(quoridorBuilder, statisticsCounter, parser);
   }
@@ -32,7 +31,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
             game.getPlayingPawn().getCurrentTile().getRow(),
             game.getPlayingPawn().getCurrentTile().getColumn()
     );
-    game.movePlayingPawn(targetPosition);
+    super.movePawn(targetPosition);
     eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
   }
 
@@ -42,14 +41,14 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
 
   @Override
   protected void placeWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
-    game.placeWall(position, orientation);
+    super.placeWall(position, orientation);
     eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
   }
 
   @Override
   protected void quitGame() {
     gameView.disposeMainFrame();
-    System.exit(0);
+    super.quitGame();
   }
 
   @Override

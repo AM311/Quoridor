@@ -99,6 +99,6 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
       System.err.println("Error closing socket: " + e.getMessage());
     }
 
-    System.exit(0);
+    super.quitGame();
   }
 }
