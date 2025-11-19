@@ -19,7 +19,6 @@ import static it.units.sdm.quoridor.model.AbstractTile.LinkState.*;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
-import static it.units.sdm.quoridor.utils.directions.StraightDirection.LEFT;
 
 public class WallPlacerTest {
 
@@ -276,7 +275,7 @@ public class WallPlacerTest {
   }
 
   @Test
-  void verticalWallOutOfEdges_throwsException() throws InvalidParameterException, InvalidActionException, BuilderException {
+  void verticalWallOutOfEdges_throwsException() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -288,7 +287,7 @@ public class WallPlacerTest {
   }
 
   @Test
-  void horizontalWallOutOfEdges_throwsException() throws InvalidParameterException, InvalidActionException, BuilderException {
+  void horizontalWallOutOfEdges_throwsException() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
