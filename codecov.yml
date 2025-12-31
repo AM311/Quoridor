@@ -23,4 +23,4 @@ coverage:
     patch: false
 ignore:
   - "**/gui/**"
-  - "**/engine/**"
+  - "**/engine/*"

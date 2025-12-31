@@ -15,7 +15,7 @@ jobs:
     steps:
       - checkout
       - run: gradle dependencies
-      - run: gradle test
+      - run: gradle test -PexcludeTaggedTests
       - codecov/upload
 
 workflows:

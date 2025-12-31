@@ -12,6 +12,7 @@ import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -116,6 +117,7 @@ public class EngineFactoryTest {
   }
 
   @Test
+  @Tag("noCircleCI")
   void localFactoryTest_createGUIEngine_correctContextDoesNotThrowFactoryException() throws InvalidParameterException {
     AbstractEngineFactory factory = new LocalEngineFactory();
 
@@ -145,6 +147,7 @@ public class EngineFactoryTest {
   }
 
   @Test
+  @Tag("noCircleCI")
   void serverFactoryTest_createGUIEngine_correctContextDoesNotThrowFactoryException() throws InvalidParameterException {
     AbstractEngineFactory factory = new ServerEngineFactory();
 

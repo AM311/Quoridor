@@ -30,7 +30,11 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        if (project.hasProperty("excludeTaggedTests")) {
+            excludeTags 'noCircleCI'
+        }
+    }
     finalizedBy jacocoTestReport
 }
 
