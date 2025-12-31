@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.controller.engine.gui;
+package it.units.sdm.quoridor.controller.engine;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
@@ -22,8 +22,8 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
   private final BufferedReader socketReader;
   private final BufferedWriter socketWriter;
 
-  public ServerStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, BufferedReader socketReader, BufferedWriter socketWriter, QuoridorParser parser) {
-    super(quoridorBuilder, statisticsCounter, parser);
+  protected ServerStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, QuoridorParser parser, StatisticsCounter statisticsCounter, BufferedReader socketReader, BufferedWriter socketWriter) {
+    super(quoridorBuilder, parser, statisticsCounter);
     this.socketReader = socketReader;
     this.socketWriter = socketWriter;
   }

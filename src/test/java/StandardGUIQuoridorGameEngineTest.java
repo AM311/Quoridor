@@ -8,7 +8,7 @@ import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.*;
 import testDoubles.StubStandardGUIQuoridorGameEngine;
 import java.util.List;
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.*;
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction.*;
 
 public class StandardGUIQuoridorGameEngineTest {
   QuoridorParser parser;

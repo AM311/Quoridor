@@ -14,8 +14,8 @@ import java.io.BufferedWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.PLACE_HORIZONTAL_WALL;
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.PLACE_VERTICAL_WALL;
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction.PLACE_HORIZONTAL_WALL;
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction.PLACE_VERTICAL_WALL;
 import static it.units.sdm.quoridor.controller.server.ServerProtocolCommands.PLAY;
 
 public class ServerStandardGUIQuoridorGameEngineTest {

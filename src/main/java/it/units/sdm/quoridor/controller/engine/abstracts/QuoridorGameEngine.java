@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.controller.engine;
+package it.units.sdm.quoridor.controller.engine.abstracts;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;

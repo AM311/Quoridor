@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.controller.engine.cli;
+package it.units.sdm.quoridor.controller.engine;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
@@ -18,8 +18,8 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
   private final BufferedReader socketReader;
   private final BufferedWriter socketWriter;
 
-  public ServerStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, BufferedWriter socketWriter, BufferedReader socketReader) {
-    super(reader, parser, builder, statisticsCounter);
+  protected ServerStandardCLIQuoridorGameEngine(AbstractQuoridorBuilder builder, QuoridorParser parser, StatisticsCounter statisticsCounter, BufferedReader reader, BufferedReader socketReader, BufferedWriter socketWriter) {
+    super(builder, parser, statisticsCounter, reader);
     this.socketWriter = socketWriter;
     this.socketReader = socketReader;
   }

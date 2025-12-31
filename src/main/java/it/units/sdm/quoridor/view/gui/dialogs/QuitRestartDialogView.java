@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.server.Logger;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.utils.GUIConstants;

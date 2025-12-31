@@ -1,7 +1,7 @@
 package testDoubles;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.controller.server.Logger;
 import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;

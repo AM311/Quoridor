@@ -1,7 +1,7 @@
 package testDoubles;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
@@ -15,8 +15,8 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.util.List;
 
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.DO_NOTHING;
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction.MOVE;
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction.DO_NOTHING;
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction.MOVE;
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 

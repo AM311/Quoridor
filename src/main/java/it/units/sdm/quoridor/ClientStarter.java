@@ -1,12 +1,14 @@
 package it.units.sdm.quoridor;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.QuoridorGameEngine;
-import it.units.sdm.quoridor.controller.engine.cli.ServerStandardCLIQuoridorGameEngine;
-import it.units.sdm.quoridor.controller.engine.gui.ServerStandardGUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.QuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.AbstractEngineFactory;
+import it.units.sdm.quoridor.controller.engine.EngineContext;
+import it.units.sdm.quoridor.controller.engine.ServerEngineFactory;
 import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;
 import it.units.sdm.quoridor.exceptions.BuilderException;
+import it.units.sdm.quoridor.exceptions.FactoryException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 
@@ -14,6 +16,9 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientStarter {
+    private static final AbstractEngineFactory factory = new ServerEngineFactory();
+  private static final EngineContext.ContextBuilder contextBuilder = new EngineContext.ContextBuilder();
+
   public static void main(String[] args) {
     try {
       String serverAddress = args[0];
@@ -33,11 +38,13 @@ public class ClientStarter {
 
         int numOfPlayers = Integer.parseInt(reader.readLine());
 
+        contextBuilder.setCore(new StandardQuoridorParser(), new StatisticsCounter(), new StandardQuoridorBuilder(numOfPlayers));
+
         QuoridorGameEngine engine = switch (args[2]) {
           case "CLI" ->
-                  new ServerStandardCLIQuoridorGameEngine(new BufferedReader(new InputStreamReader(System.in)), new StandardQuoridorParser(), new StandardQuoridorBuilder(numOfPlayers), new StatisticsCounter(), writer, reader);
+                  factory.createCLIEngine(contextBuilder.setReader(new BufferedReader(new InputStreamReader(System.in))).setSocket(reader, writer).build());
           case "GUI" ->
-                  new ServerStandardGUIQuoridorGameEngine(new StandardQuoridorBuilder(numOfPlayers), new StatisticsCounter(), reader, writer, new StandardQuoridorParser());
+                  factory.createGUIEngine(contextBuilder.setSocket(reader, writer).build());
           default -> throw new InvalidParameterException("Invalid game mode.");
         };
 
@@ -48,7 +55,9 @@ public class ClientStarter {
         System.err.println("Invalid parameter: " + e.getMessage());
       } catch (BuilderException e) {
         System.err.println("Exception encountered while creating the Game: " + e.getMessage());
-      }
+      } catch (FactoryException e) {
+      System.err.println("Exception encountered while creating the Engine: " + e.getMessage());
+    }
     } catch (ArrayIndexOutOfBoundsException ex) {
       System.err.println("Missing parameter: " + ex.getMessage());
     }

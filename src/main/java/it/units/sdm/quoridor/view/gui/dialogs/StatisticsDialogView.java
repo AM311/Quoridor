@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 

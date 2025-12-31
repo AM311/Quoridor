@@ -1,12 +1,12 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine.GUIAction;
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction;
 
 public class WallDirectionsPanelComponent implements PanelComponent {
   private final GUIQuoridorGameEngine gameEngine;

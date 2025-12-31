@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
-import it.units.sdm.quoridor.controller.engine.gui.GUIQuoridorGameEngine;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.utils.Position;

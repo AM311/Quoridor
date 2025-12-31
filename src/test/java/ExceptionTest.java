@@ -135,4 +135,18 @@ public class ExceptionTest {
     Assertions.assertEquals("Test", exception.getMessage());
   }
 
+  @Test
+  void correctThrowFactoryException() {
+    Assertions.assertThrows(FactoryException.class, () -> {
+      throw new FactoryException();
+    });
+
+    Exception exception = Assertions.assertThrows(FactoryException.class, () -> {
+      throw new FactoryException("Test");
+    });
+
+    Assertions.assertEquals("Test", exception.getMessage());
+  }
+
+
 }

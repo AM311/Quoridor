@@ -1,6 +1,7 @@
-package it.units.sdm.quoridor.controller.engine.gui;
+package it.units.sdm.quoridor.controller.engine;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
+import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.controller.server.Logger;
 import it.units.sdm.quoridor.exceptions.BuilderException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
-  public StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
+  protected StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, QuoridorParser parser, StatisticsCounter statisticsCounter) {
     super(quoridorBuilder, statisticsCounter, parser);
   }
 
