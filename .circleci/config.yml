@@ -14,6 +14,18 @@ jobs:
 
     steps:
       - checkout
+
+      - run:
+          name: Install Xvfb
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y xvfb
+
+      - run:
+          name: Start Xvfb
+          command: |
+            Xvfb :99 & export DISPLAY=:99
+
       - run: gradle dependencies
       - run: gradle test
       - codecov/upload
