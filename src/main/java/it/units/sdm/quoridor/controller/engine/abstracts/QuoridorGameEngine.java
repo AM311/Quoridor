@@ -13,6 +13,7 @@ import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public abstract class QuoridorGameEngine {
@@ -38,43 +39,47 @@ public abstract class QuoridorGameEngine {
     parser.parse(command);
     Optional<Position> targetPosition = parser.getActionPosition();
 
-    return switch (parser.getCommandType().orElseThrow()) {
-      case MOVE -> {
-        movePawn(targetPosition.orElse(null));
-        if (sendCommand) {
-          sendCommand(command);
+    try {
+      return switch (parser.getCommandType().orElseThrow()) {
+        case MOVE -> {
+          movePawn(targetPosition.orElse(null));
+          if (sendCommand) {
+            sendCommand(command);
+          }
+          statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
+          yield true;
         }
-        statisticsCounter.updateGameMoves(String.valueOf(game.getPlayingPawn()));
-        yield true;
-      }
-      case WALL -> {
-        placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
+        case WALL -> {
+          placeWall(targetPosition.orElse(null), parser.getWallOrientation().orElse(null));
 
-        if (sendCommand) {
-          sendCommand(command);
+          if (sendCommand) {
+            sendCommand(command);
+          }
+          statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
+          yield true;
         }
-        statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-        yield true;
-      }
-      case HELP -> {
-        printHelp();
-        yield false;
-      }
-      case QUIT -> {
-        if (sendCommand) {
-          sendCommand(command);
+        case HELP -> {
+          printHelp();
+          yield false;
         }
-        quitGame();
-        yield false;
-      }
-      case RESTART -> {
-        if (sendCommand) {
-          sendCommand(command);
+        case QUIT -> {
+          if (sendCommand) {
+            sendCommand(command);
+          }
+          quitGame();
+          yield false;
         }
-        restartGame();
-        yield false;
-      }
-    };
+        case RESTART -> {
+          if (sendCommand) {
+            sendCommand(command);
+          }
+          restartGame();
+          yield false;
+        }
+      };
+    } catch (NoSuchElementException e) {
+      throw new ParserException(e.getMessage());
+    }
   }
 
   protected void movePawn(Position targetPosition) throws InvalidActionException, InvalidParameterException {

@@ -50,7 +50,10 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
       } catch (IOException e) {
         System.err.println("Unable to communicate with server!");
         quitGame();
-      } catch (InvalidActionException | InvalidParameterException | ParserException | BuilderException e) {
+      } catch (BuilderException e) {
+        System.err.println("Exception while handling Game building: " + e.getMessage());
+        quitGame();
+      } catch (InvalidActionException | InvalidParameterException | ParserException e) {
         System.err.println(e.getMessage());
       }
     } while (!commandExecuted);

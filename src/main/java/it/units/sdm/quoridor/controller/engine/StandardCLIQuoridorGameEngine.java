@@ -97,7 +97,7 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
       System.err.println("Error reading input: " + e.getMessage());
       quitGame();
     } catch (ParserException | BuilderException e) {
-      System.err.println(e.getMessage());
+      System.err.println("Exception while handling Game End: " + e.getMessage());
       handleQuitGame();
     }
   }
