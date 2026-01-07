@@ -33,7 +33,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
             game.getPlayingPawn().getCurrentTile().getColumn()
     );
     super.movePawn(targetPosition);
-    eventListener.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
+    gameView.onPawnMoved(currentPosition, targetPosition, getPlayingPawnIndex());
   }
 
   @Override
@@ -43,7 +43,7 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
   @Override
   protected void placeWall(Position position, WallOrientation orientation) throws InvalidParameterException, InvalidActionException {
     super.placeWall(position, orientation);
-    eventListener.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
+    gameView.onWallPlaced(position, orientation, game.getPlayingPawnIndex(), game.getPlayingPawn().getNumberOfWalls());
   }
 
   @Override
@@ -73,28 +73,28 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
 
           if (game.isGameFinished()) {
             statisticsCounter.updateAllTotalStats();
-            eventListener.onGameFinished();
-            eventListener.displayQuitRestartDialog();
+            gameView.onGameFinished();
+            gameView.displayQuitRestartDialog();
           } else {
-            eventListener.onRoundFinished(true);
+            gameView.onRoundFinished(true);
           }
         }
         case PLACE_HORIZONTAL_WALL -> {
           placeWall(targetPosition, WallOrientation.HORIZONTAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-          eventListener.onRoundFinished(true);
+          gameView.onRoundFinished(true);
         }
         case PLACE_VERTICAL_WALL -> {
           placeWall(targetPosition, WallOrientation.VERTICAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
-          eventListener.onRoundFinished(true);
+          gameView.onRoundFinished(true);
         }
-        case DO_NOTHING -> eventListener.displayNotification("Choose an action", true);
+        case DO_NOTHING -> gameView.displayNotification("Choose an action", true);
       }
 
       setCurrentAction(GUIAction.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.displayNotification(e.getMessage(), true);
+      gameView.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -102,20 +102,20 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
   public void setMoveAction() {
     setCurrentAction(GUIAction.MOVE);
     try {
-      eventListener.highlightValidMoves();
+      gameView.highlightValidMoves();
     } catch (Exception e) {
-      eventListener.displayNotification(e.getMessage(), true);
+      gameView.displayNotification(e.getMessage(), true);
     }
   }
 
   @Override
   public void setPlaceWallAction() {
     setCurrentAction(GUIAction.DO_NOTHING);
-    eventListener.clearHighlights();
+    gameView.clearHighlights();
     if (game.getPlayingPawn().getNumberOfWalls() > 0) {
-      eventListener.displayWallDirectionButtons(getPlayingPawnIndex());
+      gameView.displayWallDirectionButtons(getPlayingPawnIndex());
     } else {
-      eventListener.displayNotification("No walls available!", true);
+      gameView.displayNotification("No walls available!", true);
     }
   }
 

@@ -51,27 +51,27 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
           if (game.isGameFinished()) {
             handleEndGame(false);
           } else {
-            eventListener.onRoundFinished(false);
+            gameView.onRoundFinished(false);
           }
         }
         case PLACE_HORIZONTAL_WALL -> {
           placeWall(targetPosition, WallOrientation.HORIZONTAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
           sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.HORIZONTAL);
-          eventListener.onRoundFinished(false);
+          gameView.onRoundFinished(false);
         }
         case PLACE_VERTICAL_WALL -> {
           placeWall(targetPosition, WallOrientation.VERTICAL);
           statisticsCounter.updateGameWalls(String.valueOf(game.getPlayingPawn()));
           sendCommand(QuoridorParser.CommandType.WALL, targetPosition, WallOrientation.VERTICAL);
-          eventListener.onRoundFinished(false);
+          gameView.onRoundFinished(false);
         }
-        case DO_NOTHING -> eventListener.displayNotification("Wait for your round or choose an action", true);
+        case DO_NOTHING -> gameView.displayNotification("Wait for your round or choose an action", true);
       }
 
       setCurrentAction(GUIAction.DO_NOTHING);
     } catch (InvalidParameterException | InvalidActionException e) {
-      eventListener.displayNotification(e.getMessage(), true);
+      gameView.displayNotification(e.getMessage(), true);
     }
   }
 
@@ -116,7 +116,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
             if (game.isGameFinished()) {
               handleEndGame(true);
             } else {
-              eventListener.onRoundFinished(false);
+              gameView.onRoundFinished(false);
             }
           }
         }
@@ -134,14 +134,14 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     String serverMessage = null;
 
     statisticsCounter.updateAllTotalStats();
-    eventListener.onGameFinished();
+    gameView.onGameFinished();
 
     if (waitForCommand) {
       try {
         serverMessage = socketReader.readLine();
 
         if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
-          eventListener.displayQuitRestartDialog();
+          gameView.displayQuitRestartDialog();
         } else {
           parser.parse(serverMessage);
 

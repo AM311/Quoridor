@@ -6,14 +6,12 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
-import it.units.sdm.quoridor.view.gui.GameEventListener;
 import it.units.sdm.quoridor.view.gui.GameView;
 
 import java.util.List;
 
 public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
-  protected final GameView gameView;
-  public GameEventListener eventListener;
+  public final GameView gameView;
   protected GUIAction currentGUIAction = GUIAction.DO_NOTHING;
 
 
@@ -22,9 +20,6 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
     this.gameView = new GameView(this);
   }
 
-  public void setEventListener(GameEventListener eventListener) {
-    this.eventListener = eventListener;
-  }
 
   public void setCurrentAction(GUIAction currentGUIAction) {
     this.currentGUIAction = currentGUIAction;

@@ -8,7 +8,7 @@ import it.units.sdm.quoridor.view.gui.managers.PanelsManager;
 
 import javax.swing.*;
 
-public class GameView implements GameEventListener {
+public class GameView {
   private final GUIQuoridorGameEngine gameEngine;
   private final JFrame mainFrame;
   private PanelsManager panelsManager;
@@ -16,7 +16,6 @@ public class GameView implements GameEventListener {
 
   public GameView(GUIQuoridorGameEngine gameEngine) {
     this.gameEngine = gameEngine;
-    gameEngine.setEventListener(this);
 
     this.mainFrame = new JFrame("Quoridor");
     this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,58 +40,47 @@ public class GameView implements GameEventListener {
     displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 
-  @Override
   public void onWallPlaced(Position position, WallOrientation orientation, int playerIndex, int remainingWalls) {
     panelsManager.updateWallVisualization(position, orientation);
     panelsManager.updateWallLabel(playerIndex, remainingWalls);
   }
 
-  @Override
   public void displayNotification(String message, boolean isError) {
     dialogManager.displayNotificationDialog(message, isError);
   }
 
-  @Override
   public void displayQuitRestartDialog() {
     dialogManager.displayQuitRestartDialog();
   }
 
-  @Override
   public void displayCommandsForCurrentPlayer() {
     panelsManager.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
   }
 
-  @Override
   public void highlightValidMoves() {
     panelsManager.highlightValidMoves();
   }
 
-  @Override
   public void disposeMainFrame() {
     mainFrame.dispose();
   }
 
-  @Override
   public void onPawnMoved(Position oldPosition, Position newPosition, int playerIndex) {
     panelsManager.updatePawnPosition(oldPosition, newPosition, playerIndex);
   }
 
-  @Override
   public void clearHighlights() {
     panelsManager.clearHighlights();
   }
 
-  @Override
   public void displayWallDirectionButtons(int playerIndex) {
     panelsManager.displayWallDirectionButtons(playerIndex);
   }
 
-  @Override
   public void displayStatistics() {
     dialogManager.displayStatisticsDialog();
   }
 
-  @Override
   public void onRoundFinished(boolean showControls) {
     int oldPlayerIndex = gameEngine.getPlayingPawnIndex();
     gameEngine.changeRound();
@@ -105,7 +93,6 @@ public class GameView implements GameEventListener {
     displayNotification("Player " + (gameEngine.getPlayingPawnIndex() + 1) + "'s round", false);
   }
 
-  @Override
   public void onGameFinished() {
     panelsManager.disposeActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     displayStatistics();
