@@ -1,6 +1,5 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
-import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.controller.server.Logger;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.utils.GUIConstants;
@@ -9,13 +8,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class QuitRestartDialogView implements DialogView {
-  private final GUIQuoridorGameEngine gameEngine;
+
+  @FunctionalInterface
+  public interface RestartHandler {
+    void restart() throws BuilderException;
+  }
+
   private final JFrame mainFrame;
   private final JDialog dialog;
+  private final RestartHandler onRestart;
+  private final Runnable onExit;
 
-  public QuitRestartDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
-    this.gameEngine = gameEngine;
+  public QuitRestartDialogView(JFrame mainFrame, RestartHandler onRestart, Runnable onExit) {
     this.mainFrame = mainFrame;
+    this.onRestart = onRestart;
+    this.onExit = onExit;
     this.dialog = new JDialog(mainFrame, true);
   }
 
@@ -27,7 +34,6 @@ public class QuitRestartDialogView implements DialogView {
     dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
     JPanel panel = createDialogContent();
-
     dialog.add(panel);
     dialog.setVisible(true);
 
@@ -59,12 +65,11 @@ public class QuitRestartDialogView implements DialogView {
 
   private JButton createExitButton() {
     JButton exitButton = new JButton("EXIT");
-
     exitButton.setFont(GUIConstants.BUTTON_FONT);
     exitButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     exitButton.addActionListener(e -> {
       dialog.dispose();
-      gameEngine.handleQuitGame();
+      onExit.run();
     });
     return exitButton;
   }
@@ -76,10 +81,10 @@ public class QuitRestartDialogView implements DialogView {
     restartButton.addActionListener(e -> {
       try {
         dialog.dispose();
-        gameEngine.handleRestartGame();
+        onRestart.restart();
       } catch (BuilderException ex) {
         Logger.printLog(System.err, "Exception while restarting game: " + ex.getMessage());
-        gameEngine.handleQuitGame();
+        onExit.run();
       }
     });
     return restartButton;
@@ -88,7 +93,6 @@ public class QuitRestartDialogView implements DialogView {
   private JLabel getQuitRestartMessageLabel() {
     JLabel messageLabel = new JLabel("<html>Choose how to continue<br></html>", SwingConstants.CENTER);
     messageLabel.setForeground(GUIConstants.TEXT_COLOR);
-
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
     messageLabel.setFont(GUIConstants.NORMAL_FONT);
     messageLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));

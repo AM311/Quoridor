@@ -19,15 +19,27 @@ public class DialogManager {
   }
 
   public void displayConfirmQuitDialog() {
-    new QuitDialogView(gameEngine, mainFrame).displayDialog();
+    new QuitDialogView(mainFrame, () -> {
+      gameEngine.gameView.onGameFinished();
+      gameEngine.gameView.displayQuitRestartDialog();
+    }).displayDialog();
   }
 
   public void displayStatisticsDialog() {
-    new StatisticsDialogView(gameEngine, mainFrame).displayDialog();
+    new StatisticsDialogView(
+            gameEngine.getStatisticsCounter(),
+            gameEngine.getPawns(),
+            gameEngine.getNumberOfPlayers(),
+            mainFrame
+    ).displayDialog();
   }
 
   public void displayQuitRestartDialog() {
-    new QuitRestartDialogView(gameEngine, mainFrame).displayDialog();
+    new QuitRestartDialogView(
+            mainFrame,
+            gameEngine::handleRestartGame,
+            gameEngine::handleQuitGame
+    ).displayDialog();
   }
 
   public void displayNotificationDialog(String message, boolean invalidActionFlag) {

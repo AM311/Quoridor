@@ -1,6 +1,5 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
-import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
@@ -8,15 +7,14 @@ import java.awt.*;
 
 public class QuitDialogView implements DialogView {
   private final JDialog confirmQuitDialog;
-  private final GUIQuoridorGameEngine gameEngine;
   private final JFrame mainFrame;
+  private final Runnable onConfirmQuit;
 
-  public QuitDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
-    this.gameEngine = gameEngine;
+  public QuitDialogView(JFrame mainFrame, Runnable onConfirmQuit) {
     this.mainFrame = mainFrame;
+    this.onConfirmQuit = onConfirmQuit;
     this.confirmQuitDialog = new JDialog(mainFrame, true);
   }
-
 
   @Override
   public void displayDialog() {
@@ -26,11 +24,9 @@ public class QuitDialogView implements DialogView {
     confirmQuitDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
     JPanel panel = createDialogContent();
-
     confirmQuitDialog.add(panel);
     confirmQuitDialog.setVisible(true);
   }
-
 
   private JPanel createDialogContent() {
     JPanel quitPanel = new JPanel(new BorderLayout());
@@ -54,8 +50,7 @@ public class QuitDialogView implements DialogView {
     yesButton.setPreferredSize(new Dimension(GUIConstants.BUTTON_WIDTH, GUIConstants.BUTTON_HEIGHT));
     yesButton.addActionListener(e -> {
       confirmQuitDialog.dispose();
-      gameEngine.gameView.onGameFinished();
-      gameEngine.gameView.displayQuitRestartDialog();
+      onConfirmQuit.run();
     });
 
     JButton noButton = new JButton("NO");

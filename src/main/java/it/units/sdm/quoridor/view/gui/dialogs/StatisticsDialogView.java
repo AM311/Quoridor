@@ -1,20 +1,24 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class StatisticsDialogView implements DialogView {
-  private final GUIQuoridorGameEngine gameEngine;
+  private final StatisticsCounter statistics;
+  private final List<AbstractPawn> pawns;
+  private final int numberOfPlayers;
   private final JFrame mainFrame;
   private final JDialog dialog;
 
-  public StatisticsDialogView(GUIQuoridorGameEngine gameEngine, JFrame mainFrame) {
-    this.gameEngine = gameEngine;
+  public StatisticsDialogView(StatisticsCounter statistics, List<AbstractPawn> pawns, int numberOfPlayers, JFrame mainFrame) {
+    this.statistics = statistics;
+    this.pawns = pawns;
+    this.numberOfPlayers = numberOfPlayers;
     this.mainFrame = mainFrame;
     this.dialog = new JDialog(mainFrame, true);
   }
@@ -22,16 +26,14 @@ public class StatisticsDialogView implements DialogView {
   @Override
   public void displayDialog() {
     dialog.setUndecorated(true);
-    dialog.setSize(700, gameEngine.getNumberOfPlayers() == 4 ? 750 : 600);
+    dialog.setSize(700, numberOfPlayers == 4 ? 750 : 600);
     dialog.setLocationRelativeTo(mainFrame);
     dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
     JPanel panel = createDialogContent();
-
     dialog.add(panel);
     dialog.setVisible(true);
   }
-
 
   private JPanel createDialogContent() {
     JPanel panel = new JPanel(new BorderLayout());
@@ -57,9 +59,11 @@ public class StatisticsDialogView implements DialogView {
   }
 
   private JLabel getStatisticsMessageLabel() {
-    JLabel messageLabel = new JLabel("<html><br>" + getLastGameStatistics() + "<br><br><br>" + getTotalStatistics() + "</html>", SwingConstants.CENTER);
+    JLabel messageLabel = new JLabel(
+            "<html><br>" + getLastGameStatistics() + "<br><br><br>" + getTotalStatistics() + "</html>",
+            SwingConstants.CENTER
+    );
     messageLabel.setForeground(GUIConstants.TEXT_COLOR);
-
     messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
     messageLabel.setFont(GUIConstants.NORMAL_FONT);
     messageLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
@@ -67,10 +71,8 @@ public class StatisticsDialogView implements DialogView {
   }
 
   private String getLastGameStatistics() {
-    StatisticsCounter statistics = gameEngine.getStatisticsCounter();
     StringBuilder lastGameStatistics = new StringBuilder();
     lastGameStatistics.append("============= LAST GAME STATISTICS ============= <br><br>");
-
     lastGameStatistics.append("<table style='width:100%; text-align:right;'>");
 
     lastGameStatistics.append("<tr>")
@@ -79,7 +81,7 @@ public class StatisticsDialogView implements DialogView {
             .append("<th style='padding:6px;'>WALLS PLACED</th>")
             .append("</tr>");
 
-    for (AbstractPawn pawn : gameEngine.getPawns()) {
+    for (AbstractPawn pawn : pawns) {
       String playerColor = pawn.getPawnAppearance().color().toString();
       String playerIdentifier = pawn.getPawnAppearance().toString();
 
@@ -91,17 +93,14 @@ public class StatisticsDialogView implements DialogView {
     }
 
     lastGameStatistics.append("</table>");
-
     return lastGameStatistics.toString();
   }
 
-
   private String getTotalStatistics() {
-    StatisticsCounter statistics = gameEngine.getStatisticsCounter();
     StringBuilder totalStatisticsString = new StringBuilder();
     totalStatisticsString.append("============= TOTAL GAME STATISTICS ============= <br><br>");
-
     totalStatisticsString.append("<table style='width:100%; text-align:right;'>");
+
     totalStatisticsString.append("<tr>")
             .append(GUIConstants.STATISTICS_STYLE).append("PLAYER</th>")
             .append(GUIConstants.STATISTICS_STYLE).append("WINS</th>")
@@ -110,7 +109,7 @@ public class StatisticsDialogView implements DialogView {
             .append(GUIConstants.STATISTICS_STYLE).append("TOTAL WALLS</th>")
             .append("</tr>");
 
-    for (AbstractPawn pawn : gameEngine.getPawns()) {
+    for (AbstractPawn pawn : pawns) {
       String playerColor = pawn.getPawnAppearance().color().toString();
       String playerIdentifier = pawn.getPawnAppearance().toString();
 
