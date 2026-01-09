@@ -11,6 +11,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction;
+
 public class PlayerPanelsManager {
   private final List<PlayerPanelComponent> playerPanelComponents;
   private final ActionsPanelComponent actionsPanelComponent;
@@ -18,8 +20,20 @@ public class PlayerPanelsManager {
 
   public PlayerPanelsManager(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager) {
     this.playerPanelComponents = new ArrayList<>(gameEngine.getNumberOfPlayers());
-    this.actionsPanelComponent = new ActionsPanelComponent(gameEngine, dialogManager, playerPanelComponents);
-    this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(gameEngine, actionsPanelComponent);
+
+    this.actionsPanelComponent = new ActionsPanelComponent(
+            dialogManager,
+            playerPanelComponents,
+            gameEngine::setMoveAction,
+            gameEngine::setPlaceWallAction
+    );
+
+    this.wallDirectionsPanelComponent = new WallDirectionsPanelComponent(
+            actionsPanelComponent,
+            () -> gameEngine.setCurrentAction(GUIAction.PLACE_VERTICAL_WALL),
+            () -> gameEngine.setCurrentAction(GUIAction.PLACE_HORIZONTAL_WALL),
+            () -> gameEngine.setCurrentAction(GUIAction.DO_NOTHING)
+    );
   }
 
   public void displayPlayerPanels(JPanel leftPanel, JPanel rightPanel, GUIQuoridorGameEngine gameEngine) {

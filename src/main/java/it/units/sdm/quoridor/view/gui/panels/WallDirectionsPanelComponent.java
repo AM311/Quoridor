@@ -1,20 +1,29 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
-import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction;
-
 public class WallDirectionsPanelComponent implements PanelComponent {
-  private final GUIQuoridorGameEngine gameEngine;
   private final ActionsPanelComponent actionsPanelComponent;
 
-  public WallDirectionsPanelComponent(GUIQuoridorGameEngine gameEngine, ActionsPanelComponent actionsPanelComponent) {
-    this.gameEngine = gameEngine;
+  private final Runnable onSelectVertical;
+  private final Runnable onSelectHorizontal;
+  private final Runnable onCancelAction;
+
+  private int currentPlayerIndex = -1;
+
+  public WallDirectionsPanelComponent(
+          ActionsPanelComponent actionsPanelComponent,
+          Runnable onSelectVertical,
+          Runnable onSelectHorizontal,
+          Runnable onCancelAction
+  ) {
     this.actionsPanelComponent = actionsPanelComponent;
+    this.onSelectVertical = onSelectVertical;
+    this.onSelectHorizontal = onSelectHorizontal;
+    this.onCancelAction = onCancelAction;
   }
 
   @Override
@@ -24,26 +33,29 @@ public class WallDirectionsPanelComponent implements PanelComponent {
 
     JButton verticalButton = new JButton("Vertical");
     JButton horizontalButton = new JButton("Horizontal");
+    JButton cancelButton = new JButton("X");
 
     verticalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameEngine.setCurrentAction(GUIAction.PLACE_VERTICAL_WALL);
+      onSelectVertical.run();
     });
 
     horizontalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameEngine.setCurrentAction(GUIAction.PLACE_HORIZONTAL_WALL);
+      onSelectHorizontal.run();
     });
 
-
-    JButton cancelButton = new JButton("X");
     cancelButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
       horizontalButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameEngine.setCurrentAction(GUIAction.DO_NOTHING);
-      actionsPanelComponent.displayActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
+
+      onCancelAction.run();
+
+      if (currentPlayerIndex >= 0) {
+        actionsPanelComponent.displayActionsPanelForPlayingPlayer(currentPlayerIndex);
+      }
     });
 
     directionsPanel.add(verticalButton);
@@ -54,6 +66,8 @@ public class WallDirectionsPanelComponent implements PanelComponent {
   }
 
   public void displayWallDirectionButtons(int playerIndex) {
+    this.currentPlayerIndex = playerIndex;
+
     actionsPanelComponent.removeCurrentActionPanel(playerIndex);
 
     JPanel wallDirectionPanel = new JPanel();

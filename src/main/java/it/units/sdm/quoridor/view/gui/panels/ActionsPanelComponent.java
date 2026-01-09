@@ -1,6 +1,5 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
-import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.view.gui.managers.DialogManager;
 
@@ -9,16 +8,23 @@ import java.awt.*;
 import java.util.List;
 
 public class ActionsPanelComponent implements PanelComponent {
-  private final GUIQuoridorGameEngine gameEngine;
   private JPanel currentActionPanel;
   private final DialogManager dialogManager;
   private final List<PlayerPanelComponent> playerPanelComponents;
 
+  private final Runnable onMoveSelected;
+  private final Runnable onPlaceWallSelected;
 
-  public ActionsPanelComponent(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager, List<PlayerPanelComponent> playerPanelComponents) {
-    this.gameEngine = gameEngine;
+  public ActionsPanelComponent(
+          DialogManager dialogManager,
+          List<PlayerPanelComponent> playerPanelComponents,
+          Runnable onMoveSelected,
+          Runnable onPlaceWallSelected
+  ) {
     this.dialogManager = dialogManager;
     this.playerPanelComponents = playerPanelComponents;
+    this.onMoveSelected = onMoveSelected;
+    this.onPlaceWallSelected = onPlaceWallSelected;
   }
 
   @Override
@@ -27,20 +33,26 @@ public class ActionsPanelComponent implements PanelComponent {
     actionsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
 
     JButton moveButton = new JButton("Move");
+    JButton placeWallButton = new JButton("Place Wall");
+
     moveButton.addActionListener(e -> {
-      moveButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
-      gameEngine.setMoveAction();
+      setButtonState(moveButton, placeWallButton);
+      onMoveSelected.run();
     });
 
-    JButton placeWallButton = new JButton("Place Wall");
     placeWallButton.addActionListener(e -> {
-      moveButton.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
-      gameEngine.setPlaceWallAction();
+      setButtonState(placeWallButton, moveButton);
+      onPlaceWallSelected.run();
     });
 
     actionsPanel.add(moveButton);
     actionsPanel.add(placeWallButton);
     return actionsPanel;
+  }
+
+  private void setButtonState(JButton selected, JButton unselected) {
+    selected.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
+    unselected.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
   }
 
   public void displayActionsPanelForPlayingPlayer(int playerIndex) {
