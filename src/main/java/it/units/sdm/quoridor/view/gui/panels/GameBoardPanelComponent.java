@@ -1,6 +1,5 @@
 package it.units.sdm.quoridor.view.gui.panels;
 
-import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
 import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.utils.Position;
@@ -10,41 +9,50 @@ import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class GameBoardPanelComponent implements PanelComponent {
+  private final int sideLength;
+  private final List<AbstractPawn> initialPawns;
+  private final Consumer<Position> onTileClick;
+
   private final JButton[][] tiles;
-  private final GUIQuoridorGameEngine gameEngine;
   private final Map<JButton, BorderManager> borderManagers = new HashMap<>();
   private final ImageIcon[] pawnIcons;
+
   private JPanel gameBoardPanel;
 
-  public GameBoardPanelComponent(GUIQuoridorGameEngine gameEngine) {
-    this.gameEngine = gameEngine;
-    this.pawnIcons = loadPawnIcons(gameEngine.getPawns().size());
-    this.tiles = new JButton[gameEngine.getSideLength()][gameEngine.getSideLength()];
+  public GameBoardPanelComponent(int sideLength, List<AbstractPawn> pawns, Consumer<Position> onTileClick) {
+    this.sideLength = sideLength;
+    this.initialPawns = List.copyOf(pawns);
+    this.onTileClick = onTileClick;
+
+    this.pawnIcons = loadPawnIcons(this.initialPawns);
+    this.tiles = new JButton[sideLength][sideLength];
   }
 
   @Override
   public JPanel createPanel() {
     gameBoardPanel = new JPanel();
-    gameBoardPanel.setLayout(new GridLayout(gameEngine.getSideLength(), gameEngine.getSideLength(), 0, 0));
+    gameBoardPanel.setLayout(new GridLayout(sideLength, sideLength, 0, 0));
     initializeTiles();
-
+    placeInitialPawns();
     return gameBoardPanel;
   }
 
-  private ImageIcon[] loadPawnIcons(int numPawns) {
-    ImageIcon[] icons = new ImageIcon[numPawns];
+  private ImageIcon[] loadPawnIcons(List<AbstractPawn> pawns) {
+    ImageIcon[] icons = new ImageIcon[pawns.size()];
 
-    for (int i = 0; i < numPawns; i++) {
-      String resourcePath = gameEngine.getPawns().get(i).getPawnAppearance().getGuiMarkerPath();
+    for (int i = 0; i < pawns.size(); i++) {
+      String resourcePath = pawns.get(i).getPawnAppearance().getGuiMarkerPath();
       ImageIcon icon = new ImageIcon(Objects.requireNonNull(
-              GameBoardPanelComponent.class.getResource(resourcePath)));
+              GameBoardPanelComponent.class.getResource(resourcePath),
+              "Missing resource: " + resourcePath
+      ));
 
       Image img = icon.getImage();
       Image scaledImg = img.getScaledInstance(GUIConstants.ICON_SIZE, GUIConstants.ICON_SIZE, Image.SCALE_SMOOTH);
@@ -64,27 +72,24 @@ public class GameBoardPanelComponent implements PanelComponent {
         tile.setMargin(new Insets(0, 0, 0, 0));
         tile.setBorder(new LineBorder(Color.GRAY, 1));
 
-        ActionListener tileClickListener = e -> gameEngine.handleTileClick(new Position(row, col));
-        tile.addActionListener(tileClickListener);
+        tile.addActionListener(e -> onTileClick.accept(new Position(row, col)));
 
         tiles[i][j] = tile;
         gameBoardPanel.add(tile);
       }
     }
+  }
 
-    List<AbstractPawn> pawns = gameEngine.getPawns();
-
-    for (int i = 0; i < pawns.size(); i++) {
-      int row = pawns.get(i).getCurrentTile().getRow();
-      int column = pawns.get(i).getCurrentTile().getColumn();
-
+  private void placeInitialPawns() {
+    for (int i = 0; i < initialPawns.size(); i++) {
+      int row = initialPawns.get(i).getCurrentTile().getRow();
+      int column = initialPawns.get(i).getCurrentTile().getColumn();
       tiles[row][column].setIcon(pawnIcons[i]);
     }
   }
 
-  public void highlightValidMoves() {
+  public void highlightValidMoves(List<Position> validPositions) {
     clearHighlights();
-    List<Position> validPositions = gameEngine.getValidMovePositions();
     for (Position position : validPositions) {
       tiles[position.row()][position.column()].setBackground(GUIConstants.HIGHLIGHT_COLOR);
     }
@@ -122,5 +127,4 @@ public class GameBoardPanelComponent implements PanelComponent {
     manager.setBorderSide(side, GUIConstants.WALL_COLOR, 3);
     manager.applyTo(button);
   }
-
 }

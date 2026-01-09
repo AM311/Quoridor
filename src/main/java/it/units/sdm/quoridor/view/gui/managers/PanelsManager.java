@@ -7,6 +7,7 @@ import it.units.sdm.quoridor.view.gui.panels.GameBoardPanelComponent;
 import it.units.sdm.quoridor.view.gui.panels.RootPanelComponent;
 
 import javax.swing.*;
+import java.util.List;
 
 public class PanelsManager {
 
@@ -17,7 +18,13 @@ public class PanelsManager {
 
   public PanelsManager(GUIQuoridorGameEngine gameEngine, DialogManager dialogManager) {
     this.gameEngine = gameEngine;
-    this.gameBoardPanelComponent = new GameBoardPanelComponent(gameEngine);
+
+    this.gameBoardPanelComponent = new GameBoardPanelComponent(
+            gameEngine.getSideLength(),
+            gameEngine.getPawns(),
+            gameEngine::handleTileClick
+    );
+
     this.playerPanelsManager = new PlayerPanelsManager(gameEngine, dialogManager);
     this.rootPanelComponent = new RootPanelComponent(gameEngine, gameBoardPanelComponent, playerPanelsManager);
   }
@@ -39,12 +46,12 @@ public class PanelsManager {
     playerPanelsManager.getActionsPanelComponent().displayActionsPanelForPlayingPlayer(playerIndex);
   }
 
-  public void disposeActionsPanelForPlayingPlayer(int playerIndex) {
-    playerPanelsManager.getActionsPanelComponent().removeCurrentActionPanel(playerIndex);
-  }
-
   public void displayWallDirectionButtons(int playerIndex) {
     playerPanelsManager.getWallDirectionsPanelComponent().displayWallDirectionButtons(playerIndex);
+  }
+
+  public void disposeActionsPanelForPlayingPlayer(int playerIndex) {
+    playerPanelsManager.getActionsPanelComponent().removeCurrentActionPanel(playerIndex);
   }
 
   public void updateWallLabel(int playerIndex, int remainingWalls) {
@@ -52,7 +59,8 @@ public class PanelsManager {
   }
 
   public void highlightValidMoves() {
-    gameBoardPanelComponent.highlightValidMoves();
+    List<Position> validPositions = gameEngine.getValidMovePositions();
+    gameBoardPanelComponent.highlightValidMoves(validPositions);
   }
 
   public void clearHighlights() {
