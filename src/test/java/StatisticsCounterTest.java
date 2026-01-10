@@ -26,7 +26,7 @@ class StatisticsCounterTest {
   }
 
   @Test
-  void updateGameMoves_isCoherent() {
+  void updateGameMovesIsCoherent() {
     String pawn1 = String.valueOf(game.getPawns().get(0));
     String pawn2 = String.valueOf(game.getPawns().get(1));
 
@@ -42,7 +42,7 @@ class StatisticsCounterTest {
   }
 
   @Test
-  void updateGameWalls_isCoherent() {
+  void updateGameWallsIsCoherent() {
     String pawn1 = String.valueOf(game.getPawns().get(0));
     String pawn2 = String.valueOf(game.getPawns().get(1));
 
@@ -59,7 +59,7 @@ class StatisticsCounterTest {
   }
 
   @Test
-  void resetGamesStats_isCoherent() {
+  void resetGamesStatsIsCoherent() {
     String pawn1 = String.valueOf(game.getPawns().get(0));
     String pawn2 = String.valueOf(game.getPawns().get(1));
 
@@ -76,7 +76,7 @@ class StatisticsCounterTest {
   }
 
   @Test
-  void updateAllTotalStats_isCoherent() {
+  void updateAllTotalStatsIsCoherent() {
     String pawn1 = String.valueOf(game.getPawns().get(0));
     String pawn2 = String.valueOf(game.getPawns().get(1));
 
@@ -98,7 +98,7 @@ class StatisticsCounterTest {
 
 
   @Test
-  void totalStats_afterMultipleGames_areCoherent() throws InvalidParameterException, BuilderException {
+  void totalStatsAfterMultipleGamesAreCoherent() throws InvalidParameterException, BuilderException {
     String pawn1 = String.valueOf(game.getPawns().get(0));
     String pawn2 = String.valueOf(game.getPawns().get(1));
 

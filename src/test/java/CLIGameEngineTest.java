@@ -42,7 +42,7 @@ public class CLIGameEngineTest {
   }
 
   @Test
-  void movementCommandIsExecuted() throws InvalidParameterException, BuilderException {
+  void movementCommandIsCorrectlyExecuted() throws InvalidParameterException, BuilderException {
     StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setLoopStoppedAfterOneRound(true);
@@ -52,7 +52,7 @@ public class CLIGameEngineTest {
   }
 
   @Test
-  void wallCommandIsExecuted() throws InvalidParameterException, BuilderException {
+  void wallCommandIsCorrectlyExecuted() throws InvalidParameterException, BuilderException {
     StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("2");
 
     engine.setLoopStoppedAfterOneRound(true);
@@ -62,7 +62,7 @@ public class CLIGameEngineTest {
   }
 
   @Test
-  void quitCommandIsExecuted() throws InvalidParameterException, BuilderException {
+  void quitCommandIsCorrectlyExecuted() throws InvalidParameterException, BuilderException {
     StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("3");
 
     engine.setLoopStoppedAfterOneRound(true);

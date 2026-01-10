@@ -19,7 +19,7 @@ import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 public class BuilderTest {
   @ParameterizedTest
   @ValueSource(ints = {2, 4})
-  public void builderDirectorTest_stdGameIsCorrectlyBuilt_gameBoardIsCorrect(int numberOfPlayers) throws InvalidParameterException, BuilderException {
+  public void builderDirectorTest_multipleChecks_stdGameIsCorrectlyBuilt_gameBoardIsCorrect(int numberOfPlayers) throws InvalidParameterException, BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numberOfPlayers));
     AbstractGame game = builderDirector.makeGame();
 
@@ -56,7 +56,7 @@ public class BuilderTest {
 
   @ParameterizedTest
   @CsvSource({"2,10", "4,5"})
-  public void builderDirectorTest_stdGameIsCorrectlyBuilt_pawnsListIsCorrect(int numberOfPlayers, int numberOfWalls) throws InvalidParameterException, BuilderException {
+  public void builderDirectorTest_multipleChecks_stdGameIsCorrectlyBuilt_pawnsListIsCorrect(int numberOfPlayers, int numberOfWalls) throws InvalidParameterException, BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(new StdQuoridorBuilder(numberOfPlayers));
     AbstractGame game = builderDirector.makeGame();
 
