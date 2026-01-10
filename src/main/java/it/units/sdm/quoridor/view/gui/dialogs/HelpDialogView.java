@@ -92,6 +92,9 @@ public class HelpDialogView implements DialogView {
     brBorder.setBorderSide(BorderManager.BOTTOM, GUIConstants.WALL_COLOR, 5);
     brBorder.applyTo(bottomRight);
 
+    BorderManager trBorder = new BorderManager();
+    trBorder.applyTo(topRight);
+
     BorderManager blBottomBorder = borderManagers.computeIfAbsent(bottomLeft, k -> new BorderManager());
     blBottomBorder.setBorderSide(BorderManager.BOTTOM, GUIConstants.WALL_COLOR, 5);
     blBottomBorder.applyTo(bottomLeft);
