@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends AbstractGame {
-  public final ActionManager actionManager;
-  public ActionController<Wall> placeWallActionController;
-  public ActionController<AbstractTile> movePawnActionController;
+  private final ActionManager actionManager;
+  private ActionController<Wall> placeWallActionController;
+  private ActionController<AbstractTile> movePawnActionController;
 
   public Game(AbstractGameBoard gameBoard, List<AbstractPawn> pawns, int playingPawn, ActionManager actionManager, ActionController<AbstractTile> movePawnActionController, ActionController<Wall> placeWallActionController) {
     super(gameBoard, pawns, playingPawn);
