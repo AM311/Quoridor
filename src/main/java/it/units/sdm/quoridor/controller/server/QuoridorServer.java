@@ -77,65 +77,16 @@ public class QuoridorServer {
           } else {
             executorService.submit(() -> {
               try (client) {
-                clientList.add(client);
-                Logger.printLog(System.out, "New connection: " + client);
-                Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
-                latch.await();
+                registerClient(client, latch);
                 int playerNumber = (clientList.indexOf(client) + 1);
-                client.write(ServerProtocolCommands.READY.getCommandString());
-                client.write("You are player " + playerNumber);
-                client.write(String.valueOf(numOfPlayers));
-
-                while (true) {
-                  waitForRound(playerNumber);
-                  client.write(ServerProtocolCommands.PLAY.getCommandString());
-                  Logger.printLog(System.out, "PLAY sent to: " + client);
-
-                  String request;
-                  do {
-                    request = client.reader().readLine();
-                  } while (request == null);
-
-                  request = request.toUpperCase();
-
-                  Logger.printLog(System.out, "Command: " + request + " from: " + client);
-
-                  notifyClients(request, client);
-
-                  if (request.equals("Q")) {
-                    Thread.sleep(1000);
-                    shutdown();
-                  } else if (request.equals("R")) {
-                    Thread.sleep(1000);
-                    currentPlayer.set(0);
-                  }
-
-                  nextRound();
-                }
+                prepareClient(client, playerNumber);
+                runClientGameLoop(playerNumber, client);
               } catch (InterruptedException ex) {
                 Logger.printLog(System.err, "Thread managing " + client + " has been interrupted");
               } catch (IOException ex) {
                 Logger.printLog(System.err, "Client " + client + " abruptly closed connection.");
-              } catch (RuntimeException ex) {
-                Logger.printLog(System.err, "Unhandled RuntimeException while managing " + client + ": " + ex.getMessage());
-              } catch (Error er) {
-                Logger.printLog(System.err, "ERROR while managing " + client + ": " + er.getMessage());
               } finally {
-                clientList.remove(client);
-                Logger.printLog(System.out, "Closed connection: " + client);
-
-                if (latch.getCount() == 0) {
-                  try {
-                    notifyClients("Q", client);
-                    Thread.sleep(1000);
-                  } catch (IOException ex) {
-                    Logger.printLog(System.err, "IOException when notifying clients: " + ex.getMessage());
-                  } catch (InterruptedException ex) {
-                    Logger.printLog(System.err, "Thread sleep managing " + client + " has been interrupted");
-                  }
-
-                  shutdown();
-                }
+                handleClientDisconnect(client, latch);
               }
             });
           }
@@ -150,14 +101,74 @@ public class QuoridorServer {
     }
   }
 
+  private void handleClientDisconnect(Client client, CountDownLatch latch) {
+    clientList.remove(client);
+    Logger.printLog(System.out, "Closed connection: " + client);
+
+    if (latch.getCount() == 0) {
+      try {
+        notifyClients("Q", client);
+        Thread.sleep(1000);
+      } catch (IOException ex) {
+        Logger.printLog(System.err, "IOException when notifying clients: " + ex.getMessage());
+      } catch (InterruptedException ex) {
+        Logger.printLog(System.err, "Thread sleep managing " + client + " has been interrupted");
+      }
+
+      shutdown();
+    }
+  }
+
+  private void runClientGameLoop(int playerNumber, Client client) throws InterruptedException, IOException {
+    while (true) {
+      waitForRound(playerNumber);
+      client.write(ServerProtocolCommands.PLAY.getCommandString());
+      Logger.printLog(System.out, "PLAY sent to: " + client);
+
+      String request;
+      do {
+        request = client.reader().readLine();
+      } while (request == null);
+
+      request = request.toUpperCase();
+      Logger.printLog(System.out, "Command: " + request + " from: " + client);
+      notifyClients(request, client);
+
+      if (request.equals("Q")) {
+        Thread.sleep(1000);
+        shutdown();
+      } else if (request.equals("R")) {
+        Thread.sleep(1000);
+        currentPlayer.set(0);
+      }
+
+      nextRound();
+    }
+  }
+
+  private void prepareClient(Client client, int playerNumber) throws IOException {
+    client.write(ServerProtocolCommands.READY.getCommandString());
+    client.write("You are player " + playerNumber);
+    client.write(String.valueOf(numOfPlayers));
+  }
+
+  private void registerClient(Client client, CountDownLatch latch) throws InterruptedException {
+    clientList.add(client);
+    Logger.printLog(System.out, "New connection: " + client);
+    Logger.printLog(System.out, "Waiting for " + (numOfPlayers - clientList.size()) + " more players");
+    latch.await();
+  }
+
   private void waitForRound(int playerNumber) throws InterruptedException {
     lock.lock();
 
-    while (currentPlayer.get() != playerNumber) {
-      turnChanged.await();
+    try {
+      while (currentPlayer.get() != playerNumber) {
+        turnChanged.await();
+      }
+    } finally {
+      lock.unlock();
     }
-
-    lock.unlock();
   }
 
   private void notifyClients(String message, Client sender) throws IOException {
