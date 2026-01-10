@@ -8,13 +8,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class GameBoardStringBuilderTest {
-  private static AbstractGame buildGame(int nOfPlayers) throws InvalidParameterException, BuilderException {
-    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(nOfPlayers));
+  private static AbstractGame buildGame() throws InvalidParameterException, BuilderException {
+    BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(2));
     return builderDirector.makeGame();
   }
+
   @Test
   void gameBoardStringIsNotNull() throws InvalidParameterException, BuilderException {
-    AbstractGame game = buildGame(2);
+    AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
     String gameBoardString = gameBoard.toString();
     Assertions.assertNotNull(gameBoardString);
@@ -22,10 +23,9 @@ public class GameBoardStringBuilderTest {
 
   @Test
   void gameBoardStringIsNotEmpty() throws InvalidParameterException, BuilderException {
-    AbstractGame game = buildGame(2);
+    AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
     String gameBoardString = gameBoard.toString();
     Assertions.assertFalse(gameBoardString.isEmpty());
-
   }
 }
