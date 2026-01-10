@@ -20,7 +20,7 @@ public class MovePawnTest {
 
   @ParameterizedTest
   @CsvSource({"7, 4" ,"6, 4", "5, 4"})
-  void destinationTileTest(int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
+  void destinationTilesAreConsistent(int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position destinationPosition = new Position(destinationRow, destinationColumn);
@@ -34,7 +34,7 @@ public class MovePawnTest {
 
   @ParameterizedTest
   @CsvSource({"3, 4" ,"5, 4", "1, 4"})
-  void startingTileTest(int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
+  void startingTileIsCorrectlyEmptyAfterMovement(int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position destinationPosition = new Position(destinationRow, destinationColumn);
@@ -49,7 +49,7 @@ public class MovePawnTest {
 
   @ParameterizedTest
   @CsvSource({"7, 4" ,"6, 4", "5, 4"})
-  void occupiedByTest(int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
+  void destinationTileIsCorrectlyOccupiedBy(int destinationRow, int destinationColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position destinationPosition = new Position(destinationRow, destinationColumn);

@@ -260,7 +260,7 @@ public class WallPlacementCheckerTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
+  void horizontalWallIsCorrectlyNotAllowed_ifZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 

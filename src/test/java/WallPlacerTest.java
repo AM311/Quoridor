@@ -315,7 +315,7 @@ public class WallPlacerTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void ifZeroWallsRemaining_throwsException(int row, int column) throws InvalidParameterException, BuilderException {
+  void throwsExceptionIfZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
