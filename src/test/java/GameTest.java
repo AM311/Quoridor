@@ -30,7 +30,7 @@ public class GameTest {
   }
 
   @Test
-  void changeRoundOnceTest() throws InvalidParameterException, BuilderException {
+  void correctlyChangeRoundOnceTest() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     game.changeRound();
@@ -38,7 +38,7 @@ public class GameTest {
   }
 
   @Test
-  void changeRoundTwiceTest() throws InvalidParameterException, BuilderException {
+  void correctlyChangeRoundTwiceTest() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     game.changeRound();
@@ -47,7 +47,7 @@ public class GameTest {
   }
 
   @Test
-  void changeRoundFourTimesTest() throws InvalidParameterException, BuilderException {
+  void correctlyChangeRoundFourTimesTest() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     game.changeRound();
@@ -61,7 +61,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"1, 4, 1, 6", "1, 4, 1, 2", "1, 4, 2, 5", "1, 4, 3, 7", "1, 4, 2, 3", "1, 7, 0, 6"})
-  void checkNotAdjacencyMoveNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+  void notAdjacentMoveIsCorrectlyNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);
@@ -75,7 +75,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6", "4, 3, 3, 3", "7, 3, 7, 4"})
-  void goingToAnOccupiedTileNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn) throws InvalidParameterException, BuilderException {
+  void goingToAnOccupiedTileIsCorrectlyNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);
@@ -93,7 +93,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"3, 6, 2, 6, 0, 6", "3, 5, 4, 5, 6, 5", "8, 8, 8, 7, 8, 5", "1, 3, 1, 2, 1, 0"})
-  void jumpingTwoTilesOverNeighborPawnNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+  void jumpingTwoTilesOverNeighborPawnIsCorrectlyNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);
@@ -112,7 +112,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"5, 3, 4, 3, 4, 3, HORIZONTAL", "3, 6 , 2, 6, 2, 6, HORIZONTAL", "1, 7, 1, 6, 1, 7, VERTICAL", "3, 3, 3, 2, 4, 3, VERTICAL"})
-  void jumpingOverWallNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn, int wallRow, int wallColumn, WallOrientation wallOrientation) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void jumpingOverWallIsCorrectlyNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn, int wallRow, int wallColumn, WallOrientation wallOrientation) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);
@@ -128,7 +128,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"7, 1, 6, 1, 5, 1, 5, 1, HORIZONTAL", "2, 1, 1, 1, 0, 1, 0, 0, HORIZONTAL", "6, 6, 6, 5, 6, 4, 6, 5, VERTICAL", "8, 6, 8, 7, 8, 8, 8, 8, VERTICAL"})
-  void jumpingOverPawnHavingWallBehindNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn, WallOrientation wallOrientation) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void jumpingOverPawnHavingWallBehindIsCorrectlyNotAllowed(int startingRow, int startingColumn, int opponentRow, int opponentColumn, int targetRow, int targetColumn, int wallRow, int wallColumn, WallOrientation wallOrientation) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);
@@ -149,7 +149,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"4, 3, 3, 3, 2, 3, 1, 3", "4, 3, 4, 2, 4, 1, 4, 0", "4, 5, 4, 6, 4, 7, 4, 8", "4, 5, 5, 5, 6, 5, 7, 5"})
-  void jumpingOverTwoPlayersNotAllowed(int startingRow, int startingColumn, int secondPlayerRow, int secondPlayerColumn, int thirdPlayerRow, int thirdPlayerColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+  void jumpingOverTwoPawnsIsCorrectlyNotAllowed(int startingRow, int startingColumn, int secondPlayerRow, int secondPlayerColumn, int thirdPlayerRow, int thirdPlayerColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(new StandardQuoridorBuilder(4));
     AbstractGame game = builderDirector.makeGame();
 
@@ -174,7 +174,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"0, 8, 0, 9", "0, 0, -1, 0", "8, 0, 9, 0", "8, 8, 8, 9"})
-  void invalidTargetCoordinatesNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
+  void invalidTargetCoordinatesIsCorrectlyNotAllowed(int startingRow, int startingColumn, int targetRow, int targetColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(startingRow, startingColumn);
@@ -188,7 +188,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"8,4", "8,5", "8,1", "8,5"})
-  void hasReachedDestinationTest_destinationHasBeenReached(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException {
+  void hasReachedDestinationTest_destinationHasBeenCorrectlyReached(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     AbstractPawn pawn = game.getPlayingPawn();
 
@@ -200,7 +200,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"2,4", "3,5", "1,1", "7,5"})
-  void hasReachedDestinationTest_destinationHasNotBeenReached(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException {
+  void hasReachedDestinationTest_destinationHasCorrectlyNotBeenReached(int testTileRow, int testTileColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     AbstractPawn pawn = game.getPlayingPawn();
 
@@ -211,14 +211,14 @@ public class GameTest {
   }
 
   @Test
-  void cloneTest_cloneEqualToNewGame() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
+  void cloneTest_cloneEqualsToNewGame() throws CloneNotSupportedException, InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     Assertions.assertEquals(game, game.clone());
   }
 
   @ParameterizedTest
   @CsvSource({"8, 0", "4, 8", "8, 8", "0, 8"})
-  void horizontalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException {
+  void horizontalWallIsIsCorrectlyNotAllowed(int row, int column) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(row, column);
@@ -228,7 +228,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "3, 3", "6, 4"})
-  void horizontalWallCrossingVerticalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void horizontalWallCrossingVerticalWallIsCorrectlyNotAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPositionHorizontal = new Position(row, column);
@@ -241,7 +241,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"6, 1", "2, 5", "3, 2"})
-  void horizontalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void horizontalWallsOverlappingIsCorrectlyNotAllowedFirstCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(row, column);
@@ -265,7 +265,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"0, 0", "4, 0", "0, 7"})
-  void verticalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException {
+  void verticalWallIsCorrectlyNotAllowed(int row, int column) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(row, column);
@@ -275,7 +275,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"3, 4", "5, 7", "1, 7"})
-  void verticalWallCrossingHorizontalWallIsNotAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void verticalWallCrossingHorizontalWallIsCorrectlyNotAllowed(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPositionHorizontal = new Position(row - 1, column - 1);
@@ -288,7 +288,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"1, 4", "7, 2", "4, 6"})
-  void verticalWallsOverlappingIsNotAllowedFirstCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void verticalWallsOverlappingIsCorrectlyNotAllowedFirstCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPosition = new Position(row, column);
@@ -299,7 +299,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"5, 4", "5, 1", "6, 3"})
-  void verticalWallsOverlappingIsNotAllowedSecondCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void verticalWallsOverlappingIsCorrectlyNotAllowedSecondCase(int row, int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
 
     Position startingPositionFirst = new Position(row - 1, column);
@@ -312,7 +312,7 @@ public class GameTest {
 
   @ParameterizedTest
   @CsvSource({"3, 3", "6, 2", "0, 0"})
-  void horizontalWallNotIsAllowed_IfZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
+  void horizontalWallNotIsCorrectlyAllowedIfZeroWallsRemaining(int row, int column) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
     for (int i = 0; i < 5; i++)

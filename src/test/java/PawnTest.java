@@ -23,7 +23,7 @@ public class PawnTest {
 
   @ParameterizedTest
   @CsvSource({"3,4", "7,5", "6,2", "5,5"})
-  void moveTest(int destinationTileRow, int destinationTileColumn) throws InvalidParameterException, BuilderException {
+  void afterMoveDestinationTileIsConsistentWithCurrentTile(int destinationTileRow, int destinationTileColumn) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame(2);
     AbstractPawn pawn = game.getPlayingPawn();
 
@@ -35,7 +35,7 @@ public class PawnTest {
 
   @ParameterizedTest
   @CsvSource({"10", "5", "3"})
-  void decrementNumberOfWallsTest_decrementWorks(int numberOfWalls) throws InvalidParameterException, BuilderException {
+  void decrementNumberOfWallsTest_decrementIsCorrectlyExecuted(int numberOfWalls) throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame(2);
     AbstractPawn pawn = game.getPlayingPawn();
 
@@ -48,7 +48,7 @@ public class PawnTest {
   }
 
   @Test
-  void decrementNumberOfWallsTest_exceptionIsThrown() throws InvalidParameterException, BuilderException {
+  void decrementNumberOfWallsTest_exceptionIsCorrectlyThrown() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame(2);
     AbstractPawn pawn = game.getPlayingPawn();
 

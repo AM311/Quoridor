@@ -91,7 +91,7 @@ public class PathExistenceCheckerTest {
 
   @ParameterizedTest
   @ValueSource(ints = {3, 4, 6})
-  void checkBlockedPawns1And2_FromCorrectSide(int row) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void checkBlockedPawns1And2_fromCorrectSide(int row) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -120,7 +120,7 @@ public class PathExistenceCheckerTest {
 
 
   @Test
-  void checkBlockedPath_OnlyForPawn1() throws InvalidParameterException, BuilderException, InvalidActionException {
+  void checkBlockedPath_onlyForPawn1() throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -136,7 +136,7 @@ public class PathExistenceCheckerTest {
 
 
   @Test
-  void checkBlockedPath_OnlyForPawn2() throws InvalidParameterException, BuilderException, InvalidActionException {
+  void checkBlockedPath_onlyForPawn2() throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -150,7 +150,7 @@ public class PathExistenceCheckerTest {
   }
 
   @Test
-  void checkBlockedPath_OnlyForPawn1_whenOnSameSide() throws InvalidParameterException, BuilderException, InvalidActionException {
+  void checkBlockedPath_onlyForPawn1_whenOnSameSide() throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -173,7 +173,7 @@ public class PathExistenceCheckerTest {
 
 
   @Test
-  void checkBlockedPath_OnlyForPawn2_whenOnSameSide() throws InvalidParameterException, BuilderException, InvalidActionException {
+  void checkBlockedPath_onlyForPawn2_whenOnSameSide() throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -213,7 +213,7 @@ public class PathExistenceCheckerTest {
 
   @ParameterizedTest
   @ValueSource(ints = {3, 4, 6})
-  void checkBlockedPawns3And4_FromCorrectSide(int column) throws InvalidParameterException, BuilderException, InvalidActionException {
+  void checkBlockedPawns3And4_fromCorrectSide(int column) throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
@@ -281,7 +281,7 @@ public class PathExistenceCheckerTest {
   }
 
   @Test
-  void pawn3And4ClosedInABox_3onCorrectSide_4onWrongSide() throws InvalidParameterException, BuilderException, InvalidActionException {
+  void pawn3And4ClosedInABox_3OnCorrectSide_4OnWrongSide() throws InvalidParameterException, BuilderException, InvalidActionException {
     AbstractGame game = buildGame();
     AbstractGameBoard gameBoard = game.getGameBoard();
 
