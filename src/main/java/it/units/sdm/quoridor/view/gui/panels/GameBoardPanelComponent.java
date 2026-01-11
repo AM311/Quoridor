@@ -4,6 +4,7 @@ import it.units.sdm.quoridor.model.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
+import it.units.sdm.quoridor.view.gui.components.FlatColorButton;
 import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 
 import javax.swing.*;
@@ -68,7 +69,8 @@ public class GameBoardPanelComponent implements PanelComponent {
         final int row = i;
         final int col = j;
 
-        JButton tile = new JButton();
+        JButton tile = new FlatColorButton();
+        tile.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
         tile.setMargin(new Insets(0, 0, 0, 0));
         tile.setBorder(new LineBorder(Color.GRAY, 1));
 

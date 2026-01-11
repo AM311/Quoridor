@@ -1,6 +1,7 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
 import it.units.sdm.quoridor.utils.GUIConstants;
+import it.units.sdm.quoridor.view.gui.components.FlatColorButton;
 import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 
 import javax.swing.*;
@@ -65,10 +66,19 @@ public class HelpDialogView implements DialogView {
     visualPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     visualPanel.setMaximumSize(new Dimension(200, 200));
 
-    JButton topLeft = new JButton();
-    JButton topRight = new JButton();
-    JButton bottomLeft = new JButton();
-    JButton bottomRight = new JButton();
+    // JButton topLeft = new JButton();
+    // JButton topRight = new JButton();
+    // JButton bottomLeft = new JButton();
+    // JButton bottomRight = new JButton();
+
+    JButton topLeft = new FlatColorButton();
+    JButton topRight = new FlatColorButton();
+    JButton bottomLeft = new FlatColorButton();
+    JButton bottomRight = new FlatColorButton();
+
+    topLeft.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
+    topRight.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
+    bottomRight.setBackground(GUIConstants.BUTTON_BACKGROUND_COLOR);
 
     bottomLeft.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
 
