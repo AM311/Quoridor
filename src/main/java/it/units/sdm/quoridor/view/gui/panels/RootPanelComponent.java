@@ -27,27 +27,37 @@ public class RootPanelComponent implements PanelComponent {
     gbc.gridy = 0;
     gbc.weighty = 1;
 
+    int sideWidth = 260;
+
     JPanel leftPanel = new JPanel(new GridBagLayout());
     leftPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
+    leftPanel.setPreferredSize(new Dimension(sideWidth, 0));
+    leftPanel.setMinimumSize(new Dimension(sideWidth, 0));
+
     gbc.gridx = 0;
-    gbc.weightx = 3.5;
+    gbc.weightx = 0;
     rootPanel.add(leftPanel, gbc);
 
     JPanel centerWrapper = new JPanel(new GameBoardPanelLayoutManager());
     centerWrapper.setBackground(GUIConstants.BACKGROUND_COLOR);
+
     gbc.gridx = 1;
-    gbc.weightx = 9;
+    gbc.weightx = 1;
     rootPanel.add(centerWrapper, gbc);
     centerWrapper.add(gameBoardPanelComponent.createPanel());
 
     JPanel rightPanel = new JPanel(new GridBagLayout());
     rightPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
+    rightPanel.setPreferredSize(new Dimension(sideWidth, 0));
+    rightPanel.setMinimumSize(new Dimension(sideWidth, 0));
+
     gbc.gridx = 2;
-    gbc.weightx = 3.5;
+    gbc.weightx = 0;
     rootPanel.add(rightPanel, gbc);
 
     playerPanelsManager.displayPlayerPanels(leftPanel, rightPanel, gameEngine);
 
     return rootPanel;
   }
+
 }

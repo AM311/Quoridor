@@ -28,12 +28,11 @@ public class WallDirectionsPanelComponent implements PanelComponent {
 
   @Override
   public JPanel createPanel() {
-    JPanel directionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    directionsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
-
     JButton verticalButton = new JButton("Vertical");
     JButton horizontalButton = new JButton("Horizontal");
-    JButton cancelButton = new JButton("X");
+    JButton cancelButton = new JButton("Back");
+
+    cancelButton.setMargin(new Insets(2, 10, 2, 10));
 
     verticalButton.addActionListener(e -> {
       verticalButton.setBackground(GUIConstants.BUTTON_SELECTED_COLOR);
@@ -58,12 +57,26 @@ public class WallDirectionsPanelComponent implements PanelComponent {
       }
     });
 
-    directionsPanel.add(verticalButton);
-    directionsPanel.add(horizontalButton);
-    directionsPanel.add(cancelButton);
+    JPanel directionRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    directionRow.setOpaque(false);
+    directionRow.add(verticalButton);
+    directionRow.add(horizontalButton);
+
+    JPanel cancelRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    cancelRow.setOpaque(false);
+    cancelRow.add(cancelButton);
+
+    JPanel directionsPanel = new JPanel();
+    directionsPanel.setLayout(new BoxLayout(directionsPanel, BoxLayout.Y_AXIS));
+    directionsPanel.setBackground(GUIConstants.BACKGROUND_COLOR);
+
+    directionsPanel.add(directionRow);
+    directionsPanel.add(Box.createVerticalStrut(GUIConstants.VERTICAL_SPACING));
+    directionsPanel.add(cancelRow);
 
     return directionsPanel;
   }
+
 
   public void displayWallDirectionButtons(int playerIndex) {
     this.currentPlayerIndex = playerIndex;
