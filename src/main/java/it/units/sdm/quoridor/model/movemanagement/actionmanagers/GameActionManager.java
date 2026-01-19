@@ -5,7 +5,7 @@ import it.units.sdm.quoridor.exceptions.QuoridorRuntimeException;
 import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.CheckResult;
-import it.units.sdm.quoridor.utils.ActionController;
+import it.units.sdm.quoridor.model.movemanagement.ActionController;
 
 import static it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult.*;
 

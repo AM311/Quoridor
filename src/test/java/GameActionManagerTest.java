@@ -1,7 +1,7 @@
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.GameActionManager;
-import it.units.sdm.quoridor.utils.ActionController;
+import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

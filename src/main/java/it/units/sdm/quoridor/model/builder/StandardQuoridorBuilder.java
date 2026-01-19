@@ -13,7 +13,7 @@ import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.GameActionManager;
 import it.units.sdm.quoridor.model.movemanagement.actions.PawnMover;
 import it.units.sdm.quoridor.model.movemanagement.actions.WallPlacer;
-import it.units.sdm.quoridor.utils.ActionController;
+import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 

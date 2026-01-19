@@ -2,7 +2,7 @@ package it.units.sdm.quoridor.model.movemanagement.actionmanagers;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.model.abstracts.AbstractGame;
-import it.units.sdm.quoridor.utils.ActionController;
+import it.units.sdm.quoridor.model.movemanagement.ActionController;
 
 @FunctionalInterface
 public interface ActionManager {

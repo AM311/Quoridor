@@ -9,7 +9,7 @@ import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
-import it.units.sdm.quoridor.utils.ActionController;
+import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
