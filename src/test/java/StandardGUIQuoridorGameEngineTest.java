@@ -1,7 +1,7 @@
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
-import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;

@@ -2,7 +2,7 @@ package testDoubles;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.QuoridorRuntimeException;
-import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.CheckResult;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;

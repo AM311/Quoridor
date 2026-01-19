@@ -1,6 +1,6 @@
 package it.units.sdm.quoridor.model.movemanagement.actioncheckers;
 
-import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 
 @FunctionalInterface
 public interface ActionChecker<T> {

@@ -1,6 +1,7 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.model.movemanagement.actions.PawnMover;

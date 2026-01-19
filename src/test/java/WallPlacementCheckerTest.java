@@ -1,9 +1,9 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractGameBoard;
-import it.units.sdm.quoridor.model.AbstractTile;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.Wall;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;

@@ -3,7 +3,7 @@ package it.units.sdm.quoridor.controller.engine.abstracts;
 import it.units.sdm.quoridor.controller.StatisticsCounter;
 import it.units.sdm.quoridor.controller.parser.QuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
-import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.view.gui.GameView;

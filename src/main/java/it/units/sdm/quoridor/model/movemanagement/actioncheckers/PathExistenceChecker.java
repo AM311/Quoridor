@@ -4,13 +4,17 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.directions.StraightDirection;
 
 import java.util.*;
 
-import static it.units.sdm.quoridor.model.AbstractTile.LinkState.FREE;
-import static it.units.sdm.quoridor.model.AbstractTile.LinkState.WALL;
+import static it.units.sdm.quoridor.model.abstracts.AbstractTile.LinkState.FREE;
+import static it.units.sdm.quoridor.model.abstracts.AbstractTile.LinkState.WALL;
 
 public class PathExistenceChecker implements ActionChecker<Wall> {
   @Override

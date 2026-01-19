@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.model.builder;
 
 import it.units.sdm.quoridor.exceptions.BuilderException;
-import it.units.sdm.quoridor.model.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 
 public class BuilderDirector {
   private AbstractQuoridorBuilder builder;

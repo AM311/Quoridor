@@ -2,12 +2,12 @@ package it.units.sdm.quoridor.model.movemanagement.actions;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractGameBoard;
-import it.units.sdm.quoridor.model.AbstractTile;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.Wall;
 
-import static it.units.sdm.quoridor.model.AbstractTile.LinkState.WALL;
+import static it.units.sdm.quoridor.model.abstracts.AbstractTile.LinkState.WALL;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class WallPlacer implements Action<Wall> {

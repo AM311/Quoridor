@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.view.gui.managers;
 
 import it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine;
-import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.view.gui.panels.ActionsPanelComponent;
 import it.units.sdm.quoridor.view.gui.panels.PlayerPanelComponent;
 import it.units.sdm.quoridor.view.gui.panels.WallDirectionsPanelComponent;

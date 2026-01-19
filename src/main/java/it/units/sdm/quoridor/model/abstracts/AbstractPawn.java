@@ -1,4 +1,6 @@
-package it.units.sdm.quoridor.model;
+package it.units.sdm.quoridor.model.abstracts;
+
+import it.units.sdm.quoridor.model.PawnAppearance;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.view.gui.dialogs;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 
 import javax.swing.*;

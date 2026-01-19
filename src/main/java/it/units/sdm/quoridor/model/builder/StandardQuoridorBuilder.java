@@ -2,6 +2,10 @@ package it.units.sdm.quoridor.model.builder;
 
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PathExistenceChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.WallPlacementChecker;
@@ -16,7 +20,7 @@ import it.units.sdm.quoridor.utils.TargetTiles;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static it.units.sdm.quoridor.model.AbstractTile.LinkState.EDGE;
+import static it.units.sdm.quoridor.model.abstracts.AbstractTile.LinkState.EDGE;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class StandardQuoridorBuilder extends AbstractQuoridorBuilder {

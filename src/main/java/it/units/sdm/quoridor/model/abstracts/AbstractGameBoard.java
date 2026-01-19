@@ -1,8 +1,9 @@
-package it.units.sdm.quoridor.model;
+package it.units.sdm.quoridor.model.abstracts;
 
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
+import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 import it.units.sdm.quoridor.utils.directions.Direction;

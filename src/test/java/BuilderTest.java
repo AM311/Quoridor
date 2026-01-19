@@ -1,6 +1,10 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.*;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
@@ -15,7 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.units.sdm.quoridor.model.AbstractTile.LinkState.EDGE;
+import static it.units.sdm.quoridor.model.abstracts.AbstractTile.LinkState.EDGE;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class BuilderTest {

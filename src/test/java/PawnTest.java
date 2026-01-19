@@ -1,9 +1,9 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractPawn;
-import it.units.sdm.quoridor.model.AbstractTile;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;

@@ -1,7 +1,8 @@
-package it.units.sdm.quoridor.model;
+package it.units.sdm.quoridor.model.abstracts;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.model.Pawn;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 

@@ -4,6 +4,8 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.NotAdjacentTilesException;
 import it.units.sdm.quoridor.exceptions.OutOfGameBoardException;
 import it.units.sdm.quoridor.exceptions.QuoridorRuntimeException;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 import it.units.sdm.quoridor.utils.directions.Direction;

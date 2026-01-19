@@ -2,6 +2,10 @@ package it.units.sdm.quoridor.model;
 
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.ActionChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;

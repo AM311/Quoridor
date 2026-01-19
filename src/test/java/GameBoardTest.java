@@ -1,7 +1,7 @@
 import it.units.sdm.quoridor.exceptions.*;
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractGameBoard;
-import it.units.sdm.quoridor.model.AbstractTile;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
+import it.units.sdm.quoridor.model.abstracts.AbstractTile;
 import it.units.sdm.quoridor.model.GameBoard;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;

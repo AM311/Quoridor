@@ -1,7 +1,7 @@
 package it.units.sdm.quoridor.controller;
 
-import it.units.sdm.quoridor.model.AbstractGame;
-import it.units.sdm.quoridor.model.AbstractPawn;
+import it.units.sdm.quoridor.model.abstracts.AbstractGame;
+import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
