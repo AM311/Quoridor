@@ -78,10 +78,6 @@ public abstract class AbstractGameBoard implements Cloneable {
 
   public abstract boolean isThereAWall(AbstractTile tile1, AbstractTile tile2) throws NotAdjacentTilesException;
 
-  public abstract boolean isThereAWall(AbstractTile tile, StraightDirection direction);
-
-  public abstract boolean isThereAWallOrEdge(AbstractTile tile, StraightDirection direction);
-
   public abstract AbstractTile getLandingTile(AbstractTile tile, StraightDirection direction) throws OutOfGameBoardException;
 
   public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;

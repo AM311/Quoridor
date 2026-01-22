@@ -94,16 +94,6 @@ public class GameBoard extends AbstractGameBoard {
   }
 
   @Override
-  public boolean isThereAWall(AbstractTile tile, StraightDirection direction) {
-    return tile.isThereAWall(direction);
-  }
-
-  @Override
-  public boolean isThereAWallOrEdge(AbstractTile tile, StraightDirection direction) {
-    return tile.isThereAWallOrEdge(direction);
-  }
-
-  @Override
   public AbstractTile getLandingTile(AbstractTile tile, StraightDirection direction) throws OutOfGameBoardException {
     try {
       return switch (direction) {

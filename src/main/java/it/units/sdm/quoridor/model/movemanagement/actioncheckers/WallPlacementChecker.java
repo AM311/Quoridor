@@ -32,11 +32,11 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
       AbstractTile tileBelowStartingTile = gameBoard.getAdjacentTile(wallStartingTile, DOWN);
       AbstractTile tileRightToStartingTile = gameBoard.getAdjacentTile(wallStartingTile, RIGHT);
 
-      if (gameBoard.isThereAWallOrEdge(tileBelowStartingTile, RIGHT) && gameBoard.isThereAWallOrEdge(wallStartingTile, RIGHT)) {
+      if (tileBelowStartingTile.isThereAWallOrEdge(RIGHT) && wallStartingTile.isThereAWallOrEdge(RIGHT)) {
         return false;
       }
 
-      return !gameBoard.isThereAWall(wallStartingTile, DOWN) && !gameBoard.isThereAWall(tileRightToStartingTile, DOWN);
+      return !wallStartingTile.isThereAWall(DOWN) && !tileRightToStartingTile.isThereAWall(DOWN);
     } catch (OutOfGameBoardException e) {
       return false;
     }
@@ -47,15 +47,15 @@ public class WallPlacementChecker implements ActionChecker<Wall> {
       AbstractTile tileAboveStartingTile = gameBoard.getAdjacentTile(wallStartingTile, UP);
       AbstractTile tileLeftToStartingTile = gameBoard.getAdjacentTile(wallStartingTile, LEFT);
 
-      if (gameBoard.isThereAWall(wallStartingTile, UP) && gameBoard.isThereAWall(tileLeftToStartingTile, UP)) {
+      if (wallStartingTile.isThereAWall(UP) && tileLeftToStartingTile.isThereAWall(UP)) {
         return false;
       }
 
-      if (gameBoard.isThereAWallOrEdge(tileLeftToStartingTile, UP) && gameBoard.isThereAWallOrEdge(wallStartingTile, UP)) {
+      if (tileLeftToStartingTile.isThereAWallOrEdge(UP) && wallStartingTile.isThereAWallOrEdge(UP)) {
         return false;
       }
 
-      return !gameBoard.isThereAWallOrEdge(wallStartingTile, LEFT) && !gameBoard.isThereAWallOrEdge(tileAboveStartingTile, LEFT);
+      return !wallStartingTile.isThereAWallOrEdge(LEFT) && !tileAboveStartingTile.isThereAWallOrEdge(LEFT);
     } catch (OutOfGameBoardException e) {
       return false;
     }

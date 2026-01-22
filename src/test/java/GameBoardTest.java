@@ -207,7 +207,7 @@ public class GameBoardTest {
     Position testTilePosition = new Position(testTileRow, testTileColumn);
     AbstractTile testTile = gameBoard.getTile(testTilePosition);
     game.placeWall(testTilePosition, HORIZONTAL);
-    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(testTile, DOWN));
+    Assertions.assertTrue(testTile.isThereAWallOrEdge(DOWN));
   }
 
   @ParameterizedTest
@@ -219,7 +219,7 @@ public class GameBoardTest {
     Position testTilePosition = new Position(testTileRow, testTileColumn);
     AbstractTile testTile = gameBoard.getTile(testTilePosition);
     game.placeWall(testTilePosition, VERTICAL);
-    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(testTile, LEFT));
+    Assertions.assertTrue(testTile.isThereAWallOrEdge(LEFT));
   }
 
   @ParameterizedTest
@@ -232,7 +232,7 @@ public class GameBoardTest {
     AbstractTile testTile = gameBoard.getTile(testTilePosition);
     game.placeWall(testTilePosition, VERTICAL);
     game.placeWall(testTilePosition, HORIZONTAL);
-    Assertions.assertFalse(gameBoard.isThereAWallOrEdge(testTile, RIGHT));
+    Assertions.assertFalse(testTile.isThereAWallOrEdge(RIGHT));
   }
 
   @ParameterizedTest
@@ -242,7 +242,7 @@ public class GameBoardTest {
     AbstractGameBoard gameBoard = game.getGameBoard();
 
     AbstractTile testTile = gameBoard.getTile(new Position(testTileRow, testTileColumn));
-    Assertions.assertTrue(gameBoard.isThereAWallOrEdge(testTile, direction));
+    Assertions.assertTrue(testTile.isThereAWallOrEdge(direction));
   }
 
   @ParameterizedTest
