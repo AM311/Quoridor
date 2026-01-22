@@ -10,10 +10,8 @@ import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class GameBoardPanelComponent implements PanelComponent {
@@ -90,7 +88,7 @@ public class GameBoardPanelComponent implements PanelComponent {
     }
   }
 
-  public void highlightValidMoves(List<Position> validPositions) {
+  public void highlightValidMoves(Collection<Position> validPositions) {
     clearHighlights();
     for (Position position : validPositions) {
       tiles[position.row()][position.column()].setBackground(GUIConstants.HIGHLIGHT_COLOR);

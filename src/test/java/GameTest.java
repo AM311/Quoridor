@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
@@ -329,7 +329,7 @@ public class GameTest {
   void getValidMovePositions() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
 
-    List<Position> receivedPositions = game.getValidMovePositions();
+    Collection<Position> receivedPositions = game.getValidMovePositions();
 
     Set<Position> expectedPositions = Set.of(
             new Position(1, 4),

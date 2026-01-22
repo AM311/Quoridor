@@ -8,18 +8,17 @@ import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.view.gui.GameView;
 
+import java.util.Collection;
 import java.util.List;
 
 public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
   public final GameView gameView;
   protected GUIAction currentGUIAction = GUIAction.DO_NOTHING;
 
-
   public GUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
     super(builder, statisticsCounter, parser);
     this.gameView = new GameView(this);
   }
-
 
   public void setCurrentAction(GUIAction currentGUIAction) {
     this.currentGUIAction = currentGUIAction;
@@ -65,7 +64,9 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
     return game.getPawns();
   }
 
-  abstract public List<Position> getValidMovePositions();
+  public Collection<Position> getValidMovePositions(){
+    return game.getValidMovePositions();
+  }
 
   public enum GUIAction {
     MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING

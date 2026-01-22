@@ -13,8 +13,7 @@ import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Game extends AbstractGame {
   private final ActionManager actionManager;
@@ -49,8 +48,8 @@ public class Game extends AbstractGame {
     return getPlayingPawn().hasReachedDestination();
   }
 
-  public List<Position> getValidMovePositions() {
-    List<Position> validPositions = new ArrayList<>();
+  public Collection<Position> getValidMovePositions() {
+    Set<Position> validPositions = new HashSet<>();
     ActionChecker<AbstractTile> checker = movePawnActionController.actionCheckers()[0];
     int gameBoardSize = getGameBoard().getSideLength();
 

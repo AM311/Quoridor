@@ -48,7 +48,7 @@ public abstract class AbstractGame implements Cloneable {
 
   public abstract boolean isGameFinished();
 
-  public abstract List<Position> getValidMovePositions();
+  public abstract Collection<Position> getValidMovePositions();
 
   @Override
   public int hashCode() {

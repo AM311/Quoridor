@@ -7,7 +7,7 @@ import it.units.sdm.quoridor.view.gui.panels.GameBoardPanelComponent;
 import it.units.sdm.quoridor.view.gui.panels.RootPanelComponent;
 
 import javax.swing.*;
-import java.util.List;
+import java.util.Collection;
 
 public class PanelsManager {
 
@@ -59,7 +59,7 @@ public class PanelsManager {
   }
 
   public void highlightValidMoves() {
-    List<Position> validPositions = gameEngine.getValidMovePositions();
+    Collection<Position> validPositions = gameEngine.getValidMovePositions();
     gameBoardPanelComponent.highlightValidMoves(validPositions);
   }
 

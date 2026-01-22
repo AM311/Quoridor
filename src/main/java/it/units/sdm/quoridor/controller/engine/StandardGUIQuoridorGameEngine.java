@@ -12,7 +12,6 @@ import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
 
 import java.io.IOException;
-import java.util.List;
 
 public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
   protected StandardGUIQuoridorGameEngine(AbstractQuoridorBuilder quoridorBuilder, QuoridorParser parser, StatisticsCounter statisticsCounter) {
@@ -117,10 +116,5 @@ public class StandardGUIQuoridorGameEngine extends GUIQuoridorGameEngine {
     } else {
       gameView.displayNotification("No walls available!", true);
     }
-  }
-
-  @Override
-  public List<Position> getValidMovePositions() {
-    return game.getValidMovePositions();
   }
 }
