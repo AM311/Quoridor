@@ -12,8 +12,6 @@ public class GameBoardStringBuilder {
   public static String createGameBoardString(AbstractGameBoard gameBoard) {
     StringBuilder gameBoardString = new StringBuilder();
 
-    gameBoardString.append("\n".repeat(20));
-
     appendTopBorderString(gameBoard, gameBoardString);
     appendCellRowsString(gameBoard, gameBoardString);
     appendBottomBorderString(gameBoard, gameBoardString);
