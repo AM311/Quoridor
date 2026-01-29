@@ -1,10 +1,10 @@
 package it.units.sdm.quoridor;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.abstracts.QuoridorGameEngine;
-import it.units.sdm.quoridor.controller.engine.abstracts.AbstractEngineFactory;
 import it.units.sdm.quoridor.controller.engine.EngineContext;
 import it.units.sdm.quoridor.controller.engine.ServerEngineFactory;
+import it.units.sdm.quoridor.controller.engine.abstracts.AbstractEngineFactory;
+import it.units.sdm.quoridor.controller.engine.abstracts.QuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.controller.server.ServerProtocolCommands;
 import it.units.sdm.quoridor.exceptions.BuilderException;
@@ -16,7 +16,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientStarter {
-    private static final AbstractEngineFactory factory = new ServerEngineFactory();
+  private static final AbstractEngineFactory factory = new ServerEngineFactory();
   private static final EngineContext.ContextBuilder contextBuilder = new EngineContext.ContextBuilder();
 
   public static void main(String[] args) {
@@ -43,8 +43,7 @@ public class ClientStarter {
         QuoridorGameEngine engine = switch (args[2]) {
           case "CLI" ->
                   factory.createCLIEngine(contextBuilder.setReader(new BufferedReader(new InputStreamReader(System.in))).setSocket(reader, writer).build());
-          case "GUI" ->
-                  factory.createGUIEngine(contextBuilder.setSocket(reader, writer).build());
+          case "GUI" -> factory.createGUIEngine(contextBuilder.setSocket(reader, writer).build());
           default -> throw new InvalidParameterException("Invalid game mode.");
         };
 
@@ -56,8 +55,8 @@ public class ClientStarter {
       } catch (BuilderException e) {
         System.err.println("Exception encountered while creating the Game: " + e.getMessage());
       } catch (FactoryException e) {
-      System.err.println("Exception encountered while creating the Engine: " + e.getMessage());
-    }
+        System.err.println("Exception encountered while creating the Engine: " + e.getMessage());
+      }
     } catch (ArrayIndexOutOfBoundsException ex) {
       System.err.println("Missing parameter: " + ex.getMessage());
     }

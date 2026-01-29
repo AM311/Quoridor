@@ -180,7 +180,6 @@ public class QuoridorServer {
   }
 
   public void shutdown() {
-
     try {
       executorService.shutdown();
       serverSocket.close();
