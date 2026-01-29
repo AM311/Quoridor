@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.model;
+package it.units.sdm.quoridor.view;
 
 import it.units.sdm.quoridor.utils.Color;
 
@@ -15,7 +15,7 @@ public record PawnAppearance(Color color) {
   }
 
   public String getGuiMarkerPath() {
-    return color().getGuiMarkerPath();
+    return "/" + color.getName().toLowerCase() + "-pawn.png";
   }
 
   @Override

@@ -16,6 +16,7 @@ import it.units.sdm.quoridor.model.movemanagement.actions.WallPlacer;
 import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
+import it.units.sdm.quoridor.view.PawnAppearance;
 
 import java.util.List;
 import java.util.stream.IntStream;

@@ -7,7 +7,7 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
-import it.units.sdm.quoridor.model.PawnAppearance;
+import it.units.sdm.quoridor.view.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Color;
 
@@ -115,13 +115,13 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
   }
 
   private void printWallsConvention() {
-    final String SQUARE = " " + Color.WHITE.getAnsiEscapeCode() + "   " + PawnAppearance.RESET_STRING + " ";
+    final PawnAppearance demoPawn = new PawnAppearance(Color.WHITE);
 
     String figure = "How walls are placed:\n\n" +
             "     +     +     +        \n" +
             "     |                    \n" +
             "  v  +     +     +        \n" +
-            "     |" + SQUARE + "\n" +
+            "     |" + demoPawn + "\n" +
             "     +-----+-----+        \n" +
             "           h              \n" +
             "                          \n";

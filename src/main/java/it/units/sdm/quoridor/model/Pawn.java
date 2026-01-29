@@ -3,6 +3,7 @@ package it.units.sdm.quoridor.model;
 import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.model.abstracts.AbstractTile;
+import it.units.sdm.quoridor.view.PawnAppearance;
 
 import java.util.Collection;
 

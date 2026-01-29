@@ -21,10 +21,6 @@ public enum Color {
     return ansiEscapeCode;
   }
 
-  public String getGuiMarkerPath() {
-    return "/" + name.toLowerCase() + "-pawn.png";
-  }
-
   public java.awt.Color getColor() {
     return color;
   }

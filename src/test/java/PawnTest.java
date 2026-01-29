@@ -4,7 +4,7 @@ import it.units.sdm.quoridor.exceptions.NumberOfWallsBelowZeroException;
 import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.model.abstracts.AbstractTile;
-import it.units.sdm.quoridor.model.PawnAppearance;
+import it.units.sdm.quoridor.view.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
