@@ -7,7 +7,6 @@ import it.units.sdm.quoridor.utils.WallOrientation;
 import java.util.Optional;
 
 public class StandardQuoridorParser extends QuoridorParser {
-
   @Override
   protected CommandType parseSpecific() throws ParserException {
     return switch (commandTokens[0]) {
@@ -28,43 +27,6 @@ public class StandardQuoridorParser extends QuoridorParser {
       }
 
       default -> throw new ParserException("Unexpected value for Action Type: " + commandTokens[0]);
-    };
-  }
-
-  @Override
-  public Optional<Position> getActionPosition() {
-    return Optional.ofNullable(position);
-  }
-
-  @Override
-  public Optional<WallOrientation> getWallOrientation() {
-    return Optional.ofNullable(wallOrientation);
-  }
-
-  public String toString() {
-    return """
-            
-            Command format:
-            1) "m r,c" => move the pawn in the cell (r,c)
-            2) "w r,c h" => place an horizontal wall near the cell (r,c)
-            3) "w r,c v" => place a vertical wall near the cell (r,c)
-            4) "h" => obtain information about the commands' format
-            5) "q" => quit the game
-            6) "r" => restart the game
-            """;
-  }
-
-  @Override
-  public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation) {
-    return switch (commandType) {
-      case MOVE -> "M " + position.toString();
-      case WALL -> "W " + position.toString() + " " + switch (wallOrientation) {
-        case VERTICAL -> "V";
-        case HORIZONTAL -> "H";
-      };
-      case HELP -> "H";
-      case QUIT -> "Q";
-      case RESTART -> "R";
     };
   }
 
@@ -94,5 +56,43 @@ public class StandardQuoridorParser extends QuoridorParser {
   @Override
   public Optional<CommandType> getCommandType() {
     return Optional.ofNullable(commandType);
+  }
+
+  @Override
+  public Optional<Position> getActionPosition() {
+    return Optional.ofNullable(position);
+  }
+
+  @Override
+  public Optional<WallOrientation> getWallOrientation() {
+    return Optional.ofNullable(wallOrientation);
+  }
+
+  @Override
+  public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation) {
+    return switch (commandType) {
+      case MOVE -> "M " + position.toString();
+      case WALL -> "W " + position.toString() + " " + switch (wallOrientation) {
+        case VERTICAL -> "V";
+        case HORIZONTAL -> "H";
+      };
+      case HELP -> "H";
+      case QUIT -> "Q";
+      case RESTART -> "R";
+    };
+  }
+
+  @Override
+  public String toString() {
+    return """
+            
+            Command format:
+            1) "m r,c" => move the pawn in the cell (r,c)
+            2) "w r,c h" => place an horizontal wall near the cell (r,c)
+            3) "w r,c v" => place a vertical wall near the cell (r,c)
+            4) "h" => obtain information about the commands' format
+            5) "q" => quit the game
+            6) "r" => restart the game
+            """;
   }
 }

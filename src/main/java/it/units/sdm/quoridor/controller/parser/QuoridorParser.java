@@ -12,6 +12,10 @@ public abstract class QuoridorParser {
   protected Position position;
   protected WallOrientation wallOrientation;
 
+  public enum CommandType {
+    QUIT, MOVE, WALL, HELP, RESTART
+  }
+
   public final void parse(String command) throws ParserException {
     this.commandTokens = command.toUpperCase().split("\\s+");
     initializeFieldsToNull();
@@ -34,9 +38,7 @@ public abstract class QuoridorParser {
     }
   }
 
-  protected abstract CommandType parseSpecific() throws ParserException;
-
-  protected void initializeFieldsToNull() {
+  private void initializeFieldsToNull() {
     this.commandType = null;
     this.position = null;
     this.wallOrientation = null;
@@ -48,17 +50,15 @@ public abstract class QuoridorParser {
       throw new ParserException("Wrong number of parameters provided for this command: " + expected + " expected, " + actual + " given.");
   }
 
+  protected abstract CommandType parseSpecific() throws ParserException;
+
   abstract public Optional<CommandType> getCommandType();
 
   abstract public Optional<Position> getActionPosition();
 
   abstract public Optional<WallOrientation> getWallOrientation();
 
-  abstract public String toString();
-
   abstract public String generateString(CommandType commandType, Position position, WallOrientation wallOrientation);
 
-  public enum CommandType {
-    QUIT, MOVE, WALL, HELP, RESTART
-  }
+  abstract public String toString();
 }
