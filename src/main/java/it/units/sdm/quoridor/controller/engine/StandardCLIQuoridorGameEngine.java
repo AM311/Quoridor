@@ -44,7 +44,6 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
     handleEndGame();
   }
 
-
   private void printInitialInformation() {
     System.out.println("\n--- Welcome to QUORIDOR! ---\n");
     System.out.println("Before starting, here you can find a couple of useful information:\n\n");
@@ -137,8 +136,7 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
     return String.valueOf(reader.readLine());
   }
 
-  protected String generateSeparator() {
+  private String generateSeparator() {
     return "\n" + "-".repeat(27) + "\n";
   }
-
 }

@@ -28,12 +28,14 @@ public abstract class QuoridorGameEngine {
     this.parser = parser;
   }
 
+  public StatisticsCounter getStatisticsCounter() {
+    return statisticsCounter;
+  }
+
   protected void createGame() throws BuilderException {
     BuilderDirector builderDirector = new BuilderDirector(builder);
     this.game = builderDirector.makeGame();
   }
-
-  public abstract void runGame() throws BuilderException;
 
   protected boolean performCommand(String command, boolean sendCommand) throws ParserException, InvalidParameterException, InvalidActionException, IOException, BuilderException {
     parser.parse(command);
@@ -86,27 +88,12 @@ public abstract class QuoridorGameEngine {
     game.movePlayingPawn(targetPosition);
   }
 
-  protected abstract void sendCommand(String command) throws IOException;
-
   protected void placeWall(Position targetPosition, WallOrientation orientation) throws InvalidActionException, InvalidParameterException {
     game.placeWall(targetPosition, orientation);
   }
 
-  protected abstract void printHelp();
-
   protected void quitGame() {
     System.exit(0);
-  }
-
-  protected abstract void restartGame() throws BuilderException;
-
-  protected void sendCommand(QuoridorParser.CommandType commandType, Position position, WallOrientation wallOrientation) {
-    try {
-      sendCommand(parser.generateString(commandType, position, wallOrientation));
-    } catch (IOException e) {
-      System.err.println("Unable to communicate with server: " + e.getMessage());
-      handleQuitGame();
-    }
   }
 
   protected void handleQuitGame() {
@@ -119,7 +106,20 @@ public abstract class QuoridorGameEngine {
     restartGame();
   }
 
-  public StatisticsCounter getStatisticsCounter() {
-    return statisticsCounter;
+  protected void sendCommand(QuoridorParser.CommandType commandType, Position position, WallOrientation wallOrientation) {
+    try {
+      sendCommand(parser.generateString(commandType, position, wallOrientation));
+    } catch (IOException e) {
+      System.err.println("Unable to communicate with server: " + e.getMessage());
+      handleQuitGame();
+    }
   }
+
+  protected abstract void sendCommand(String command) throws IOException;
+
+  public abstract void runGame() throws BuilderException;
+
+  protected abstract void restartGame() throws BuilderException;
+
+  protected abstract void printHelp();
 }

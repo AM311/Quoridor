@@ -14,7 +14,7 @@ public class LocalEngineFactory implements AbstractEngineFactory {
   }
 
   @Override
-  public GUIQuoridorGameEngine createGUIEngine(EngineContext context) throws FactoryException {
+  public GUIQuoridorGameEngine createGUIEngine(EngineContext context) {
     return new StandardGUIQuoridorGameEngine(
             context.getBuilder(),
             context.getParser(), context.getStatisticsCounter()

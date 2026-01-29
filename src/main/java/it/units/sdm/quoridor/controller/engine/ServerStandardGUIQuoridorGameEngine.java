@@ -37,6 +37,44 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     listenSocket();
   }
 
+  private void listenSocket() {
+    do {
+      String serverMessage = null;
+
+      try {
+        serverMessage = socketReader.readLine();
+      } catch (IOException e) {
+        System.err.println("Unable to communicate with server: " + e.getMessage());
+        quitGame();
+      }
+
+      Logger.printLog(System.out, "Command received: " + serverMessage);
+
+      try {
+        if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
+          Logger.printLog(System.out, "Playing");
+          gameView.displayCommandsForCurrentPlayer();
+        } else {
+          Logger.printLog(System.out, "Executing remote command");
+          boolean commandExecuted = performCommand(serverMessage, false);
+
+          if (commandExecuted) {
+            if (game.isGameFinished()) {
+              handleEndGame(true);
+            } else {
+              gameView.onRoundFinished(false);
+            }
+          }
+        }
+      } catch (IOException e) {
+        System.err.println("Unable to communicate with server: " + e.getMessage());
+        quitGame();
+      } catch (InvalidActionException | InvalidParameterException | ParserException | BuilderException e) {
+        System.err.println(e.getMessage());
+      }
+    } while (!game.isGameFinished());
+  }
+
   @Override
   public void handleTileClick(Position targetPosition) {
     Logger.printLog(System.out, "Handling tile click");
@@ -75,6 +113,7 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
     }
   }
 
+  @Override
   protected void restartGame() throws BuilderException {
     Logger.printLog(System.out, "Restarting game");
 
@@ -89,44 +128,6 @@ public class ServerStandardGUIQuoridorGameEngine extends StandardGUIQuoridorGame
   protected void sendCommand(String command) throws IOException {
     socketWriter.write(command + System.lineSeparator());
     socketWriter.flush();
-  }
-
-  private void listenSocket() {
-    do {
-      String serverMessage = null;
-
-      try {
-        serverMessage = socketReader.readLine();
-      } catch (IOException e) {
-        System.err.println("Unable to communicate with server: " + e.getMessage());
-        quitGame();
-      }
-
-      Logger.printLog(System.out, "Command received: " + serverMessage);
-
-      try {
-        if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
-          Logger.printLog(System.out, "Playing");
-          gameView.displayCommandsForCurrentPlayer();
-        } else {
-          Logger.printLog(System.out, "Executing remote command");
-          boolean commandExecuted = performCommand(serverMessage, false);
-
-          if (commandExecuted) {
-            if (game.isGameFinished()) {
-              handleEndGame(true);
-            } else {
-              gameView.onRoundFinished(false);
-            }
-          }
-        }
-      } catch (IOException e) {
-        System.err.println("Unable to communicate with server: " + e.getMessage());
-        quitGame();
-      } catch (InvalidActionException | InvalidParameterException | ParserException | BuilderException e) {
-        System.err.println(e.getMessage());
-      }
-    } while (!game.isGameFinished());
   }
 
   protected void handleEndGame(boolean waitForCommand) {

@@ -20,15 +20,9 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
     this.gameView = new GameView(this);
   }
 
-  public void setCurrentAction(GUIAction currentGUIAction) {
-    this.currentGUIAction = currentGUIAction;
+  public enum GUIAction {
+    MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
   }
-
-  abstract public void handleTileClick(Position position);
-
-  abstract public void setMoveAction();
-
-  abstract public void setPlaceWallAction();
 
   public int getNumberOfPlayers() {
     return game.getPawns().size();
@@ -42,12 +36,20 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
     return game.getPlayingPawnIndex();
   }
 
-  public void changeRound() {
-    game.changeRound();
+  public List<AbstractPawn> getPawns() {
+    return game.getPawns();
   }
 
-  @Override
-  protected void printHelp() {
+  public Collection<Position> getValidMovePositions(){
+    return game.getValidMovePositions();
+  }
+
+  public void setCurrentAction(GUIAction currentGUIAction) {
+    this.currentGUIAction = currentGUIAction;
+  }
+
+  public void changeRound() {
+    game.changeRound();
   }
 
   @Override
@@ -60,15 +62,13 @@ public abstract class GUIQuoridorGameEngine extends QuoridorGameEngine {
     super.handleRestartGame();
   }
 
-  public List<AbstractPawn> getPawns() {
-    return game.getPawns();
+  @Override
+  protected void printHelp() {
   }
 
-  public Collection<Position> getValidMovePositions(){
-    return game.getValidMovePositions();
-  }
+  abstract public void handleTileClick(Position position);
 
-  public enum GUIAction {
-    MOVE, PLACE_VERTICAL_WALL, PLACE_HORIZONTAL_WALL, DO_NOTHING
-  }
+  abstract public void setMoveAction();
+
+  abstract public void setPlaceWallAction();
 }
