@@ -4,19 +4,19 @@ import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 
 public abstract class AbstractQuoridorBuilder {
-  public final int gameBoardSideLength;
-  public final int stdNumberOfWalls;
-  public final int numberOfPlayers;
+  protected final int gameBoardSideLength;
+  protected final int defaultNumberOfWalls;
+  protected final int numberOfPlayers;
 
-  public AbstractQuoridorBuilder(int gameBoardSideLength, int stdNumberOfWalls, int numberOfPlayers) throws InvalidParameterException {
+  public AbstractQuoridorBuilder(int gameBoardSideLength, int defaultNumberOfWalls, int numberOfPlayers) throws InvalidParameterException {
     if (gameBoardSideLength <= 0)
       throw new InvalidParameterException("GameBoard side length must be positive: " + gameBoardSideLength);
 
-    if (stdNumberOfWalls < 0)
-      throw new InvalidParameterException("Number of walls must be null or positive: " + stdNumberOfWalls);
+    if (defaultNumberOfWalls < 0)
+      throw new InvalidParameterException("Number of walls must be null or positive: " + defaultNumberOfWalls);
 
     this.gameBoardSideLength = gameBoardSideLength;
-    this.stdNumberOfWalls = stdNumberOfWalls;
+    this.defaultNumberOfWalls = defaultNumberOfWalls;
     this.numberOfPlayers = numberOfPlayers;
   }
 

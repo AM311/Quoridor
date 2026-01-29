@@ -6,6 +6,7 @@ import it.units.sdm.quoridor.model.abstracts.AbstractGame;
 import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
 import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.model.abstracts.AbstractTile;
+import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PathExistenceChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.PawnMovementChecker;
 import it.units.sdm.quoridor.model.movemanagement.actioncheckers.WallPlacementChecker;
@@ -13,11 +14,11 @@ import it.units.sdm.quoridor.model.movemanagement.actionmanagers.ActionManager;
 import it.units.sdm.quoridor.model.movemanagement.actionmanagers.GameActionManager;
 import it.units.sdm.quoridor.model.movemanagement.actions.PawnMover;
 import it.units.sdm.quoridor.model.movemanagement.actions.WallPlacer;
-import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.TargetTiles;
 import it.units.sdm.quoridor.view.PawnAppearance;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -25,6 +26,10 @@ import static it.units.sdm.quoridor.model.abstracts.AbstractTile.LinkState.EDGE;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.*;
 
 public class StandardQuoridorBuilder extends AbstractQuoridorBuilder {
+  public final static int GAMEBOARD_SIDE_LENGTH = 9;
+  public final static int DEFAULT_NUMBER_OF_WALLS = 10;
+  public final static int[] ALLOWED_NUMBER_OF_PLAYERS = {2, 4};
+
   private AbstractGameBoard gameBoard;
   private List<AbstractPawn> pawns;
   private ActionManager actionManager;
@@ -32,10 +37,11 @@ public class StandardQuoridorBuilder extends AbstractQuoridorBuilder {
   private ActionController<AbstractTile> movePawnActionController;
 
   public StandardQuoridorBuilder(int numberOfPlayers) throws InvalidParameterException {
-    super(9, 10, numberOfPlayers);
+    super(GAMEBOARD_SIDE_LENGTH, DEFAULT_NUMBER_OF_WALLS, numberOfPlayers);
 
-    if (numberOfPlayers != 2 && numberOfPlayers != 4)
+    if (Arrays.stream(ALLOWED_NUMBER_OF_PLAYERS).noneMatch(i -> i == numberOfPlayers)) {
       throw new InvalidParameterException("Invalid number of players: " + numberOfPlayers);
+    }
   }
 
   @Override
@@ -77,7 +83,7 @@ public class StandardQuoridorBuilder extends AbstractQuoridorBuilder {
 
   @Override
   AbstractQuoridorBuilder setPawnList() {
-    int numberOfWalls = stdNumberOfWalls / (numberOfPlayers / 2);
+    int numberOfWalls = defaultNumberOfWalls / (numberOfPlayers / 2);
     List<TargetTiles> startingAndDestinationTiles = gameBoard.getStartingAndDestinationTiles();
 
     this.pawns = IntStream.range(0, numberOfPlayers).mapToObj(
