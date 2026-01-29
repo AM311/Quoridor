@@ -35,7 +35,7 @@ public class GameBoard extends AbstractGameBoard {
               gameState[sideLength / 2][sideLength - 1]
       );
 
-      List<List<AbstractTile>> destinationTiles = List.of(
+      List<Collection<AbstractTile>> destinationTiles = List.of(
               getRowTiles(sideLength - 1),
               getRowTiles(0),
               getColumnTiles(sideLength - 1),
@@ -58,7 +58,7 @@ public class GameBoard extends AbstractGameBoard {
   }
 
   @Override
-  public List<AbstractTile> getRowTiles(int row) throws InvalidParameterException {
+  public Collection<AbstractTile> getRowTiles(int row) throws InvalidParameterException {
     try {
       return List.of(gameState[row]);
     } catch (ArrayIndexOutOfBoundsException ex) {
@@ -67,7 +67,7 @@ public class GameBoard extends AbstractGameBoard {
   }
 
   @Override
-  public List<AbstractTile> getColumnTiles(int column) throws InvalidParameterException {
+  public Collection<AbstractTile> getColumnTiles(int column) throws InvalidParameterException {
     try {
       return List.of(Arrays.stream(gameState).map(x -> x[column]).toArray(AbstractTile[]::new));
     } catch (ArrayIndexOutOfBoundsException ex) {
@@ -125,5 +125,4 @@ public class GameBoard extends AbstractGameBoard {
       throw new OutOfGameBoardException("The provided tile is on the edge!");
     }
   }
-
 }

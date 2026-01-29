@@ -23,6 +23,34 @@ public abstract class AbstractTile implements Cloneable {
     links = new EnumMap<>(Map.of(UP, FREE, RIGHT, FREE, DOWN, FREE, LEFT, FREE));
   }
 
+  public enum LinkState {
+    FREE, WALL, EDGE
+  }
+
+  public LinkState getLink(StraightDirection direction) {
+    return links.get(direction);
+  }
+
+  public int getRow() {
+    return position.row();
+  }
+
+  public int getColumn() {
+    return position.column();
+  }
+
+  public abstract Optional<AbstractPawn> isOccupiedBy();
+
+  public abstract boolean isThereAWall(StraightDirection direction);
+
+  public abstract boolean isThereAWallOrEdge(StraightDirection direction);
+
+  public abstract void setOccupiedBy(AbstractPawn occupyingPawn);
+
+  public abstract void setFree();
+
+  public abstract void setLink(StraightDirection direction, LinkState linkState);
+
   @Override
   public int hashCode() {
     return Objects.hash(position);
@@ -43,35 +71,5 @@ public abstract class AbstractTile implements Cloneable {
     clonedTile.links = new EnumMap<>(Map.of(UP, this.getLink(UP), RIGHT, this.getLink(RIGHT), DOWN, this.getLink(DOWN), LEFT, this.getLink(LEFT)));
 
     return clonedTile;
-  }
-
-  public LinkState getLink(StraightDirection direction) {
-    return links.get(direction);
-  }
-
-  public abstract Optional<AbstractPawn> isOccupiedBy();
-
-  public abstract boolean isThereAWall(StraightDirection direction);
-
-  public abstract boolean isThereAWallOrEdge(StraightDirection direction);
-
-  public abstract void setOccupiedBy(AbstractPawn occupyingPawn);
-
-  public abstract void setFree();
-
-  public void setLink(StraightDirection direction, LinkState linkState) {
-    links.put(direction, linkState);
-  }
-
-  public int getRow() {
-    return position.row();
-  }
-
-  public int getColumn() {
-    return position.column();
-  }
-
-  public enum LinkState {
-    FREE, WALL, EDGE
   }
 }

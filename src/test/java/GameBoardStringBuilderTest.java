@@ -1,7 +1,6 @@
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.model.abstracts.AbstractGame;
-import it.units.sdm.quoridor.model.abstracts.AbstractGameBoard;
 import it.units.sdm.quoridor.model.builder.BuilderDirector;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import org.junit.jupiter.api.Assertions;
@@ -16,16 +15,14 @@ public class GameBoardStringBuilderTest {
   @Test
   void gameBoardStringIsNotNull() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
-    AbstractGameBoard gameBoard = game.getGameBoard();
-    String gameBoardString = gameBoard.toString();
+    String gameBoardString = game.getGameBoard().toString();
     Assertions.assertNotNull(gameBoardString);
   }
 
   @Test
   void gameBoardStringIsNotEmpty() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
-    AbstractGameBoard gameBoard = game.getGameBoard();
-    String gameBoardString = gameBoard.toString();
-    Assertions.assertFalse(gameBoardString.isEmpty());
+    String gameBoardString = game.getGameBoard().toString();
+    Assertions.assertFalse(gameBoardString.isBlank());
   }
 }

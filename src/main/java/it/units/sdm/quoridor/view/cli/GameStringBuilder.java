@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameStringBuilder {
-
-  public static String createGameString(AbstractGame game) {
+  public static String buildGameString(AbstractGame game) {
     StringBuilder gameString = new StringBuilder("\n".repeat(20));
 
     gameString.append(game.getGameBoard().toString());

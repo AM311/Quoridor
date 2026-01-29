@@ -27,6 +27,7 @@ public class Game extends AbstractGame {
     this.movePawnActionController = movePawnActionController;
   }
 
+  @Override
   public void placeWall(Position startingPosition, WallOrientation wallOrientation) throws InvalidActionException, InvalidParameterException {
     AbstractTile startingTile = gameBoard.getTile(startingPosition);
     Wall wall = new Wall(wallOrientation, startingTile);
@@ -34,20 +35,24 @@ public class Game extends AbstractGame {
     actionManager.performAction(this, wall, placeWallActionController, false);
   }
 
+  @Override
   public void movePlayingPawn(Position destinationPosition) throws InvalidParameterException, InvalidActionException {
     AbstractTile destinationTile = gameBoard.getTile(destinationPosition);
 
     actionManager.performAction(this, destinationTile, movePawnActionController, false);
   }
 
+  @Override
   public void changeRound() {
     playingPawn = (playingPawn + 1) % pawns.size();
   }
 
+  @Override
   public boolean isGameFinished() {
     return getPlayingPawn().hasReachedDestination();
   }
 
+  @Override
   public Collection<Position> getValidMovePositions() {
     Set<Position> validPositions = new HashSet<>();
     ActionChecker<AbstractTile> checker = movePawnActionController.actionCheckers()[0];

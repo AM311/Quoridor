@@ -8,8 +8,7 @@ import static it.units.sdm.quoridor.utils.directions.StraightDirection.DOWN;
 import static it.units.sdm.quoridor.utils.directions.StraightDirection.RIGHT;
 
 public class GameBoardStringBuilder {
-
-  public static String createGameBoardString(AbstractGameBoard gameBoard) {
+  public static String buildGameBoardString(AbstractGameBoard gameBoard) {
     StringBuilder gameBoardString = new StringBuilder();
 
     appendTopBorderString(gameBoard, gameBoardString);
@@ -26,7 +25,6 @@ public class GameBoardStringBuilder {
     gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength))).append("\n");
   }
 
-
   private static void appendTopNumbersString(int sideLength, StringBuilder gameBoardString) {
     gameBoardString.append("      ");
 
@@ -35,7 +33,6 @@ public class GameBoardStringBuilder {
     }
     gameBoardString.append("\n");
   }
-
 
   private static void appendCellRowsString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
     int sideLength = gameBoard.getSideLength();
@@ -62,10 +59,8 @@ public class GameBoardStringBuilder {
     }
   }
 
-
   private static void appendBottomBorderString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
     int sideLength = gameBoard.getSideLength();
     gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength - 1))).append("-----*").append("\n");
   }
-
 }

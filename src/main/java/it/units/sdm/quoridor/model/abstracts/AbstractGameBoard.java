@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static it.units.sdm.quoridor.view.cli.GameBoardStringBuilder.createGameBoardString;
+import static it.units.sdm.quoridor.view.cli.GameBoardStringBuilder.buildGameBoardString;
 
 public abstract class AbstractGameBoard implements Cloneable {
   protected AbstractTile[][] gameState;
@@ -37,6 +37,26 @@ public abstract class AbstractGameBoard implements Cloneable {
 
   public AbstractTile[][] getGameState() {
     return Arrays.copyOf(gameState, sideLength);
+  }
+
+  public abstract List<TargetTiles> getStartingAndDestinationTiles();
+
+  public abstract AbstractTile getTile(Position position) throws InvalidParameterException;
+
+  public abstract Collection<AbstractTile> getRowTiles(int row) throws InvalidParameterException;
+
+  public abstract Collection<AbstractTile> getColumnTiles(int column) throws InvalidParameterException;
+
+  public abstract Collection<AbstractTile> getTiles();
+
+  public abstract boolean isThereAWall(AbstractTile tile1, AbstractTile tile2) throws NotAdjacentTilesException;
+
+  public abstract AbstractTile getLandingTile(AbstractTile tile, StraightDirection direction) throws OutOfGameBoardException;
+
+  public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;
+
+  public String toString() {
+    return buildGameBoardString(this);
   }
 
   @Override
@@ -64,26 +84,6 @@ public abstract class AbstractGameBoard implements Cloneable {
     clonedGameBoard.gameState = clonedGameState;
 
     return clonedGameBoard;
-  }
-
-  public abstract List<TargetTiles> getStartingAndDestinationTiles();
-
-  public abstract AbstractTile getTile(Position position) throws InvalidParameterException;
-
-  public abstract List<AbstractTile> getRowTiles(int row) throws InvalidParameterException;
-
-  public abstract List<AbstractTile> getColumnTiles(int column) throws InvalidParameterException;
-
-  public abstract Collection<AbstractTile> getTiles();
-
-  public abstract boolean isThereAWall(AbstractTile tile1, AbstractTile tile2) throws NotAdjacentTilesException;
-
-  public abstract AbstractTile getLandingTile(AbstractTile tile, StraightDirection direction) throws OutOfGameBoardException;
-
-  public abstract AbstractTile getAdjacentTile(AbstractTile tile, Direction direction) throws OutOfGameBoardException;
-
-  public String toString() {
-    return createGameBoardString(this);
   }
 }
 

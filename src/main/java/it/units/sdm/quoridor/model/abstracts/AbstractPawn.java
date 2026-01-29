@@ -23,8 +23,6 @@ public abstract class AbstractPawn implements Cloneable {
     return currentTile;
   }
 
-  public abstract void move(AbstractTile destinationTile);
-
   public Collection<AbstractTile> getDestinationTiles() {
     return Collections.unmodifiableCollection(destinationTiles);
   }
@@ -33,13 +31,15 @@ public abstract class AbstractPawn implements Cloneable {
     return numberOfWalls;
   }
 
-  public abstract boolean hasReachedDestination();
-
-  public abstract void decrementNumberOfWalls();
-
   public PawnAppearance getPawnAppearance() {
     return pawnAppearance;
   }
+
+  public abstract void move(AbstractTile destinationTile);
+
+  public abstract boolean hasReachedDestination();
+
+  public abstract void decrementNumberOfWalls();
 
   @Override
   public int hashCode() {

@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static it.units.sdm.quoridor.view.cli.GameStringBuilder.createGameString;
+import static it.units.sdm.quoridor.view.cli.GameStringBuilder.buildGameString;
 
 public abstract class AbstractGame implements Cloneable {
   protected List<AbstractPawn> pawns;
@@ -90,8 +90,6 @@ public abstract class AbstractGame implements Cloneable {
   }
 
   public String toString() {
-    return createGameString(this);
+    return buildGameString(this);
   }
-
-
 }
