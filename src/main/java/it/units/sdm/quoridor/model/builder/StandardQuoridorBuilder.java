@@ -100,13 +100,13 @@ public class StandardQuoridorBuilder extends AbstractQuoridorBuilder {
 
   @Override
   AbstractQuoridorBuilder setPlaceWallActionController() {
-    this.placeWallActionController = new ActionController<>(new WallPlacer(), new WallPlacementChecker(), new PathExistenceChecker());
+    this.placeWallActionController = new ActionController<>(new WallPlacer(), false, new WallPlacementChecker(), new PathExistenceChecker());
     return this;
   }
 
   @Override
   AbstractQuoridorBuilder setMovePawnActionController() {
-    this.movePawnActionController = new ActionController<>(new PawnMover(), new PawnMovementChecker());
+    this.movePawnActionController = new ActionController<>(new PawnMover(), false, new PawnMovementChecker());
     return this;
   }
 }

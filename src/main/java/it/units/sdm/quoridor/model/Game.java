@@ -32,14 +32,14 @@ public class Game extends AbstractGame {
     AbstractTile startingTile = gameBoard.getTile(startingPosition);
     Wall wall = new Wall(wallOrientation, startingTile);
 
-    actionManager.performAction(this, wall, placeWallActionController, false);
+    actionManager.performAction(this, wall, placeWallActionController, placeWallActionController.useOrInsteadOfAnd());
   }
 
   @Override
   public void movePlayingPawn(Position destinationPosition) throws InvalidParameterException, InvalidActionException {
     AbstractTile destinationTile = gameBoard.getTile(destinationPosition);
 
-    actionManager.performAction(this, destinationTile, movePawnActionController, false);
+    actionManager.performAction(this, destinationTile, movePawnActionController, movePawnActionController.useOrInsteadOfAnd());
   }
 
   @Override
@@ -78,8 +78,8 @@ public class Game extends AbstractGame {
   public Game clone() throws CloneNotSupportedException {
     Game clonedGame = (Game) super.clone();
 
-    clonedGame.movePawnActionController = new ActionController<>(movePawnActionController.action());
-    clonedGame.placeWallActionController = new ActionController<>(placeWallActionController.action());
+    clonedGame.movePawnActionController = new ActionController<>(movePawnActionController.action(), movePawnActionController.useOrInsteadOfAnd());
+    clonedGame.placeWallActionController = new ActionController<>(placeWallActionController.action(), movePawnActionController.useOrInsteadOfAnd());
 
     return clonedGame;
   }

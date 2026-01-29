@@ -10,13 +10,19 @@ import it.units.sdm.quoridor.model.movemanagement.ActionController;
 import static it.units.sdm.quoridor.model.movemanagement.actioncheckers.QuoridorCheckResult.*;
 
 public class GameActionManager implements ActionManager {
-
   @Override
   public <T> void performAction(AbstractGame game, T target, ActionController<T> actionController, boolean useOrInsteadOfAnd) throws InvalidActionException {
+    ActionChecker<T>[] actionCheckers = actionController.actionCheckers();
+
+    if(actionCheckers.length == 0) {
+      actionController.action().execute(game, target);
+      return;
+    }
+
     CheckResult lastWrongResult = null;
 
     try {
-      for (ActionChecker<T> actionChecker : actionController.actionCheckers()) {
+      for (ActionChecker<T> actionChecker : actionCheckers) {
         CheckResult result = actionChecker.isValidAction(game, target);
 
         if (useOrInsteadOfAnd) {
@@ -33,10 +39,10 @@ public class GameActionManager implements ActionManager {
         }
       }
 
-      if (!useOrInsteadOfAnd || actionController.actionCheckers().length == 0) {
-        actionController.action().execute(game, target);
-      } else {
+      if (useOrInsteadOfAnd) {
         explainInvalidMove(lastWrongResult);
+      } else {
+        actionController.action().execute(game, target);
       }
     } catch (QuoridorRuntimeException ex) {
       throw new InvalidActionException("Invalid action: " + ex.getMessage());
