@@ -1,10 +1,10 @@
 package it.units.sdm.quoridor;
 
 import it.units.sdm.quoridor.controller.StatisticsCounter;
-import it.units.sdm.quoridor.controller.engine.abstracts.QuoridorGameEngine;
-import it.units.sdm.quoridor.controller.engine.abstracts.AbstractEngineFactory;
 import it.units.sdm.quoridor.controller.engine.EngineContext.ContextBuilder;
 import it.units.sdm.quoridor.controller.engine.LocalEngineFactory;
+import it.units.sdm.quoridor.controller.engine.abstracts.AbstractEngineFactory;
+import it.units.sdm.quoridor.controller.engine.abstracts.QuoridorGameEngine;
 import it.units.sdm.quoridor.controller.parser.StandardQuoridorParser;
 import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.FactoryException;
@@ -35,15 +35,19 @@ public class Starter {
   }
 
   private static QuoridorGameEngine getQuoridorGameEngine(String[] args) throws InvalidParameterException, FactoryException {
-    int numOfPlayers = Integer.parseInt(args[0]);
+    try {
+      int numOfPlayers = Integer.parseInt(args[0]);
 
-    contextBuilder.setCore(new StandardQuoridorParser(), new StatisticsCounter(), new StandardQuoridorBuilder(numOfPlayers));
+      contextBuilder.setCore(new StandardQuoridorParser(), new StatisticsCounter(), new StandardQuoridorBuilder(numOfPlayers));
 
-    return switch (args[1]) {
-      case "CLI" ->
-              factory.createCLIEngine(contextBuilder.setReader(new BufferedReader(new InputStreamReader(System.in))).build());
-      case "GUI" -> factory.createGUIEngine(contextBuilder.build());
-      default -> throw new InvalidParameterException("Invalid game mode.");
-    };
+      return switch (args[1]) {
+        case "CLI" ->
+                factory.createCLIEngine(contextBuilder.setReader(new BufferedReader(new InputStreamReader(System.in))).build());
+        case "GUI" -> factory.createGUIEngine(contextBuilder.build());
+        default -> throw new InvalidParameterException("Invalid game mode.");
+      };
+    } catch (NumberFormatException e) {
+      throw new InvalidParameterException("Invalid number of players.");
+    }
   }
 }

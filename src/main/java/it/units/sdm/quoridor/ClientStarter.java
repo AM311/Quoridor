@@ -50,15 +50,17 @@ public class ClientStarter {
         engine.runGame();
       } catch (IOException e) {
         System.err.println("Could not connect to server: " + e.getMessage());
-      } catch (InvalidParameterException e) {
-        System.err.println("Invalid parameter: " + e.getMessage());
       } catch (BuilderException e) {
         System.err.println("Exception encountered while creating the Game: " + e.getMessage());
       } catch (FactoryException e) {
         System.err.println("Exception encountered while creating the Engine: " + e.getMessage());
+      } catch (NumberFormatException e) {
+        throw new InvalidParameterException("Invalid numeric argument: " + e.getMessage());
       }
     } catch (ArrayIndexOutOfBoundsException ex) {
       System.err.println("Missing parameter: " + ex.getMessage());
+    } catch (InvalidParameterException e) {
+      System.err.println("Invalid parameter: " + e.getMessage());
     }
   }
 }

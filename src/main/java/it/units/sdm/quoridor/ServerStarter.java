@@ -22,6 +22,8 @@ public class ServerStarter {
       }
     } catch (ArrayIndexOutOfBoundsException ex) {
       System.err.println("Missing parameter: " + ex.getMessage());
+    } catch (NumberFormatException ex) {
+      System.err.println("Invalid numeric argument: " + ex.getMessage());
     }
   }
 }
