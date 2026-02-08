@@ -31,7 +31,7 @@ public class SpyServerStandardCLIQuoridorGameEngine extends SpyStandardCLIQuorid
 
     try {
       serverMessage = socketReader.readLine();
-    } catch (IOException e) {
+    } catch (IOException ignored) {
     }
 
     do {

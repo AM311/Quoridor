@@ -33,7 +33,6 @@ public final class GUIConstants {
           "<ul>" +
           "<li>On your round you can move your pawn or place a wall</li>" +
           "<li>You win by reaching the opposite side of the board</li>" +
-          "<li>Walls can be placed vertically or horizontally</li>" +
           "<li>You cannot completely block a path to destination</li>" +
           "</ul></div></html>";
   public static final String WALL_CONVENTION = "<html><div style='width: 300px; text-align: left;'>" +

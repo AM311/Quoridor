@@ -12,7 +12,6 @@ import java.util.Map;
 public class HelpDialogView implements DialogView {
   private final JFrame mainFrame;
 
-
   public HelpDialogView(JFrame mainFrame) {
     this.mainFrame = mainFrame;
   }
@@ -28,7 +27,6 @@ public class HelpDialogView implements DialogView {
             JOptionPane.INFORMATION_MESSAGE
     );
   }
-
 
   private JPanel createDialogContent() {
     JPanel helpPanel = new JPanel();
@@ -65,11 +63,6 @@ public class HelpDialogView implements DialogView {
     JPanel visualPanel = new JPanel(new GridLayout(2, 2, 0, 0));
     visualPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     visualPanel.setMaximumSize(new Dimension(200, 200));
-
-    // JButton topLeft = new JButton();
-    // JButton topRight = new JButton();
-    // JButton bottomLeft = new JButton();
-    // JButton bottomRight = new JButton();
 
     JButton topLeft = new FlatColorButton();
     JButton topRight = new FlatColorButton();

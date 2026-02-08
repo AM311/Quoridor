@@ -40,7 +40,7 @@ public class ServerStandardCLIQuoridorGameEngine extends StandardCLIQuoridorGame
     do {
       try {
         if (Objects.equals(serverMessage, ServerProtocolCommands.PLAY.getCommandString())) {
-          System.out.println("It's your round!" + System.lineSeparator());
+          System.out.println("It's your round! Make your move: ");
           String command = askCommand();
 
           commandExecuted = performCommand(command, true);

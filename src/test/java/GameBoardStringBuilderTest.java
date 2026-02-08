@@ -20,7 +20,7 @@ public class GameBoardStringBuilderTest {
   }
 
   @Test
-  void gameBoardStringIsNotEmpty() throws InvalidParameterException, BuilderException {
+  void gameBoardStringIsNotBlank() throws InvalidParameterException, BuilderException {
     AbstractGame game = buildGame();
     String gameBoardString = game.getGameBoard().toString();
     Assertions.assertFalse(gameBoardString.isBlank());

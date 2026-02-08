@@ -8,8 +8,6 @@ import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
-import it.units.sdm.quoridor.utils.Color;
-import it.units.sdm.quoridor.view.PawnAppearance;
 import it.units.sdm.quoridor.view.cli.InformationStringBuilder;
 
 import java.io.BufferedReader;
