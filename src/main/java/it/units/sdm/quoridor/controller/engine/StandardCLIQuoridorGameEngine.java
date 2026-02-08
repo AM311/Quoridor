@@ -7,9 +7,10 @@ import it.units.sdm.quoridor.exceptions.BuilderException;
 import it.units.sdm.quoridor.exceptions.InvalidActionException;
 import it.units.sdm.quoridor.exceptions.InvalidParameterException;
 import it.units.sdm.quoridor.exceptions.ParserException;
-import it.units.sdm.quoridor.view.PawnAppearance;
 import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Color;
+import it.units.sdm.quoridor.view.PawnAppearance;
+import it.units.sdm.quoridor.view.cli.InformationStringBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +21,10 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
   protected StandardCLIQuoridorGameEngine(AbstractQuoridorBuilder builder, QuoridorParser parser, StatisticsCounter statisticsCounter, BufferedReader reader) {
     super(builder, statisticsCounter, parser);
     this.reader = reader;
+  }
+
+  @Override
+  protected void sendCommand(String command) throws IOException {
   }
 
   @Override
@@ -44,10 +49,14 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
     handleEndGame();
   }
 
+  @Override
+  protected void restartGame() throws BuilderException {
+    statisticsCounter.resetGameStats();
+    runGame();
+  }
+
   private void printInitialInformation() {
-    System.out.println("\n--- Welcome to QUORIDOR! ---\n");
-    System.out.println("Before starting, here you can find a couple of useful information:\n\n");
-    printWallsConvention();
+    System.out.println(InformationStringBuilder.start().appendTitle().appendGameRules().appendWallsConvention().build());
     System.out.println(parser);
     System.out.println("Press ENTER to start the game...");
 
@@ -58,19 +67,12 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
     }
   }
 
-  private void printEndGameInformation() {
-    System.out.print(game);
-    System.out.println(generateSeparator());
-    System.out.println(game.getPlayingPawn() + " has won!");
-    System.out.println(statisticsCounter.generateStatisticsReport());
-  }
-
   protected void executeRound() throws BuilderException {
     boolean commandExecuted = false;
 
     do {
       try {
-        System.out.print("\nMake your move: ");
+        System.out.print(System.lineSeparator() + "Make your move: ");
         String command = askCommand();
         commandExecuted = performCommand(command, false);
       } catch (IOException e) {
@@ -82,9 +84,16 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
     } while (!commandExecuted);
   }
 
+  private void printEndGameInformation() {
+    System.out.print(game);
+    System.out.println(generateSeparator());
+    System.out.println(game.getPlayingPawn() + " HAS WON!");
+    System.out.println(statisticsCounter.generateStatisticsReport());
+  }
+
   protected void handleEndGame() {
     try {
-      System.out.println("Do you want to Quit (q) or restart a new game (r)?");
+      System.out.println("Do you want to quit (q) or restart a new game (r)?");
       String command = askCommand();
       parser.parse(command);
 
@@ -101,42 +110,17 @@ public class StandardCLIQuoridorGameEngine extends CLIQuoridorGameEngine {
     }
   }
 
-  @Override
-  protected void restartGame() throws BuilderException {
-    statisticsCounter.resetGameStats();
-    runGame();
-  }
-
-  @Override
-  protected void printHelp() {
-    printWallsConvention();
-    System.out.println(parser);
-  }
-
-  private void printWallsConvention() {
-    final PawnAppearance demoPawn = new PawnAppearance(Color.WHITE);
-
-    String figure = "How walls are placed:\n\n" +
-            "     +     +     +        \n" +
-            "     |                    \n" +
-            "  v  +     +     +        \n" +
-            "     |" + demoPawn + "\n" +
-            "     +-----+-----+        \n" +
-            "           h              \n" +
-            "                          \n";
-
-    System.out.print(figure);
-  }
-
-  @Override
-  protected void sendCommand(String command) throws IOException {
-  }
-
   protected String askCommand() throws IOException {
     return String.valueOf(reader.readLine());
   }
 
   private String generateSeparator() {
-    return "\n" + "-".repeat(27) + "\n";
+    return System.lineSeparator() + "-".repeat(27) + System.lineSeparator();
+  }
+
+  @Override
+  protected void printHelp() {
+    System.out.println(InformationStringBuilder.start().appendWallsConvention().build());
+    System.out.println(parser);
   }
 }
