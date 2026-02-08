@@ -25,7 +25,7 @@ import static it.units.sdm.quoridor.controller.parser.QuoridorParser.CommandType
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
-public class StubServerStandardGUIQuoridorGameEngine extends StubStandardGUIQuoridorGameEngine{
+public class SpyServerStandardGUIQuoridorGameEngine extends SpyStandardGUIQuoridorGameEngine {
   private final BufferedReader reader;
   private final BufferedReader socketReader;
   private final BufferedWriter socketWriter;
@@ -37,7 +37,7 @@ public class StubServerStandardGUIQuoridorGameEngine extends StubStandardGUIQuor
   protected boolean hasGameToActuallyRestart;
   protected boolean hasGameActuallyRestarted;
 
-  public StubServerStandardGUIQuoridorGameEngine(BufferedReader reader, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser, BufferedWriter socketWriter, BufferedReader socketReader) {
+  public SpyServerStandardGUIQuoridorGameEngine(BufferedReader reader, AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser, BufferedWriter socketWriter, BufferedReader socketReader) {
     super(builder, statisticsCounter, parser);
     this.reader = reader;
     this.socketReader = socketReader;

@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Optional;
 
-public class StubStandardCLIQuoridorGameEngine {
+public class SpyStandardCLIQuoridorGameEngine {
 
   protected final BufferedReader reader;
   protected final QuoridorParser parser;
@@ -41,7 +41,7 @@ public class StubStandardCLIQuoridorGameEngine {
   protected boolean gameHasToActuallyRestart;
   protected boolean isGameActuallyRestarted;
 
-  public StubStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
+  public SpyStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder) {
     this.reader = reader;
     this.parser = parser;
     this.builder = builder;

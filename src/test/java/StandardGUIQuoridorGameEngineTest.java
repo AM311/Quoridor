@@ -6,7 +6,7 @@ import it.units.sdm.quoridor.model.builder.AbstractQuoridorBuilder;
 import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.*;
-import testDoubles.StubStandardGUIQuoridorGameEngine;
+import testDoubles.SpyStandardGUIQuoridorGameEngine;
 import java.util.List;
 import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameEngine.GUIAction.*;
 
@@ -14,14 +14,14 @@ public class StandardGUIQuoridorGameEngineTest {
   QuoridorParser parser;
   AbstractQuoridorBuilder builder;
   StatisticsCounter statisticsCounter;
-  StubStandardGUIQuoridorGameEngine engine;
+  SpyStandardGUIQuoridorGameEngine engine;
 
   @BeforeEach
   public void setUp() throws Exception {
     parser = new StandardQuoridorParser();
     builder = new StandardQuoridorBuilder(2);
     statisticsCounter = new StatisticsCounter();
-    engine = new StubStandardGUIQuoridorGameEngine(builder, statisticsCounter, parser);
+    engine = new SpyStandardGUIQuoridorGameEngine(builder, statisticsCounter, parser);
     engine.runGame();
   }
 
@@ -172,7 +172,7 @@ public class StandardGUIQuoridorGameEngineTest {
     Assertions.assertEquals(0, statisticsCounter.getGameMoves(pawn1.toString()));
   }
 
-  private static void makeGameEnd(StubStandardGUIQuoridorGameEngine engine) {
+  private static void makeGameEnd(SpyStandardGUIQuoridorGameEngine engine) {
     List<Position> moves = List.of(
             new Position(1, 4),
             new Position(7, 4),

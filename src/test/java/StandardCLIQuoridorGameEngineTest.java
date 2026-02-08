@@ -10,7 +10,7 @@ import testDoubles.StubQuoridorParser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import testDoubles.StubStandardCLIQuoridorGameEngine;
+import testDoubles.SpyStandardCLIQuoridorGameEngine;
 
 import java.io.*;
 
@@ -25,14 +25,14 @@ public class StandardCLIQuoridorGameEngineTest {
     builder = new StandardQuoridorBuilder(2);
   }
 
-  private StubStandardCLIQuoridorGameEngine createEngineWithInput(String input) {
+  private SpyStandardCLIQuoridorGameEngine createEngineWithInput(String input) {
     BufferedReader reader = new BufferedReader(new StringReader(input));
-    return new StubStandardCLIQuoridorGameEngine(reader, parser, builder);
+    return new SpyStandardCLIQuoridorGameEngine(reader, parser, builder);
   }
 
   @Test
   void createdGameIsNotNull() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("0");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("0");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -42,7 +42,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void movementCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -52,7 +52,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void wallCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("2");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("2");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -62,7 +62,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidCommand() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("4");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("4");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -73,7 +73,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void turnHasNotChanged_afterInvalidCommand() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("5");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("5");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -83,7 +83,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void parserExceptionIsCaught() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("6");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("6");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -93,7 +93,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void invalidParameterExceptionIsCaught() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("7");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("7");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -103,7 +103,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void invalidActionExceptionIsCaught() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("8");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("8");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -113,7 +113,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void pawn0CorrectlyWins() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("1");
 
     engine.setPawn0HasToWin(true);
     engine.runGame();
@@ -123,7 +123,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void pawn1CorrectlyWins() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1" + System.lineSeparator() + "1");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("1" + System.lineSeparator() + "1");
 
     engine.setPawn1HasToWin(true);
     engine.runGame();
@@ -133,7 +133,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void gameIsQuit_onQuitCommand() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("Q");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -143,7 +143,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void gameIsActuallyRestarted_onRestartCommand() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.setGameHasToActuallyRestart(true);
@@ -154,7 +154,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void gameIsCreatedAfterRestart() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("R");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.setGameHasToActuallyRestart(true);
@@ -165,7 +165,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void gameEndedAfterWin() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nQ");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nQ");
 
     engine.setPawn0HasToWin(true);
     engine.setEndGameHasToBeHandled(true);
@@ -176,7 +176,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void gameIsQuit_onQuitCommand_afterEndGame() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nQ");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nQ");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.setEndGameHasToBeHandled(true);
@@ -187,7 +187,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void gameIsActuallyRestarted_onRestartCommand_afterEndGame() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nR");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("1\nR");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.setEndGameHasToBeHandled(true);
@@ -199,7 +199,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void helpCommandIsExecuted() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("H");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("H");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -209,7 +209,7 @@ public class StandardCLIQuoridorGameEngineTest {
 
   @Test
   void commandExecutedIsFalse_afterHelpCommand() throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput("H");
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput("H");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -220,7 +220,7 @@ public class StandardCLIQuoridorGameEngineTest {
   @ParameterizedTest
   @ValueSource(strings = {"1", "2"})
   void commandExecutedIsTrue_afterActualCommand(String input) throws InvalidParameterException, BuilderException {
-    StubStandardCLIQuoridorGameEngine engine = createEngineWithInput(input);
+    SpyStandardCLIQuoridorGameEngine engine = createEngineWithInput(input);
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();

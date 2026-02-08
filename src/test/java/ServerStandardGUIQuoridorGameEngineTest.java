@@ -7,7 +7,7 @@ import it.units.sdm.quoridor.model.builder.StandardQuoridorBuilder;
 import it.units.sdm.quoridor.utils.Position;
 import org.junit.jupiter.api.*;
 import testDoubles.StubQuoridorParser;
-import testDoubles.StubServerStandardGUIQuoridorGameEngine;
+import testDoubles.SpyServerStandardGUIQuoridorGameEngine;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,17 +30,17 @@ public class ServerStandardGUIQuoridorGameEngineTest {
     statisticsCounter = new StatisticsCounter();
   }
 
-  private StubServerStandardGUIQuoridorGameEngine createEngineWithInput(String input, String socketInput) {
+  private SpyServerStandardGUIQuoridorGameEngine createEngineWithInput(String input, String socketInput) {
     BufferedReader reader = new BufferedReader(new StringReader(input));
     BufferedReader socketReader = new BufferedReader(new StringReader(socketInput));
     BufferedWriter socketWriter = new BufferedWriter(new StringWriter(10));
 
-    return new StubServerStandardGUIQuoridorGameEngine(reader, builder, statisticsCounter, parser, socketWriter, socketReader);
+    return new SpyServerStandardGUIQuoridorGameEngine(reader, builder, statisticsCounter, parser, socketWriter, socketReader);
   }
 
   @Test
   void createdGameIsNotNull() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "0");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "0");
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
     Assertions.assertNotNull(engine.getGame());
@@ -48,7 +48,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void moveCommand_FromServerIsExecuted() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "1");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "1");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -58,7 +58,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void moveCommand_FromClientIsExecuted() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("1", PLAY.getCommandString());
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("1", PLAY.getCommandString());
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -72,7 +72,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void placeWallCommand_FromServerIsExecuted() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "2");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "2");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -82,7 +82,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void placeWallCommand_FromClientIsExecuted() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("1", PLAY.getCommandString());
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("1", PLAY.getCommandString());
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -98,7 +98,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void quitCommandFromServerIsExecuted() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "Q");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "Q");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -108,7 +108,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void restartCommandFromServerIsExecuted() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "R");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "R");
 
     engine.setGameHasToActuallyRestart(true);
     engine.runGame();
@@ -118,7 +118,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidMoveFromClient() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("1", "PLAY");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("1", "PLAY");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -132,7 +132,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidMoveFromServer() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "1");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "1");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -142,7 +142,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void turnHasNotChanged_afterInValidMoveFromServer() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "7");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "7");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -152,7 +152,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidHorizontalWallFromClient() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("2", "PLAY");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("2", "PLAY");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -167,7 +167,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidVerticalWallFromClient() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("9", "PLAY");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("9", "PLAY");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();
@@ -182,7 +182,7 @@ public class ServerStandardGUIQuoridorGameEngineTest {
 
   @Test
   void turnHasChanged_afterValidHorizontalWallFromServer() throws BuilderException {
-    StubServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "2");
+    SpyServerStandardGUIQuoridorGameEngine engine = createEngineWithInput("", "2");
 
     engine.setLoopStoppedAfterOneRound(true);
     engine.runGame();

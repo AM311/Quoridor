@@ -20,7 +20,7 @@ import static it.units.sdm.quoridor.controller.engine.abstracts.GUIQuoridorGameE
 import static it.units.sdm.quoridor.utils.WallOrientation.HORIZONTAL;
 import static it.units.sdm.quoridor.utils.WallOrientation.VERTICAL;
 
-public class StubStandardGUIQuoridorGameEngine {
+public class SpyStandardGUIQuoridorGameEngine {
   protected AbstractQuoridorBuilder builder;
   protected AbstractGame game;
   protected QuoridorParser parser;
@@ -34,7 +34,7 @@ public class StubStandardGUIQuoridorGameEngine {
   protected boolean isInvalidParameterExceptionCaught;
   protected boolean isInvalidActionExceptionCaught;
 
-  public StubStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
+  public SpyStandardGUIQuoridorGameEngine(AbstractQuoridorBuilder builder, StatisticsCounter statisticsCounter, QuoridorParser parser) {
     this.builder = builder;
     this.statisticsCounter = statisticsCounter;
     this.parser = parser;

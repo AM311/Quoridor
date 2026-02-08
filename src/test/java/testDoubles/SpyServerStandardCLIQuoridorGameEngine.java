@@ -12,13 +12,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-public class StubServerStandardCLIQuoridorGameEngine extends StubStandardCLIQuoridorGameEngine {
+public class SpyServerStandardCLIQuoridorGameEngine extends SpyStandardCLIQuoridorGameEngine {
 
   private final BufferedReader socketReader;
   private final BufferedWriter socketWriter;
-  private boolean isIOExceptionCaught;
 
-  public StubServerStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, BufferedWriter socketWriter, BufferedReader socketReader) {
+  public SpyServerStandardCLIQuoridorGameEngine(BufferedReader reader, QuoridorParser parser, AbstractQuoridorBuilder builder, BufferedWriter socketWriter, BufferedReader socketReader) {
     super(reader, parser, builder);
     this.socketWriter = socketWriter;
     this.socketReader = socketReader;
@@ -33,7 +32,6 @@ public class StubServerStandardCLIQuoridorGameEngine extends StubStandardCLIQuor
     try {
       serverMessage = socketReader.readLine();
     } catch (IOException e) {
-      isIOExceptionCaught = true;
     }
 
     do {
