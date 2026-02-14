@@ -13,17 +13,18 @@ public class NotificationDialogView implements DialogView {
   private final JFrame mainFrame;
   private JDialog notificationDialog;
 
+  private final ComponentAdapter resizeListener = new ComponentAdapter() {
+    @Override
+    public void componentResized(ComponentEvent e) {
+      updateNotificationDialog();
+    }
+  };
+
   public NotificationDialogView(String message, boolean invalidActionFlag, JFrame mainFrame) {
     this.message = "<html><div>" + message + "</div></html>";
     this.invalidActionFlag = invalidActionFlag;
     this.mainFrame = mainFrame;
-
-    mainFrame.addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentResized(ComponentEvent e) {
-        updateNotificationDialog();
-      }
-    });
+    mainFrame.addComponentListener(resizeListener);
   }
 
   @Override
@@ -38,13 +39,23 @@ public class NotificationDialogView implements DialogView {
     notificationDialog.setVisible(true);
 
     if (invalidActionFlag) {
-      Timer timer = new Timer(3000, e -> notificationDialog.dispose());
+      Timer timer = new Timer(3000, e -> dispose());
       timer.setRepeats(false);
       timer.start();
     }
   }
 
+  public void dispose() {
+    mainFrame.removeComponentListener(resizeListener);
+    if (notificationDialog != null) {
+      notificationDialog.dispose();
+      notificationDialog = null;
+    }
+  }
+
   private void updateNotificationDialog() {
+    if (notificationDialog == null) return;
+
     Dimension mainFrameSize = mainFrame.getSize();
     int mainFrameWidth = mainFrameSize.width;
     int mainFrameHeight = mainFrameSize.height;
@@ -57,9 +68,9 @@ public class NotificationDialogView implements DialogView {
     int dialogX = invalidActionFlag ? (int) (mainFrameWidth * 0.78) : (int) (mainFrameWidth * 0.029);
     int dialogY = (int) (mainFrameHeight * 0.422);
 
-    notificationDialog.setLocation(dialogX, dialogY);
+    Point p = mainFrame.getLocationOnScreen();
+    notificationDialog.setLocation(p.x + dialogX, p.y + dialogY);
   }
-
 
   private JPanel createDialogContent() {
     JPanel panel = new JPanel(new BorderLayout());

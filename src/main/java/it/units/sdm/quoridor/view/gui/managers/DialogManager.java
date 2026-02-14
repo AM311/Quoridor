@@ -9,6 +9,8 @@ public class DialogManager {
   private final JFrame mainFrame;
   private final GUIQuoridorGameEngine gameEngine;
 
+  private NotificationDialogView currentTurnDialog;
+
   public DialogManager(JFrame mainFrame, GUIQuoridorGameEngine gameEngine) {
     this.mainFrame = mainFrame;
     this.gameEngine = gameEngine;
@@ -43,6 +45,19 @@ public class DialogManager {
   }
 
   public void displayNotificationDialog(String message, boolean invalidActionFlag) {
-    new NotificationDialogView(message, invalidActionFlag, mainFrame).displayDialog();
+    if (!invalidActionFlag) {
+      if (currentTurnDialog != null) currentTurnDialog.dispose();
+      currentTurnDialog = new NotificationDialogView(message, false, mainFrame);
+      currentTurnDialog.displayDialog();
+    } else {
+      new NotificationDialogView(message, true, mainFrame).displayDialog();
+    }
+  }
+
+  public void disposeTurnNotificationDialog() {
+    if (currentTurnDialog != null) {
+      currentTurnDialog.dispose();
+      currentTurnDialog = null;
+    }
   }
 }

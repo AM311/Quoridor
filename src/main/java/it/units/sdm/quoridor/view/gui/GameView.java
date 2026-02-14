@@ -23,6 +23,10 @@ public class GameView {
   }
 
   public void displayGUI(boolean showControlsForPlayer1) {
+    if (dialogManager != null) {
+      dialogManager.disposeTurnNotificationDialog();
+    }
+
     dialogManager = new DialogManager(mainFrame, gameEngine);
     panelsManager = new PanelsManager(gameEngine, dialogManager);
 
@@ -62,6 +66,9 @@ public class GameView {
   }
 
   public void disposeMainFrame() {
+    if (dialogManager != null) {
+      dialogManager.disposeTurnNotificationDialog();
+    }
     mainFrame.dispose();
   }
 
@@ -94,6 +101,9 @@ public class GameView {
   }
 
   public void onGameFinished() {
+    if (dialogManager != null) {
+      dialogManager.disposeTurnNotificationDialog();
+    }
     panelsManager.disposeActionsPanelForPlayingPlayer(gameEngine.getPlayingPawnIndex());
     displayStatistics();
   }
