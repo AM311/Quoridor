@@ -4,7 +4,7 @@ import it.units.sdm.quoridor.model.abstracts.AbstractPawn;
 import it.units.sdm.quoridor.utils.GUIConstants;
 import it.units.sdm.quoridor.utils.Position;
 import it.units.sdm.quoridor.utils.WallOrientation;
-import it.units.sdm.quoridor.view.gui.components.FlatColorButton;
+import it.units.sdm.quoridor.utils.FlatColorButton;
 import it.units.sdm.quoridor.view.gui.managers.BorderManager;
 
 import javax.swing.*;

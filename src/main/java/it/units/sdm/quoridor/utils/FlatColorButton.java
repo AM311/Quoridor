@@ -1,4 +1,4 @@
-package it.units.sdm.quoridor.view.gui.components;
+package it.units.sdm.quoridor.utils;
 
 import javax.swing.*;
 import java.awt.*;

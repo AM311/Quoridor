@@ -32,7 +32,7 @@ public class GameStringBuilder {
       AbstractPawn pawn = pawns.get(i);
 
       int remainingWalls = pawn.getNumberOfWalls();
-      pawnInfoList.add("\t-Pawn " + i + " (" + pawn + "): " + remainingWalls + "walls");
+      pawnInfoList.add("\t-Pawn " + i + " (" + pawn + "): " + remainingWalls + " walls");
     }
 
     gameString.append(String.join(System.lineSeparator(), pawnInfoList));
