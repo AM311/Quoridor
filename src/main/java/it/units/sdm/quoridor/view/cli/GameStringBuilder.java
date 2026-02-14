@@ -16,8 +16,7 @@ public class GameStringBuilder {
     gameString.append(System.lineSeparator().repeat(2));
 
     appendRemainingWallsInfoString(game, gameString);
-
-    gameString.append(System.lineSeparator().repeat(3));
+    gameString.append(System.lineSeparator());
 
     return gameString.toString();
   }
@@ -28,11 +27,9 @@ public class GameStringBuilder {
     List<String> pawnInfoList = new ArrayList<>();
     List<AbstractPawn> pawns = game.getPawns();
 
-    for (int i = 0; i < pawns.size(); i++) {
-      AbstractPawn pawn = pawns.get(i);
-
+    for (AbstractPawn pawn : pawns) {
       int remainingWalls = pawn.getNumberOfWalls();
-      pawnInfoList.add("\t-Pawn " + i + " (" + pawn + "): " + remainingWalls + " walls");
+      pawnInfoList.add("\t" + pawn + ": " + remainingWalls + " walls");
     }
 
     gameString.append(String.join(System.lineSeparator(), pawnInfoList));

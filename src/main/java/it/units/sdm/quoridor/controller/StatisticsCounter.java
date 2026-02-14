@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class StatisticsCounter {
 
-  private int totalGamesPlayed = 0;
   private final Map<String, Integer> totalWins = new HashMap<>();
   private final Map<String, Integer> totalMoves = new HashMap<>();
   private final Map<String, Integer> totalWalls = new HashMap<>();
   private final Map<String, Integer> gameMoves = new HashMap<>();
   private final Map<String, Integer> gameWalls = new HashMap<>();
+  private int totalGamesPlayed = 0;
   private AbstractGame game;
 
 
@@ -39,11 +39,6 @@ public class StatisticsCounter {
     }
   }
 
-  public void resetGameStats() {
-    gameMoves.clear();
-    gameWalls.clear();
-  }
-
   private void updateTotalGamesPlayed() {
     totalGamesPlayed++;
   }
@@ -60,6 +55,11 @@ public class StatisticsCounter {
   private void updateTotalWalls(String key) {
     int wallsThisGame = gameWalls.getOrDefault(key, 0);
     totalWalls.put(key, totalWalls.getOrDefault(key, 0) + wallsThisGame);
+  }
+
+  public void resetGameStats() {
+    gameMoves.clear();
+    gameWalls.clear();
   }
 
   public String generateStatisticsReport() {
@@ -87,9 +87,8 @@ public class StatisticsCounter {
 
     for (int i = 0; i < game.getPawns().size(); i++) {
       String pawn = String.valueOf(game.getPawns().get(i));
-      String playerLabel = "Pawn " + (i + 1) + " (" + pawn + ")";
       report.append(String.format("%-15s | %-5d | %-8s | %-12d | %-12d |\n",
-              playerLabel,
+              pawn,
               getTotalWins(pawn),
               String.format("%.1f%%", getWinRate(pawn)),
               getTotalMoves(pawn),
@@ -100,12 +99,20 @@ public class StatisticsCounter {
     return report.toString();
   }
 
-  public int getTotalGamesPlayed() {
-    return totalGamesPlayed;
+  public int getGameMoves(String key) {
+    return gameMoves.getOrDefault(key, 0);
+  }
+
+  public int getGameWalls(String key) {
+    return gameWalls.getOrDefault(key, 0);
   }
 
   public int getTotalWins(String key) {
     return totalWins.getOrDefault(key, 0);
+  }
+
+  public double getWinRate(String key) {
+    return totalGamesPlayed == 0 ? 0 : (getTotalWins(key) * 100.0) / totalGamesPlayed;
   }
 
   public int getTotalMoves(String key) {
@@ -116,24 +123,15 @@ public class StatisticsCounter {
     return totalWalls.getOrDefault(key, 0);
   }
 
-  public int getGameMoves(String key) {
-    return gameMoves.getOrDefault(key, 0);
-  }
-
-  public int getGameWalls(String key) {
-    return gameWalls.getOrDefault(key, 0);
-  }
-
-  public double getWinRate(String key) {
-    if (totalGamesPlayed == 0) return 0;
-    return (getTotalWins(key) * 100.0) / totalGamesPlayed;
-  }
-
-  public void setGame(AbstractGame game) {
-    this.game = game;
+  public int getTotalGamesPlayed() {
+    return totalGamesPlayed;
   }
 
   public AbstractGame getGame() {
     return game;
+  }
+
+  public void setGame(AbstractGame game) {
+    this.game = game;
   }
 }
