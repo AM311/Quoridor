@@ -5,22 +5,25 @@
 
 # Quoridor
 
-This repository contains an implementation of the **Quoridor** board game developed in **Java**, with support for:
+This repository contains an implementation of the **[Quoridor](https://en.wikipedia.org/wiki/Quoridor)** board game developed in **Java**, with support for:
 
+- Matches with **2 or 4 players**
 - **Local** mode (CLI or GUI)
 - **Client/Server** mode (CLI or GUI)
-- Matches with **2 or 4 players**
-
-The project is built using **Gradle** and can be started either by running dedicated Java `main` classes or via the **Gradle Wrapper**.
 
 ---
 
 ## Requirements
 
-- **Java 21 (OpenJDK)**
+In order to compile and run the project, the following minimum requirements are needed:
+
+- **Java 21**
 - **Gradle 8.5**
 
-> ℹ️ If you use the **Gradle Wrapper** included in the repository, it is sufficient to have a **JRE compatible with Gradle 8.5** available on your system.
+> ℹ️ To execute the **Gradle Wrapper** included in the repository, it is sufficient to have Java 8 (or higher) available on your system.
+> 
+> The project is configured to use **Java 21 via Gradle Toolchains**.
+> If Java 21 is not installed locally, Gradle 8.5 can automatically provision a compatible Java 21 toolchain for compilation and execution tasks.
 
 ---
 
@@ -30,18 +33,18 @@ The application can be started in three main modes:
 
 ### 1. Local Mode
 
-- Started via the `` class
+- Started via the `Starter` class
 - Supports **CLI** or **GUI**
 
 ### 2. Server Mode
 
-- Started via the `` class
+- Started via the `ServerStarter` class
 - Handles multiple clients; necessary for playing from multiple devices
 - Must be started **before** the clients
 
 ### 3. Client Mode
 
-- Started via the `` class
+- Started via the `ClientStarter` class
 - Supports **CLI** or **GUI**
 - Connects to a remote server
 
