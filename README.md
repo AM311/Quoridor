@@ -22,8 +22,8 @@ In order to compile and run the project, the following minimum requirements are 
 
 > ℹ️ To execute the **Gradle Wrapper** included in the repository, it is sufficient to have Java 8 (or higher) available on your system.
 > 
-> The project is configured to use **Java 21 via Gradle Toolchains**.
-> If Java 21 is not installed locally, Gradle 8.5 can automatically provision a compatible Java 21 toolchain for compilation and execution tasks.
+> The project is configured to use **Java 21** via **Gradle Toolchains**.
+> If Java 21 is not installed locally, Gradle 8.5 can automatically provide a compatible Java 21 toolchain for compilation and execution tasks.
 
 ---
 
@@ -52,14 +52,41 @@ The application can be started in three main modes:
 
 ---
 
-## Running the application using Java
+## Compiling the application
 
-The application can be started by directly executing the corresponding `main` classes.
-
-### Starter (Local Mode)
+To compile the application given the source code, it is sufficient to call the proper Gradle task.
 
 ```bash
-java Starter <NUMBER_OF_PLAYERS> <CLI|GUI>
+./gradlew build
+```
+
+It is not necessary to explicitly call the `build` task when starting the application via the Gradle Wrapper as indicated below, since the building process in implicitly executed.
+
+When the `build` task is called, also 3 JAR files are created in the `build/libs` directory:
+- `Quoridor-XXX-local.jar` 
+- `Quoridor-XXX-server.jar` 
+- `Quoridor-XXX-client.jar`
+
+where `XXX` represent the current application version.
+
+These JAR can be distributed and called to run the application, provided a compatible JRE is available on the local machine.
+
+---
+
+## Running the application
+
+The application can be started via the **Gradle Wrapper**, calling one of the three dedicated tasks:
+
+- `runLocal`, which starts the application in **local mode**, calling the `Starter` class
+- `runServer`, which starts the application in **server mode**, calling the `ServerStarter` class
+- `runClient`, which starts the application in **client mode**, calling the `ClientStarter` class
+
+The required parameters for each call are describer below. 
+
+### runLocal (Local Mode)
+
+```bash
+./gradlew runLocal --args="<NUMBER_OF_PLAYERS> <CLI|GUI>"
 ```
 
 - `<NUMBER_OF_PLAYERS>`: `2` or `4`
@@ -68,32 +95,29 @@ java Starter <NUMBER_OF_PLAYERS> <CLI|GUI>
 **Example:**
 
 ```bash
-java Starter 2 CLI
+./gradlew runLocal --args="2 CLI"
 ```
 
----
-
-### ServerStarter (Server Mode)
+### runServer (Server Mode)
 
 ```bash
-java ServerStarter <PORT> <NUMBER_OF_PLAYERS>
+./gradlew runServer --args="<PORT> <NUMBER_OF_PLAYERS>"
 ```
 
 - `<PORT>`: TCP port on which the server listens for connections
 - `<NUMBER_OF_PLAYERS>`: `2` or `4`
 
+
 **Example:**
 
 ```bash
-java ServerStarter 4444 2
+./gradlew runServer --args="4444 2"
 ```
 
----
-
-### ClientStarter (Client Mode)
+### runClient (Client Mode)
 
 ```bash
-java ClientStarter <SERVER_IP> <PORT> <CLI|GUI>
+./gradlew runClient --args="<SERVER_IP> <PORT> <CLI|GUI>"
 ```
 
 - `<SERVER_IP>`: IP address of the server
@@ -103,58 +127,5 @@ java ClientStarter <SERVER_IP> <PORT> <CLI|GUI>
 **Example:**
 
 ```bash
-java ClientStarter 127.0.0.1 4444 CLI
-```
-
----
-
-## Running the application using Gradle Wrapper
-
-The same features are available via the **Gradle Wrapper**, which exposes three dedicated tasks:
-
-- `runLocal`
-- `runServer`
-- `runClient`
-
-The parameters are **exactly the same** as described above and must be passed using the standard Gradle syntax.
-
-### Local Mode
-
-```bash
-./gradlew runLocal --args="<NUMBER_OF_PLAYERS> <CLI|GUI>"
-```
-
-**Example:**
-
-```bash
-./gradlew runLocal --args="2 CLI"
-```
-
----
-
-### Server Mode
-
-```bash
-./gradlew runServer --args="<PORT> <NUMBER_OF_PLAYERS>"
-```
-
-**Example:**
-
-```bash
-./gradlew runServer --args="4444 2"
-```
-
----
-
-### Client Mode
-
-```bash
-./gradlew runClient --args="<SERVER_IP> <PORT> <CLI|GUI>"
-```
-
-**Example:**
-
-```bash
 ./gradlew runClient --args="127.0.0.1 4444 CLI"
 ```
-

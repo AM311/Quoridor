@@ -90,6 +90,15 @@ tasks.register('jar_client', Jar) {
     }
 }
 
+// ---
+
+tasks.named("jar") {
+    enabled = false
+}
+
+tasks.named("assemble") {
+    dependsOn jar_local, jar_server, jar_client
+}
 
 // ----
 
