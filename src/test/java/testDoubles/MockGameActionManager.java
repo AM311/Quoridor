@@ -37,11 +37,7 @@ public class MockGameActionManager implements ActionManager {
         }
       }
 
-      if (!useOrInsteadOfAnd || actionController.actionCheckers().length == 0) {
-        isValidAction = true;
-      } else {
-        isValidAction = false;
-      }
+      isValidAction = !useOrInsteadOfAnd || actionController.actionCheckers().length == 0;
     } catch (QuoridorRuntimeException ex) {
       throw new InvalidActionException("Invalid action: " + ex.getMessage());
     }

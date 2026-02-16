@@ -38,18 +38,7 @@ public class InformationStringBuilder {
   }
 
   public InformationStringBuilder appendWallsConvention() {
-    final PawnAppearance demoPawn = new PawnAppearance(Color.WHITE);
-
-    String figure = "WALL PLACEMENT CONVENTION:" + System.lineSeparator() +
-            "     +     +     +        " + System.lineSeparator() +
-            "     |                    " + System.lineSeparator() +
-            "  v  +     +     +        " + System.lineSeparator() +
-            "     |" + demoPawn + System.lineSeparator() +
-            "     +-----+-----+        " + System.lineSeparator() +
-            "           h              " + System.lineSeparator() +
-            "                          " + System.lineSeparator();
-
-    stringBuilder.append(figure);
+    stringBuilder.append(getFigure());
     stringBuilder.append("\tThe chosen tile is in the bottom-left.").append(System.lineSeparator());
     stringBuilder.append("\tWalls occupy two tiles:").append(System.lineSeparator());
     stringBuilder.append("\t\t- Vertical walls appear on the left side of tiles;").append(System.lineSeparator());
@@ -57,6 +46,19 @@ public class InformationStringBuilder {
     stringBuilder.append("\tYou cannot place walls on the margins.").append(System.lineSeparator().repeat(2));
 
     return this;
+  }
+
+  private static String getFigure() {
+    final PawnAppearance demoPawn = new PawnAppearance(Color.WHITE);
+
+    return "WALL PLACEMENT CONVENTION:" + System.lineSeparator() +
+            "     +     +     +        " + System.lineSeparator() +
+            "     |                    " + System.lineSeparator() +
+            "  v  +     +     +        " + System.lineSeparator() +
+            "     |" + demoPawn + System.lineSeparator() +
+            "     +-----+-----+        " + System.lineSeparator() +
+            "           h              " + System.lineSeparator() +
+            "                          " + System.lineSeparator();
   }
 
   public String build() {
