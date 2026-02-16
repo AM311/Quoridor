@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'it.units.sdm.in20'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -63,6 +63,33 @@ jacocoTestReport {
         include "jacoco/test.exec"
     })
 }
+
+// ----
+
+tasks.register('jar_local', Jar) {
+    archiveClassifier = 'local'
+    from sourceSets.main.output
+    manifest {
+        attributes 'Main-Class': 'it.units.sdm.quoridor.Starter'
+    }
+}
+
+tasks.register('jar_server', Jar) {
+    archiveClassifier = 'server'
+    from sourceSets.main.output
+    manifest {
+        attributes 'Main-Class': 'it.units.sdm.quoridor.ServerStarter'
+    }
+}
+
+tasks.register('jar_client', Jar) {
+    archiveClassifier = 'client'
+    from sourceSets.main.output
+    manifest {
+        attributes 'Main-Class': 'it.units.sdm.quoridor.ClientStarter'
+    }
+}
+
 
 // ----
 

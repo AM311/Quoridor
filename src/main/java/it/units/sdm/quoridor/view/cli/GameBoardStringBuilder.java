@@ -22,7 +22,7 @@ public class GameBoardStringBuilder {
     int sideLength = gameBoard.getSideLength();
     appendTopNumbersString(sideLength, gameBoardString);
 
-    gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength))).append("\n");
+    gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength))).append(System.lineSeparator());
   }
 
   private static void appendTopNumbersString(int sideLength, StringBuilder gameBoardString) {
@@ -31,7 +31,7 @@ public class GameBoardStringBuilder {
     for (int i = 0; i < sideLength; i++) {
       gameBoardString.append(i).append("     ");
     }
-    gameBoardString.append("\n");
+    gameBoardString.append(System.lineSeparator());
   }
 
   private static void appendCellRowsString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
@@ -54,13 +54,13 @@ public class GameBoardStringBuilder {
         for (int col = 0; col < sideLength - 1; col++) {
           gameBoardString.append(gameState[row][col].isThereAWallOrEdge(DOWN) ? "-----" : "     ").append("+");
         }
-        gameBoardString.append(gameState[row][sideLength - 1].isThereAWallOrEdge(DOWN) ? "-----" : "     ").append("*").append("\n");
+        gameBoardString.append(gameState[row][sideLength - 1].isThereAWallOrEdge(DOWN) ? "-----" : "     ").append("*").append(System.lineSeparator());
       }
     }
   }
 
   private static void appendBottomBorderString(AbstractGameBoard gameBoard, StringBuilder gameBoardString) {
     int sideLength = gameBoard.getSideLength();
-    gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength - 1))).append("-----*").append("\n");
+    gameBoardString.append("   *").append("-----*".repeat(Math.max(0, sideLength - 1))).append("-----*").append(System.lineSeparator());
   }
 }

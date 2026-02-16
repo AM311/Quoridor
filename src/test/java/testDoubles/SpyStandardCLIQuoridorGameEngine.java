@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class SpyStandardCLIQuoridorGameEngine {
-
   protected final BufferedReader reader;
   protected final QuoridorParser parser;
   protected final AbstractQuoridorBuilder builder;
