@@ -69,11 +69,9 @@ When the `build` task is called, also 3 JAR files are created in the `build/libs
 
 where `XXX` represent the current application version.
 
-These JAR can be distributed and called to run the application, provided a compatible JRE is available on the local machine.
-
 ---
 
-## Running the application
+## Running the application using the Gradle Wrapper
 
 The application can be started via the **Gradle Wrapper**, calling one of the three dedicated tasks:
 
@@ -129,3 +127,17 @@ The required parameters for each call are describer below.
 ```bash
 ./gradlew runClient --args="127.0.0.1 4444 CLI"
 ```
+
+---
+
+## Running the application using the JAR files
+
+To run the application using the JAR files generated during the building process, a compatible JRE must be available on the local machine.
+
+The following syntax can be used to run the application from the proper JAR:
+
+```bash
+java -jar build/libs/<PROPER_JAR_NAME>.jar <args>
+```
+
+where the JAR names are the ones defined above and the arguments are the same passed to the correspondent Gradle tasks.  
